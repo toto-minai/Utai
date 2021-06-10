@@ -13,13 +13,14 @@ let titlebarHeight: CGFloat = 27
 struct ContentView: View {
     var body: some View {
         ZStack {
-            Text("Utai")
+            Text("Drag or")
         }
+        // Translucent background
         .frame(width: squareLength, height: squareLength)
         .ignoresSafeArea()
         .frame(width: squareLength, height: squareLength-titlebarHeight)
         .background(EffectsView(
-            material: .popover,
+            material: .sidebar,
             blendingMode: .behindWindow).ignoresSafeArea())
     }
 }

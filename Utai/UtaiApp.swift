@@ -13,7 +13,7 @@ struct UtaiApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().colorScheme(.dark)
         }
         .windowStyle(.hiddenTitleBar)
     }
@@ -24,6 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let window = NSApplication.shared.windows.first {
             window.isMovableByWindowBackground = true
             window.level = .floating
+            
+            window.styleMask.remove(.miniaturizable)
+            window.styleMask.remove(.fullScreen)
 
             window.standardWindowButton(.miniaturizeButton)?.isHidden = true
             window.standardWindowButton(.zoomButton)?.isHidden = true
