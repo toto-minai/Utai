@@ -18,6 +18,18 @@ struct ContentView: View {
             SetupPages(page: $page)
             
             PageTurner(page: $page)
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    ControlButton(systemName: "book")
+                        .padding(8)
+                }
+                
+                
+                Spacer()
+            }
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
