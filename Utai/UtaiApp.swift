@@ -21,7 +21,7 @@ struct UtaiApp: App {
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        if let window = NSApplication.shared.windows.first {
+        if let window = NSApp.windows.first {
             window.isMovableByWindowBackground = true
             window.level = .floating
             
