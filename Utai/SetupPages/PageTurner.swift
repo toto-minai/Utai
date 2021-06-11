@@ -9,9 +9,20 @@ import SwiftUI
 
 struct PageTurnerControl: View {
     @Binding var page: Int
-    @State private var isHover = false
     
     let toPage: Int
+    let systemName: String
+    // let helpText: String
+    
+    var body: some View {
+        ControlButton(alwaysHover: page == toPage, systemName: systemName)
+    }
+}
+
+struct ControlButton: View {
+    @State private var isHover = false
+    var alwaysHover: Bool = false
+    
     let systemName: String
     // let helpText: String
     
@@ -19,7 +30,7 @@ struct PageTurnerControl: View {
         Image(systemName: systemName)
             .font(.system(size: 12))
             // .help(helpTExt)
-            .opacity(page == toPage ? 1 : (isHover ? 1 : 0.3))
+            .opacity(alwaysHover ? 1 : (isHover ? 1 : 0.3))
             .onHover { hovering in
                 isHover = hovering
             }
