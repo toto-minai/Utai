@@ -15,11 +15,11 @@ struct SetupPage1: View {
     var body: some View {
         return ZStack {
             VStack {
-                Text("**I. Import**")
+                Text("I. **Import**")
                 
                 Spacer()
             }
-            .padding(.top, 8+1)
+            .padding(.top, 8)
             
             VStack(spacing: 8) {
                 Image("WelcomeAlbum")
@@ -37,6 +37,7 @@ struct SetupPage1: View {
                     .buttonStyle(.borderless)
                 }
             }
+            .offset(y: -8)
             
             
         }
