@@ -94,11 +94,44 @@ struct PageTurner: View {
     }
 }
 
+//struct MusicDropDelegate: DropDelegate {
+//    @Binding var pageIndex: Int
+//}
+
+struct Album: Identifiable {
+    let id = UUID()
+    
+    var titleCandidates = Set<String>()
+    var artistsCandidates = Set<String>()
+    var yearCandidates = Set<Int>()
+    var trackToCandidates = Set<Int>()
+    var diskToCandidates = Set<Int>()
+    
+    var title = ""
+    var artists = ""
+    var year = ""
+    
+    struct Track: Identifiable {
+        let id = UUID()
+        
+        var trackNo: Int?
+        var diskNo: Int?
+        var title: String?
+        var artist: String?
+        
+        var length: Double?
+    }
+    
+    var tracks = [Track]()
+}
+
 struct SetupPage1: View {
     @Binding var page: Int
     
+    @State private var dragOver = false
+    
     var body: some View {
-        ZStack {
+        return ZStack {
             VStack {
                 Text("**I. Import**")
                 
