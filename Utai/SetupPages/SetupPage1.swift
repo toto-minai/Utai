@@ -21,14 +21,20 @@ struct SetupPage1: View {
             }
             .padding(.top, 8)
             
-            VStack(spacing: 8) {
-                Image("WelcomeAlbum")
-                    .resizable()
-                    .aspectRatio(1, contentMode: .fit)
-                    .frame(width: 120)
-                    .shadow(color: Color.black.opacity(0.4), radius: 8, x: 0, y: 4)
+            VStack(spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .foregroundColor(Color.black.opacity(0.2))
+                        .frame(width: 120, height: 120)
+                    
+                    Image("SimpleIcon")
+                        .resizable()
+                        .aspectRatio(1.25, contentMode: .fit)
+                        .frame(width: 54)
+                        .foregroundColor(Color.white.opacity(0.4))
+                }
                 
-                HStack(spacing: 4) {
+                HStack(spacing: 2) {
                     Text("**Drag** or")
                     
                     Button(action: {}) {
