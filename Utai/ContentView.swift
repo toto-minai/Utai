@@ -19,17 +19,7 @@ struct ContentView: View {
             
             PageTurner(page: $page)
             
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    ControlButton(systemName: "book")
-                        .padding(8)
-                }
-                
-                
-                Spacer()
-            }
+            ReferencesControl(page: $page)
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
@@ -41,3 +31,4 @@ struct ContentView: View {
             blendingMode: .behindWindow).ignoresSafeArea())
     }
 }
+

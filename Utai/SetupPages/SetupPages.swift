@@ -19,3 +19,20 @@ struct SetupPages: View {
         .clipped()
     }
 }
+
+struct ReferencesControl: View {
+    @Binding var page: Int
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                
+                ControlButton(systemName: "book")
+                    .padding(8)
+            }
+            
+            Spacer()
+        }
+    }
+}
