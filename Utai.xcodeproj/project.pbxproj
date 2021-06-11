@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99747F142672E78100995E85 /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F132672E78100995E85 /* EffectsView.swift */; };
 		9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D62670E1F60000328B /* UtaiApp.swift */; };
 		9987A3D92670E1F60000328B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D82670E1F60000328B /* ContentView.swift */; };
 		9987A3DB2670E1F70000328B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9987A3DA2670E1F70000328B /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		99747F132672E78100995E85 /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
 		9987A3D32670E1F60000328B /* Utai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Utai.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9987A3D62670E1F60000328B /* UtaiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtaiApp.swift; sourceTree = "<group>"; };
 		9987A3D82670E1F60000328B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -32,6 +34,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99747F122672E76100995E85 /* Toolbox */ = {
+			isa = PBXGroup;
+			children = (
+				99747F132672E78100995E85 /* EffectsView.swift */,
+			);
+			path = Toolbox;
+			sourceTree = "<group>";
+		};
 		9987A3CA2670E1F60000328B = {
 			isa = PBXGroup;
 			children = (
@@ -53,6 +63,7 @@
 			children = (
 				9987A3D62670E1F60000328B /* UtaiApp.swift */,
 				9987A3D82670E1F60000328B /* ContentView.swift */,
+				99747F122672E76100995E85 /* Toolbox */,
 				9987A3DA2670E1F70000328B /* Assets.xcassets */,
 				9987A3DC2670E1F70000328B /* Preview Content */,
 			);
@@ -139,6 +150,7 @@
 			files = (
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
+				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,16 +15,9 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            HStack(spacing: 0) {
-                SetupPage1(page: $page)
-            }
-            .offset(x: CGFloat(1 - page) * unitLength)
-            .frame(width: unitLength, alignment: .leading)
-            .clipped()
+            SetupPages(page: $page)
             
             PageTurner(page: $page)
-            
-            
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
@@ -37,22 +30,16 @@ struct ContentView: View {
     }
 }
 
-struct EffectsView: NSViewRepresentable {
-    var material: NSVisualEffectView.Material
-    var blendingMode: NSVisualEffectView.BlendingMode
+struct SetupPages: View {
+    @Binding var page: Int
     
-    func makeNSView(context: Context) -> NSVisualEffectView {
-        let view = NSVisualEffectView()
-        view.material = material
-        view.blendingMode = blendingMode
-        view.state = .active
-        
-        return view
-    }
-    
-    func updateNSView(_ view: NSVisualEffectView, context: Context) {
-        view.material = material
-        view.blendingMode = blendingMode
+    var body: some View {
+        HStack(spacing: 0) {
+            SetupPage1(page: $page)
+        }
+        .offset(x: CGFloat(1 - page) * unitLength)
+        .frame(width: unitLength, alignment: .leading)
+        .clipped()
     }
 }
 
