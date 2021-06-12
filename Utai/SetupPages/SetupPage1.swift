@@ -29,7 +29,7 @@ struct SetupPage1: View {
                     
                     Image("SimpleIcon")
                         .resizable()
-                        .aspectRatio(1.25, contentMode: .fit)
+                        .scaledToFit()
                         .frame(width: 54)
                         .foregroundColor(Color.white.opacity(0.4))
                 }
