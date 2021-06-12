@@ -32,19 +32,12 @@ struct ImportView: View {
     }
     
     var body: some View {
-        return ZStack {
-            VStack {
-                Text("I. **Import**")
-                
-                Spacer()
-            }
-            .padding(.top, 8)
-            
-            VStack(spacing: 12) {
+        return VStack(spacing: 0) {
+            VStack(spacing: 16) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .foregroundColor(Color.black.opacity(0.2))
-                        .frame(width: 120, height: 120)
+                        .frame(width: 114, height: 114)
                     
                     Image("SimpleIcon")
                         .resizable()
@@ -57,12 +50,19 @@ struct ImportView: View {
                     Text("**Drag** or")
                     
                     Button(action: importFile) {
-                        Text("**Add Music**")
+                        HStack(spacing: 0) {
+                            Image(systemName: "music.note")
+                                .font(.system(size: 12))
+                                .offset(y: -1.2)
+                            Text("**Add Music**")
+                        }
                     }
                     .buttonStyle(.borderless)
                 }
             }
-            .offset(y: -8)
+            .offset(y: 64)
+            
+            Spacer()
         }
         .frame(width: unitLength, height: unitLength)
         .sheet(isPresented: $isConfirmPresented, onDismiss: {}) {
@@ -84,6 +84,13 @@ struct ConfirmSheet: View {
     @State var artistsCus: String = ""
     @FocusState private var artistsCusFocused: Bool
     
+    var canSearch: Bool {
+        titleSelection != -1 ||
+        artistsSelection != -1 ||
+        titleSelection == -1 && titleCus != "" ||
+        artistsSelection == -1 && artistsCus != ""
+    }
+    
     private func prepareSearching() {
         store.album!.title = titleSelection == -1 ?
             titleCus :
@@ -99,76 +106,88 @@ struct ConfirmSheet: View {
     }
     
     var body: some View {
-        Form {
-            Text("Might want to confirm the title and artists before searching on Discogs.")
-            Divider()
+        ZStack(alignment: .topLeading) {
             
-            Spacer()
+            Image(systemName: "music.note")
+                .font(.system(size: 12))
+                .padding(8)
             
-            Picker("Album:", selection: $titleSelection) {
-                ForEach(0..<store.album!.albumTitleCandidates.count) { index in
-                    Text("\(Array(store.album!.albumTitleCandidates)[index])")
-                        .tag(index)
-                }
-                Divider()
-                Text("Other…").tag(-1)
-            }
-            .onAppear {
-                if store.album!.albumTitleCandidates.count == 0 {
-                    titleSelection = -1
-                    titleCusFocused = true
-                }
-            }
-            .onChange(of: titleSelection) { value in
-                if value == -1 { titleCusFocused = true }
-            }
-            
-            TextField("", text: $titleCus)
-                // .textFieldStyle(.roundedBorder) // Bad looking
-                .disabled(titleSelection != -1)
-                .focused($titleCusFocused)
-            
-            Picker("Artist(s):", selection: $artistsSelection) {
-                ForEach(0..<store.album!.albumArtistsCandidates.count) { index in
-                    Text("\(Array(store.album!.albumArtistsCandidates)[index])")
-                        .tag(index)
-                }
-                Divider()
-                Text("Other…").tag(-1)
-            }
-            .onAppear {
-                if store.album!.albumArtistsCandidates.count == 0 {
-                    artistsSelection = -1
-                    artistsCusFocused = true
-                }
-            }
-            .onChange(of: artistsSelection) { value in
-                if value == -1 { artistsCusFocused = true }
-            }
-            
-            TextField("", text: $artistsCus)
-                // .textFieldStyle(.roundedBorder) // Bad looking
-                .disabled(artistsSelection != -1)
-                .focused($artistsCusFocused)
-            
-            Spacer().frame(height: 16)
-            
-            HStack {
+            Form {
+                Group {
+                    Text("Might want to confirm the title and artists before searching on Discogs.")
+                    Divider()
+                }.offset(y: 1.2)
+                
                 Spacer()
                 
-                Button(action: { dismiss() }) {
-                    Text("Cancel")
+                Picker("**Album**", selection: $titleSelection) {
+                    ForEach(0..<store.album!.albumTitleCandidates.count) { index in
+                        Text("\(Array(store.album!.albumTitleCandidates)[index])")
+                            .tag(index)
+                    }
+                    Divider()
+                    Text("Other…").tag(-1)
                 }
-                .buttonStyle(.borderless)
+                .foregroundColor(.secondary)
+                .onAppear {
+                    if store.album!.albumTitleCandidates.count == 0 {
+                        titleSelection = -1
+                        titleCusFocused = true
+                    }
+                }
+                .onChange(of: titleSelection) { value in
+                    if value == -1 { titleCusFocused = true }
+                }
                 
-                Button(action: prepareSearching) {
-                    Text("**Search**")
+                TextField("", text: $titleCus)
+                    // .textFieldStyle(.roundedBorder) // Bad looking
+                    .disabled(titleSelection != -1)
+                    .focused($titleCusFocused)
+                
+                Picker("**Artist(s)**", selection: $artistsSelection) {
+                    ForEach(0..<store.album!.albumArtistsCandidates.count) { index in
+                        Text("\(Array(store.album!.albumArtistsCandidates)[index])")
+                            .tag(index)
+                    }
+                    Divider()
+                    Text("Other…").tag(-1)
                 }
-                .controlProminence(.increased)
+                .foregroundColor(.secondary)
+                .onAppear {
+                    if store.album!.albumArtistsCandidates.count == 0 {
+                        artistsSelection = -1
+                        artistsCusFocused = true
+                    }
+                }
+                .onChange(of: artistsSelection) { value in
+                    if value == -1 { artistsCusFocused = true }
+                }
+                
+                TextField("", text: $artistsCus)
+                    // .textFieldStyle(.roundedBorder) // Bad looking
+                    .disabled(artistsSelection != -1)
+                    .focused($artistsCusFocused)
+                
+                Spacer().frame(height: 16)
+                
+                HStack {
+                    Spacer()
+                    
+                    Button(action: { dismiss() }) {
+                        Text("Cancel")
+                    }
+                    .buttonStyle(.borderless)
+                    
+                    Button(action: prepareSearching) {
+                        Text("**Search**")
+                    }
+                    .controlProminence(.increased)
+                    .disabled(!canSearch)
+                }
             }
+            .padding([.leading], 16)
+            .padding([.trailing, .bottom, .top], 8)
+            .frame(width: 256, height: 256)
         }
-        .padding([.leading, .top], 16)
-        .padding([.trailing, .bottom], 8)
-        .frame(width: 256, height: 256)
     }
 }
