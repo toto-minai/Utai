@@ -35,6 +35,11 @@ struct Album: Identifiable {
     
     var tracks = [Track]()
     
+    var completed: Bool {
+        albumTitleCandidates.count   == 1 &&
+        albumArtistsCandidates.count == 1
+    }
+    
     init(urls: [URL]) {
         let editor = ID3TagEditor()
         
@@ -76,5 +81,8 @@ struct Album: Identifiable {
                 }
             } catch { print(error) }
         }
+        
+        if albumTitleCandidates.count == 1 { title = albumTitleCandidates.first }
+        if albumArtistsCandidates.count == 1 { artists = albumArtistsCandidates.first }
     }
 }
