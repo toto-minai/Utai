@@ -18,6 +18,7 @@
 		9987A3DE2670E1F70000328B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9987A3DD2670E1F70000328B /* Preview Assets.xcassets */; };
 		99D046F32674730A0076D972 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F22674730A0076D972 /* Store.swift */; };
 		99D046F626747D1B0076D972 /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 99D046F526747D1B0076D972 /* ID3TagEditor */; };
+		99D046F82674D07D0076D972 /* ChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F72674D07D0076D972 /* ChooseView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		9987A3DA2670E1F70000328B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9987A3DD2670E1F70000328B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		99D046F22674730A0076D972 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		99D046F72674D07D0076D972 /* ChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +62,7 @@
 				99747F162672EA0000995E85 /* SetupPages.swift */,
 				99747F1A2672EA7200995E85 /* ImportView.swift */,
 				99747F182672EA3300995E85 /* PageTurner.swift */,
+				99D046F72674D07D0076D972 /* ChooseView.swift */,
 			);
 			path = SetupPages;
 			sourceTree = "<group>";
@@ -228,6 +231,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99747F172672EA0000995E85 /* SetupPages.swift in Sources */,
+				99D046F82674D07D0076D972 /* ChooseView.swift in Sources */,
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
 				99747F192672EA3300995E85 /* PageTurner.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,

@@ -58,7 +58,9 @@ struct PageTurner: View {
                 PageTurnerControl(page: $page, toPage: 2, systemName: "triangle.fill")
                     .onTapGesture {
                         if page != 2 {
-                            page = 2
+                            withAnimation {
+                                page = 2
+                            }
                         }
                     }
                 

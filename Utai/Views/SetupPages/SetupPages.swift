@@ -13,6 +13,8 @@ struct SetupPages: View {
     var body: some View {
         HStack(spacing: 0) {
             ImportView()
+            
+            ChooseView()
         }
         .offset(x: CGFloat(1 - store.page) * unitLength)
         .frame(width: unitLength, alignment: .leading)

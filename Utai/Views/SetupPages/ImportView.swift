@@ -60,7 +60,7 @@ struct ImportView: View {
                     .buttonStyle(.borderless)
                 }
             }
-            .offset(y: 64)
+            .offset(y: 66)
             
             Spacer()
         }
