@@ -11,9 +11,12 @@ import SwiftUI
 struct UtaiApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
+    @StateObject private var store = Store()
+    
     var body: some Scene {
         WindowGroup {
             ContentView().colorScheme(.dark)
+                .environmentObject(store)
         }
         .windowStyle(.hiddenTitleBar)
     }

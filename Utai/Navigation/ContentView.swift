@@ -11,15 +11,15 @@ let unitLength: CGFloat = 312
 let titlebarHeight: CGFloat = 27
 
 struct ContentView: View {
-    @State var page = 1
+    @EnvironmentObject var store: Store
     
     var body: some View {
         ZStack {
-            SetupPages(page: $page)
+            SetupPages(page: $store.page)
             
-            PageTurner(page: $page)
+            PageTurner(page: $store.page)
             
-            ReferencesControl(page: $page)
+            ReferencesControl(page: $store.page)
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
