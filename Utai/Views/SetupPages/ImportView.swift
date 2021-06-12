@@ -14,6 +14,8 @@ struct ImportView: View {
     @State private var isConfirmPresented = false
     
     private func importFile() {
+        store.searchResult = nil
+        
         let panel = NSOpenPanel()
         panel.title = "􀑪 Add Music"
         panel.allowsMultipleSelection = true
@@ -29,35 +31,10 @@ struct ImportView: View {
         if !store.album!.completed {
             isConfirmPresented = true
         } else {
-            searchOnDiscogs(title: store.album!.title, artists: store.album!.artists)
+            withAnimation(.spring()) {
+                store.page = 2
+            }
         }
-    }
-    
-    func searchOnDiscogs(title: String?, artists: String?) {
-        var componets = URLComponents()
-        componets.scheme = "https"
-        componets.host = "api.discogs.com"
-        componets.path = "/database/search"
-        componets.queryItems = [
-            URLQueryItem(name: "key", value: discogs_key),
-            URLQueryItem(name: "secret", value: discogs_secret)
-        ]
-        
-        if let title = title {
-            componets.queryItems!.append(URLQueryItem(name: "q", value: title))
-        }
-        if let artists = artists {
-            componets.queryItems!.append(URLQueryItem(name: "artist", value: artists))
-        }
-        
-        URLSession.shared.dataTask(with: componets.url!) { data, _, _ in
-            do {
-                if let data = data {
-                    store.searchResult = try JSONDecoder().decode(SearchResult.self, from: data)
-                    print(store.searchResult)
-                }
-            } catch { print(error) }
-        }.resume()
     }
     
     var body: some View {
@@ -104,7 +81,6 @@ struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
     
     @Environment(\.dismiss) var dismiss
-//    @Binding var isConfirmPresented: Bool
     
     @State private var titleSelection: Int = 0
     @State var titleCus: String = ""
@@ -130,9 +106,11 @@ struct ConfirmSheet: View {
             (artistsCus == "" ? nil : artistsCus) :
             Array(store.album!.albumArtistsCandidates)[artistsSelection]
         
-//        isConfirmPresented = false
-         dismiss()
+        withAnimation(.spring()) {
+            store.page = 2
+        }
         
+        dismiss()
     }
     
     var body: some View {
