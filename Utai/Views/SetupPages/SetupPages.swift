@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct SetupPages: View {
-    @Binding var page: Int
+    @EnvironmentObject var store: Store
     
     var body: some View {
         HStack(spacing: 0) {
-            SetupPage1(page: $page)
+            SetupPage1(page: $store.page)
         }
-        .offset(x: CGFloat(1 - page) * unitLength)
+        .offset(x: CGFloat(1 - store.page) * unitLength)
         .frame(width: unitLength, alignment: .leading)
         .clipped()
     }

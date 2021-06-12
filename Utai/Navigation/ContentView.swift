@@ -15,7 +15,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            SetupPages(page: $store.page)
+            SetupPages()
             
             PageTurner(page: $store.page)
             
