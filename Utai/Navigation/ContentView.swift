@@ -17,7 +17,7 @@ struct ContentView: View {
         ZStack {
             SetupPages()
             
-            PageTurner(page: $store.page)
+            PageTurner()
             
             ReferencesControl(page: $store.page)
         }

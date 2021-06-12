@@ -39,32 +39,31 @@ struct ControlButton: View {
 }
 
 struct PageTurner: View {
-    @Binding var page: Int
+    @EnvironmentObject var store: Store
     
     var body: some View {
         VStack {
             Spacer()
             
             HStack(spacing: 8) {
-                PageTurnerControl(page: $page, toPage: 1, systemName: "circle.fill")
+                PageTurnerControl(page: $store.page, toPage: 1, systemName: "circle.fill")
                     .onTapGesture {
                         withAnimation(.spring()) {
-                            page = 1
-                            
-                            // TODO
+                            store.page = 1
                         }
                     }
                 
-                PageTurnerControl(page: $page, toPage: 2, systemName: "triangle.fill")
+                PageTurnerControl(page: $store.page, toPage: 2, systemName: "triangle.fill")
                     .onTapGesture {
-                        if page != 2 {
+                        if store.page != 2 {
                             withAnimation {
-                                page = 2
+                                store.page = 2
                             }
                         }
                     }
+                    .disabled(store.album == nil)
                 
-                PageTurnerControl(page: $page, toPage: 3, systemName: "square.fill")
+                PageTurnerControl(page: $store.page, toPage: 3, systemName: "square.fill")
             }
         }
         .padding(.bottom, 2*8)

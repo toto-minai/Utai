@@ -32,7 +32,7 @@ struct ChooseView: View {
                         .frame(height: 84)
                         .foregroundColor(.clear)
                         .background(LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0), location: 0),
-                                                           Gradient.Stop(color: Color.white.opacity(0.08), location: 0.3),
+                                                           Gradient.Stop(color: Color.white.opacity(0.12), location: 0.3),
                                                            Gradient.Stop(color: Color.white.opacity(0), location: 1)],
                                                    startPoint: .top, endPoint: .bottom))
                         .offset(y: 108)
@@ -58,41 +58,44 @@ struct ChooseView: View {
                             HStack(spacing: 8) {
                                 Spacer().frame(width: 8+12)
                                 
-                                ForEach(1..<5) { index in
-                                    Image("\(index)")
-                                        .resizable()
-                                        .scaledToFill()
+                                ForEach(0..<min(10, r.results.count)) { index in
+                                    if let thumb = r.results[index].coverImage {
+                                        AsyncImage(url: URL(string: thumb)!) { image in
+                                            image.resizable()
+                                                .scaledToFill()
+                                                .frame(width: 80, height: 80)
+                                                .cornerRadius(4)
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
                                         .frame(width: 80, height: 80)
-                                        .cornerRadius(4)
                                         .shadow(color: Color.black.opacity(0.4), radius: 4, x: 0, y: 4)
                                         .frame(height: 100)
                                         .focusable(true)
-                                        .focused($chosen, equals: index-1)
+                                        .focused($chosen, equals: index)
                                         .onTapGesture {
-                                            chosen = index-1
+                                            chosen = index
                                         }
+                                    }
                                 }
                                 
                                 Spacer().frame(width: 8+12)
                             }
                         }
                         .padding(.vertical, -10)
-                        .onAppear {
-                            withAnimation {
-                                chosen = 0
-                            }
-                        }
+                        .onAppear { chosen = 0 }
                         
                         HStack(spacing: 8) {
                             Button(action: {}) {
                                 HStack(spacing: 2) {
-                                    Image(systemName: "slider.vertical.3")
+                                    Image(systemName: "gear")
                                         .font(.system(size: 12))
                                         .offset(y: -1.2)
                                     Text("**Settings**")
                                 }
                             }
                             .buttonStyle(.borderless)
+                            .focusable(false)
                             
                             Button(action: {}) {
                                 HStack(spacing: 2) {
@@ -103,9 +106,10 @@ struct ChooseView: View {
                                 }
                             }
                             .buttonStyle(.borderless)
+                            .focusable(false)
                         }
                         
-                        if let chosen = chosen {
+//                        if let chosen = chosen {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 8) {
                                     Spacer().frame(width: 2*8+12)
@@ -113,9 +117,9 @@ struct ChooseView: View {
                                     VStack(alignment: .trailing, spacing: 4) {
                                         Text("**Versus**")
                                         Text("**Format**")
-                                            .opacity(r.results[chosen].format != nil ? 1 : 0.3)
+                                            .opacity(r.results[(chosen ?? 0)].format != nil ? 1 : 0.3)
                                         Text("**Released**")
-                                            .opacity(r.results[chosen].year != nil ? 1 : 0.3)
+                                            .opacity(r.results[(chosen ?? 0)].year != nil ? 1 : 0.3)
                                         
                                         Spacer()  // Keep 2 VStack aligned
                                     }
@@ -123,15 +127,15 @@ struct ChooseView: View {
                                     .animation(.default, value: chosen)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("**\(r.results[chosen].title.replacingOccurrences(of: " - ", with: " – ").replacingOccurrences(of: "*", with: "†"))**")
-                                        Text("**\(r.results[chosen].format?.uniqued().joined(separator: " / ") ?? "*")**")
-                                        Text("**\(r.results[chosen].year ?? "")**")
+                                        Text("**\(r.results[(chosen ?? 0)].title.replacingOccurrences(of: " - ", with: " – ").replacingOccurrences(of: "*", with: "†"))**")
+                                        Text("**\(r.results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*")**")
+                                        Text("**\(r.results[(chosen ?? 0)].year ?? "")**")
                                         
                                         Spacer()
                                     }
                                 }
                             }
-                        }
+//                        }
                         
                     }
                     
@@ -140,7 +144,6 @@ struct ChooseView: View {
                 .frame(width: unitLength, height: unitLength)
             }
             .onAppear {
-                chosen = 0
                 if store.searchResult == nil {
                     store.searchOnDiscogs()
                 }
