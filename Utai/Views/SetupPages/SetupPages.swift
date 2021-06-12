@@ -12,7 +12,7 @@ struct SetupPages: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            SetupPage1(page: $store.page)
+            ImportView()
         }
         .offset(x: CGFloat(1 - store.page) * unitLength)
         .frame(width: unitLength, alignment: .leading)

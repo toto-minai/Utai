@@ -9,4 +9,5 @@ import Foundation
 
 class Store: ObservableObject {
     @Published var page: Int = 1
+    @Published var album: Album?
 }

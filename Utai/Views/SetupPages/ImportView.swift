@@ -7,10 +7,24 @@
 
 import SwiftUI
 
-struct SetupPage1: View {
-    @Binding var page: Int
+struct ImportView: View {
+    @EnvironmentObject var store: Store
     
     @State private var dragOver = false
+    
+    private func importFile() {
+        let panel = NSOpenPanel()
+        panel.title = "Add Music"
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        
+        guard panel.runModal() == .OK else {
+            print("Error on open panel")
+            return
+        }
+        
+        store.album = Album(urls: panel.urls)
+    }
     
     var body: some View {
         return ZStack {
@@ -37,7 +51,7 @@ struct SetupPage1: View {
                 HStack(spacing: 2) {
                     Text("**Drag** or")
                     
-                    Button(action: {}) {
+                    Button(action: importFile) {
                         Text("**Add Music**")
                     }
                     .buttonStyle(.borderless)

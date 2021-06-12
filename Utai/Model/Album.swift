@@ -6,30 +6,75 @@
 //
 
 import Foundation
+import ID3TagEditor
+import AVKit
 
 struct Album: Identifiable {
     let id = UUID()
     
-    var titleCandidates = Set<String>()
-    var artistsCandidates = Set<String>()
+    var albumTitleCandidates = Set<String>()
+    var albumArtistsCandidates = Set<String>()
     var yearCandidates = Set<Int>()
     var trackToCandidates = Set<Int>()
     var diskToCandidates = Set<Int>()
     
-    var title = ""
-    var artists = ""
-    var year = ""
+    var title: String?
+    var artists: String?
+    var year: String?
     
     struct Track: Identifiable {
         let id = UUID()
         
-        var trackNo: Int?
-        var diskNo: Int?
         var title: String?
         var artist: String?
-        
         var length: Double?
+        
+        var trackNo: Int?
+        var diskNo: Int?
     }
     
     var tracks = [Track]()
+    
+    init(urls: [URL]) {
+        let editor = ID3TagEditor()
+        
+        for url in urls {
+            do {
+                if let tags = try editor.read(from: url.path) {
+                    // Retrieve info for whole album
+                    if let albumTitle =
+                        (tags.frames[.album] as? ID3FrameWithStringContent)?.content
+                        { albumTitleCandidates.insert(albumTitle) }
+                    if let albumArtists =
+                        (tags.frames[.albumArtist] as? ID3FrameWithStringContent)?.content
+                        { albumArtistsCandidates.insert(albumArtists) }
+                    if let year =
+                        (tags.frames[.recordingDateTime] as? ID3FrameRecordingDateTime)?.recordingDateTime.date?.year
+                        { yearCandidates.insert(year) }
+                    if let trackTo =
+                        (tags.frames[.trackPosition] as? ID3FramePartOfTotal)?.total
+                        { trackToCandidates.insert(trackTo) }
+                    if let diskTo =
+                        (tags.frames[.discPosition] as? ID3FramePartOfTotal)?.total
+                        { diskToCandidates.insert(diskTo) }
+                    
+                    // Retrieve info for a single track
+                    let asset = AVURLAsset(url: url)
+                    let length = CMTimeGetSeconds(asset.duration)
+                    
+                    let title = (tags.frames[.title] as? ID3FrameWithStringContent)?.content
+                    let artist = (tags.frames[.artist] as? ID3FrameWithStringContent)?.content
+                    if let artist = artist { albumArtistsCandidates.insert(artist) }
+                    
+                    let trackNo = (tags.frames[.trackPosition] as? ID3FramePartOfTotal)?.part
+                    let diskNo = (tags.frames[.discPosition] as? ID3FramePartOfTotal)?.part
+                    
+                    let track = Track(title: title, artist: artist,
+                                      length: length, trackNo: trackNo, diskNo: diskNo)
+                    
+                    tracks.append(track)
+                }
+            } catch { print(error) }
+        }
+    }
 }
