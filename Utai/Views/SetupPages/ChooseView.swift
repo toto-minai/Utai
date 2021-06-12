@@ -99,7 +99,7 @@ struct ChooseView: View {
                             
                             Button(action: {}) {
                                 HStack(spacing: 2) {
-                                    Image(systemName: "smallcircle.fill.circle.fill")
+                                    Image(systemName: "bag")
                                         .font(.system(size: 12))
                                         .offset(y: -1.2)
                                     Text("**Pick-It**")
