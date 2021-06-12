@@ -17,7 +17,7 @@ struct ChooseView: View {
                     .frame(height: 84)
                     .foregroundColor(.clear)
                     .background(LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0), location: 0),
-                                                       Gradient.Stop(color: Color.white.opacity(0.1), location: 0.3),
+                                                       Gradient.Stop(color: Color.white.opacity(0.08), location: 0.3),
                                                        Gradient.Stop(color: Color.white.opacity(0), location: 1)],
                                                startPoint: .top, endPoint: .bottom))
                     .offset(y: 108)
@@ -42,8 +42,8 @@ struct ChooseView: View {
                             ForEach(1..<5) { index in
                                 Image("\(index)")
                                     .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 80)
+                                    .scaledToFill()
+                                    .frame(width: 80, height: 80)
                                     .cornerRadius(4)
                                     .shadow(color: Color.black.opacity(0.4), radius: 4, x: 0, y: 4)
                                     .frame(height: 100)
@@ -70,7 +70,7 @@ struct ChooseView: View {
                                 Image(systemName: "smallcircle.fill.circle.fill")
                                     .font(.system(size: 12))
                                     .offset(y: -1.2)
-                                Text("**Pick It**")
+                                Text("**Pick-It**")
                             }
                         }
                         .buttonStyle(.borderless)
