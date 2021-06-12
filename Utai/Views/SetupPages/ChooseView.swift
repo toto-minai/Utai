@@ -10,6 +10,9 @@ import SwiftUI
 struct ChooseView: View {
     @EnvironmentObject var store: Store
     
+    @State private var isSettingsPresented: Bool = false
+    @FocusState private var chosen: Int?
+    
     var titleText: String { store.album!.title ?? "" }
     var artistsText: String { store.album!.artists ?? "" }
     var yearText: String {
@@ -21,8 +24,6 @@ struct ChooseView: View {
             else { return "" }
         }
     }
-    
-    @FocusState private var chosen: Int?
     
     var body: some View {
         if store.page == 2 {
@@ -86,7 +87,7 @@ struct ChooseView: View {
                         .onAppear { chosen = 0 }
                         
                         HStack(spacing: 8) {
-                            Button(action: {}) {
+                            Button(action: { isSettingsPresented = true }) {
                                 HStack(spacing: 2) {
                                     Image(systemName: "gear")
                                         .font(.system(size: 12))
@@ -96,6 +97,9 @@ struct ChooseView: View {
                             }
                             .buttonStyle(.borderless)
                             .focusable(false)
+                            .sheet(isPresented: $isSettingsPresented, onDismiss: {}) {
+                                SettingsSheet()
+                            }
                             
                             Button(action: {}) {
                                 HStack(spacing: 2) {
@@ -148,6 +152,51 @@ struct ChooseView: View {
                     store.searchOnDiscogs()
                 }
             }
+        }
+    }
+}
+
+struct SettingsSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        ZStack(alignment: .topLeading) {
+            Image(systemName: "gear")
+                .font(.system(size: 12))
+                .padding(8)
+            
+            Form {
+                Group {
+                    Text("Adjust global settings for picking rather album.")
+                    Divider()
+                }.offset(y: 1.2)
+                
+                Spacer()
+                
+                TextField("**Debugging**", text: .constant(""))
+                    .foregroundColor(.secondary)
+                
+                Spacer()
+                
+                Spacer().frame(height: 16)
+                
+                HStack {
+                    Spacer()
+                    
+//                    Button(action: { dismiss() }) {
+//                        Text("Cancel")
+//                    }
+//                    .buttonStyle(.borderless)
+                    
+                    Button(action: { dismiss() }) {
+                        Text("**Apply**")
+                    }
+                    .controlProminence(.increased)
+                }
+            }
+            .padding([.leading], 16)
+            .padding([.trailing, .bottom, .top], 8)
+            .frame(width: 256, height: 256)
         }
     }
 }

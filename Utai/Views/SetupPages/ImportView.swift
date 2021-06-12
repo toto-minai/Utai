@@ -116,7 +116,6 @@ struct ConfirmSheet: View {
     
     var body: some View {
         ZStack(alignment: .topLeading) {
-            
             Image(systemName: "music.note")
                 .font(.system(size: 12))
                 .padding(8)
