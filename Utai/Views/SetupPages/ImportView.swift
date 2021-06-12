@@ -100,7 +100,7 @@ struct ConfirmSheet: View {
     
     var body: some View {
         Form {
-            Text("Might want to confirm the title and artists before searching on Discogs.")
+            Text("I½. Might want to confirm the title and artists before searching on Discogs.")
             Divider()
             
             Spacer()
