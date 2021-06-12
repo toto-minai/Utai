@@ -19,9 +19,12 @@
 		99D046F32674730A0076D972 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F22674730A0076D972 /* Store.swift */; };
 		99D046F626747D1B0076D972 /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 99D046F526747D1B0076D972 /* ID3TagEditor */; };
 		99D046F82674D07D0076D972 /* ChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F72674D07D0076D972 /* ChooseView.swift */; };
+		99D046FA2674E5B80076D972 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F92674E5B80076D972 /* SearchResult.swift */; };
+		99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046FB2674E6AA0076D972 /* Secrets.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		996C0E842674FB6B00BA5A6C /* Utai.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Utai.entitlements; sourceTree = "<group>"; };
 		99747F132672E78100995E85 /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
 		99747F162672EA0000995E85 /* SetupPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPages.swift; sourceTree = "<group>"; };
 		99747F182672EA3300995E85 /* PageTurner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTurner.swift; sourceTree = "<group>"; };
@@ -34,6 +37,8 @@
 		9987A3DD2670E1F70000328B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		99D046F22674730A0076D972 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		99D046F72674D07D0076D972 /* ChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseView.swift; sourceTree = "<group>"; };
+		99D046F92674E5B80076D972 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
+		99D046FB2674E6AA0076D972 /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +91,7 @@
 		9987A3D52670E1F60000328B /* Utai */ = {
 			isa = PBXGroup;
 			children = (
+				996C0E842674FB6B00BA5A6C /* Utai.entitlements */,
 				9987A3D62670E1F60000328B /* UtaiApp.swift */,
 				99D046EC267471E90076D972 /* Model */,
 				99D046ED2674720F0076D972 /* Views */,
@@ -113,6 +119,7 @@
 			children = (
 				99747F1C2672EAD400995E85 /* Album.swift */,
 				99D046F22674730A0076D972 /* Store.swift */,
+				99D046F92674E5B80076D972 /* SearchResult.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -143,6 +150,7 @@
 		99D046F0267472A10076D972 /* Support */ = {
 			isa = PBXGroup;
 			children = (
+				99D046FB2674E6AA0076D972 /* Secrets.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -232,6 +240,7 @@
 			files = (
 				99747F172672EA0000995E85 /* SetupPages.swift in Sources */,
 				99D046F82674D07D0076D972 /* ChooseView.swift in Sources */,
+				99D046FA2674E5B80076D972 /* SearchResult.swift in Sources */,
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
 				99747F192672EA3300995E85 /* PageTurner.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,
@@ -239,6 +248,7 @@
 				99747F1D2672EAD400995E85 /* Album.swift in Sources */,
 				99747F1B2672EA7200995E85 /* ImportView.swift in Sources */,
 				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
+				99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +376,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = Utai/Utai.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -394,6 +405,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = Utai/Utai.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;

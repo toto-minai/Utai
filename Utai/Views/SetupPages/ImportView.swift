@@ -28,7 +28,36 @@ struct ImportView: View {
         
         if !store.album!.completed {
             isConfirmPresented = true
+        } else {
+            searchOnDiscogs(title: store.album!.title, artists: store.album!.artists)
         }
+    }
+    
+    func searchOnDiscogs(title: String?, artists: String?) {
+        var componets = URLComponents()
+        componets.scheme = "https"
+        componets.host = "api.discogs.com"
+        componets.path = "/database/search"
+        componets.queryItems = [
+            URLQueryItem(name: "key", value: discogs_key),
+            URLQueryItem(name: "secret", value: discogs_secret)
+        ]
+        
+        if let title = title {
+            componets.queryItems!.append(URLQueryItem(name: "q", value: title))
+        }
+        if let artists = artists {
+            componets.queryItems!.append(URLQueryItem(name: "artist", value: artists))
+        }
+        
+        URLSession.shared.dataTask(with: componets.url!) { data, _, _ in
+            do {
+                if let data = data {
+                    store.searchResult = try JSONDecoder().decode(SearchResult.self, from: data)
+                    print(store.searchResult)
+                }
+            } catch { print(error) }
+        }.resume()
     }
     
     var body: some View {
@@ -75,6 +104,7 @@ struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
     
     @Environment(\.dismiss) var dismiss
+//    @Binding var isConfirmPresented: Bool
     
     @State private var titleSelection: Int = 0
     @State var titleCus: String = ""
@@ -93,16 +123,16 @@ struct ConfirmSheet: View {
     
     private func prepareSearching() {
         store.album!.title = titleSelection == -1 ?
-            titleCus :
+            (titleCus == "" ? nil : titleCus) :
             Array(store.album!.albumTitleCandidates)[titleSelection]
         
-        store.album!.title = artistsSelection == -1 ?
-            titleCus :
+        store.album!.artists = artistsSelection == -1 ?
+            (artistsCus == "" ? nil : artistsCus) :
             Array(store.album!.albumArtistsCandidates)[artistsSelection]
         
-        // TODO: Search on Discogs
+//        isConfirmPresented = false
+         dismiss()
         
-        dismiss()
     }
     
     var body: some View {
