@@ -73,24 +73,25 @@ struct ImportView: View {
 
 struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
+    
     @Environment(\.dismiss) var dismiss
     
-    @State private var albumTitleSelection: Int = 0
-    @State var albumTitleCustom: String = ""
-    @FocusState private var albumTitleCustomFocused: Bool
+    @State private var titleSelection: Int = 0
+    @State var titleCus: String = ""
+    @FocusState private var titleCusFocused: Bool
     
-    @State private var albumArtistsSelection: Int = 0
-    @State var albumArtistsCustom: String = ""
-    @FocusState private var albumArtistsCustomFocused: Bool
+    @State private var artistsSelection: Int = 0
+    @State var artistsCus: String = ""
+    @FocusState private var artistsCusFocused: Bool
     
     private func prepareSearching() {
-        store.album!.title = albumTitleSelection == -1 ?
-            albumTitleCustom :
-            Array(store.album!.albumTitleCandidates)[albumTitleSelection]
+        store.album!.title = titleSelection == -1 ?
+            titleCus :
+            Array(store.album!.albumTitleCandidates)[titleSelection]
         
-        store.album!.title = albumArtistsSelection == -1 ?
-            albumTitleCustom :
-            Array(store.album!.albumArtistsCandidates)[albumArtistsSelection]
+        store.album!.title = artistsSelection == -1 ?
+            titleCus :
+            Array(store.album!.albumArtistsCandidates)[artistsSelection]
         
         // TODO: Search on Discogs
         
@@ -104,7 +105,7 @@ struct ConfirmSheet: View {
             
             Spacer()
             
-            Picker("Album:", selection: $albumTitleSelection) {
+            Picker("Album:", selection: $titleSelection) {
                 ForEach(0..<store.album!.albumTitleCandidates.count) { index in
                     Text("\(Array(store.album!.albumTitleCandidates)[index])")
                         .tag(index)
@@ -114,22 +115,20 @@ struct ConfirmSheet: View {
             }
             .onAppear {
                 if store.album!.albumTitleCandidates.count == 0 {
-                    albumTitleSelection = -1
-                    albumTitleCustomFocused = true
+                    titleSelection = -1
+                    titleCusFocused = true
                 }
             }
-            .onChange(of: albumTitleSelection) { value in
-                if value == -1 {
-                    albumTitleCustomFocused = true
-                }
+            .onChange(of: titleSelection) { value in
+                if value == -1 { titleCusFocused = true }
             }
             
-            TextField("", text: $albumTitleCustom)
+            TextField("", text: $titleCus)
                 // .textFieldStyle(.roundedBorder) // Bad looking
-                .disabled(albumTitleSelection != -1)
-                .focused($albumTitleCustomFocused)
+                .disabled(titleSelection != -1)
+                .focused($titleCusFocused)
             
-            Picker("Artist(s):", selection: $albumArtistsSelection) {
+            Picker("Artist(s):", selection: $artistsSelection) {
                 ForEach(0..<store.album!.albumArtistsCandidates.count) { index in
                     Text("\(Array(store.album!.albumArtistsCandidates)[index])")
                         .tag(index)
@@ -139,20 +138,18 @@ struct ConfirmSheet: View {
             }
             .onAppear {
                 if store.album!.albumArtistsCandidates.count == 0 {
-                    albumArtistsSelection = -1
-                    albumArtistsCustomFocused = true
+                    artistsSelection = -1
+                    artistsCusFocused = true
                 }
             }
-            .onChange(of: albumArtistsSelection) { value in
-                if value == -1 {
-                    albumArtistsCustomFocused = true
-                }
+            .onChange(of: artistsSelection) { value in
+                if value == -1 { artistsCusFocused = true }
             }
             
-            TextField("", text: $albumArtistsCustom)
+            TextField("", text: $artistsCus)
                 // .textFieldStyle(.roundedBorder) // Bad looking
-                .disabled(albumArtistsSelection != -1)
-                .focused($albumArtistsCustomFocused)
+                .disabled(artistsSelection != -1)
+                .focused($artistsCusFocused)
             
             Spacer().frame(height: 16)
             
