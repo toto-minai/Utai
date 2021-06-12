@@ -15,7 +15,7 @@ struct ImportView: View {
     
     private func importFile() {
         let panel = NSOpenPanel()
-        panel.title = "Add Music"
+        panel.title = "􀑪 Add Music"
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
         
