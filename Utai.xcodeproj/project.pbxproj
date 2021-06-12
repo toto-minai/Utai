@@ -11,7 +11,7 @@
 		99747F172672EA0000995E85 /* SetupPages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F162672EA0000995E85 /* SetupPages.swift */; };
 		99747F192672EA3300995E85 /* PageTurner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F182672EA3300995E85 /* PageTurner.swift */; };
 		99747F1B2672EA7200995E85 /* SetupPage1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1A2672EA7200995E85 /* SetupPage1.swift */; };
-		99747F1D2672EAD400995E85 /* DataModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1C2672EAD400995E85 /* DataModels.swift */; };
+		99747F1D2672EAD400995E85 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1C2672EAD400995E85 /* Album.swift */; };
 		9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D62670E1F60000328B /* UtaiApp.swift */; };
 		9987A3D92670E1F60000328B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D82670E1F60000328B /* ContentView.swift */; };
 		9987A3DB2670E1F70000328B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9987A3DA2670E1F70000328B /* Assets.xcassets */; };
@@ -23,7 +23,7 @@
 		99747F162672EA0000995E85 /* SetupPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPages.swift; sourceTree = "<group>"; };
 		99747F182672EA3300995E85 /* PageTurner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTurner.swift; sourceTree = "<group>"; };
 		99747F1A2672EA7200995E85 /* SetupPage1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPage1.swift; sourceTree = "<group>"; };
-		99747F1C2672EAD400995E85 /* DataModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataModels.swift; sourceTree = "<group>"; };
+		99747F1C2672EAD400995E85 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		9987A3D32670E1F60000328B /* Utai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Utai.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9987A3D62670E1F60000328B /* UtaiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtaiApp.swift; sourceTree = "<group>"; };
 		9987A3D82670E1F60000328B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -79,11 +79,14 @@
 		9987A3D52670E1F60000328B /* Utai */ = {
 			isa = PBXGroup;
 			children = (
-				99747F1C2672EAD400995E85 /* DataModels.swift */,
-				99747F152672E9E500995E85 /* SetupPages */,
 				9987A3D62670E1F60000328B /* UtaiApp.swift */,
-				9987A3D82670E1F60000328B /* ContentView.swift */,
+				99D046EC267471E90076D972 /* Model */,
+				99D046ED2674720F0076D972 /* Views */,
+				99D046EE267472310076D972 /* Navigation */,
+				99D046EF267472630076D972 /* Main Menu */,
 				99747F122672E76100995E85 /* Toolbox */,
+				99D046F0267472A10076D972 /* Support */,
+				99D046F1267472A70076D972 /* Resources */,
 				9987A3DA2670E1F70000328B /* Assets.xcassets */,
 				9987A3DC2670E1F70000328B /* Preview Content */,
 			);
@@ -96,6 +99,51 @@
 				9987A3DD2670E1F70000328B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		99D046EC267471E90076D972 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				99747F1C2672EAD400995E85 /* Album.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		99D046ED2674720F0076D972 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				99747F152672E9E500995E85 /* SetupPages */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		99D046EE267472310076D972 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				9987A3D82670E1F60000328B /* ContentView.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		99D046EF267472630076D972 /* Main Menu */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Main Menu";
+			sourceTree = "<group>";
+		};
+		99D046F0267472A10076D972 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		99D046F1267472A70076D972 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,7 +220,7 @@
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
 				99747F192672EA3300995E85 /* PageTurner.swift in Sources */,
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
-				99747F1D2672EAD400995E85 /* DataModels.swift in Sources */,
+				99747F1D2672EAD400995E85 /* Album.swift in Sources */,
 				99747F1B2672EA7200995E85 /* SetupPage1.swift in Sources */,
 				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
 			);
