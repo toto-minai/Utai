@@ -10,6 +10,8 @@ import SwiftUI
 struct ChooseView: View {
     @EnvironmentObject var store: Store
     
+    @Environment(\.openURL) var openURL
+    
     @State private var isSettingsPresented: Bool = false
     @FocusState private var chosen: Int?
     
@@ -49,6 +51,7 @@ struct ChooseView: View {
                                 .foregroundColor(.secondary)
                             if store.album!.artists != nil && store.album!.title != nil {
                                 Text(" – ")
+                                    .fontWeight(.bold)
                             }
                             Text("**\(titleText)**")
                             Text("**\(yearText)**")
@@ -74,7 +77,7 @@ struct ChooseView: View {
                                             ProgressView()
                                         }
                                         .frame(width: 80, height: 80)
-                                        .shadow(color: Color.black.opacity(0.4), radius: 4, x: 0, y: 4)
+                                        .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
                                         .frame(height: 100)
                                         .focusable(true)
                                         .focused($chosen, equals: index)
@@ -104,6 +107,20 @@ struct ChooseView: View {
                             .sheet(isPresented: $isSettingsPresented, onDismiss: {}) {
                                 SettingsSheet()
                             }
+                            
+                            Button(action: {
+                                let discogs = "https://discogs.com\(r.results[(chosen ?? 0)].uri)"
+                                openURL(URL(string: discogs)!)
+                            }) {
+                                HStack(spacing: 2) {
+                                    Image(systemName: "smallcircle.fill.circle.fill")
+                                        .font(.system(size: 12))
+                                        .offset(y: -1.2)
+                                    Text("**View on Discogs**")
+                                }
+                            }
+                            .buttonStyle(.borderless)
+                            .focusable(false)
                             
                             Button(action: {}) {
                                 HStack(spacing: 2) {
