@@ -46,17 +46,17 @@ struct ChooseView: View {
                             // TODO: Add artists-only helper text
                             Text("\(artists)")
                                 .fontWeight(.bold)
-                                .foregroundColor(.secondary)
-                            if album.artists != nil && album.title != nil
-                                { Text(" – ") .fontWeight(.bold) }
+                                .foregroundColor(.secondary) +
+                            Text(album.artists != nil && album.title != nil ? " – " : "") .fontWeight(.bold) +
                             Text("\(title)")
-                                .fontWeight(.bold)
+                                .fontWeight(.bold) +
                             Text("\(yearText)")
                                 .fontWeight(.bold)
                                 .foregroundColor(.secondary)
                             
                             Spacer().frame(width: lilSpacing2x+lilIconLength)
                         }
+                        .textSelection(.enabled)
                         .contextMenu {
                             Menu("Copy") {
                                 if let title = album.title {
@@ -193,6 +193,7 @@ struct ChooseView: View {
                                         
                                         Spacer()
                                     }
+                                    .textSelection(.enabled)
                                     
                                     Spacer().frame(width: lilSpacing2x+lilIconLength)
                                 }
