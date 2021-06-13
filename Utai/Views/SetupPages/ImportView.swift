@@ -14,29 +14,6 @@ struct ImportView: View {
     // @State private var dragOver = false
     @State private var isConfirmPresented = false
     
-    private func importFile() {
-//        store.album = nil
-        
-        let panel = NSOpenPanel()
-        panel.title = "􀑪 Add Music"
-        panel.allowsMultipleSelection = true
-        panel.canChooseDirectories = false
-        
-        guard panel.runModal() == .OK else {
-            print("Error on open panel")
-            return
-        }
-        
-        store.album = Album(urls: panel.urls)
-        
-        if !store.album!.completed {
-            isConfirmPresented = true
-        } else {
-            store.makeSearchUrl()
-            store.page = 2
-        }
-    }
-    
     var body: some View {
         return VStack(spacing: 0) {
             VStack(spacing: lilSpacing2x) {
@@ -45,7 +22,7 @@ struct ImportView: View {
                 HStack(spacing: 2) {
                     Text("**Drag or**")
                     
-                    ButtonCus(action: importFile,
+                    ButtonCus(action: importFiles,
                               label: "Add Music",
                               systemName: "music.note")
                         .sheet(isPresented: $isConfirmPresented, onDismiss: {}) {
@@ -61,6 +38,31 @@ struct ImportView: View {
             Spacer()
         }
         .frame(width: unitLength, height: unitLength)
+    }
+}
+
+extension ImportView {
+    private var album: Album { store.album! }
+    
+    private func importFiles() {
+        let panel = NSOpenPanel()
+        panel.title = "􀑪 Add Music"
+        panel.allowsMultipleSelection = true
+        panel.canChooseDirectories = false
+        
+        guard panel.runModal() == .OK else {
+            print("Error on open panel")
+            return
+        }
+        
+        store.album = Album(urls: panel.urls)
+        
+        if !album.completed {
+            isConfirmPresented = true
+        } else {
+            store.makeSearchUrl()
+            store.page = 2
+        }
     }
 }
 
@@ -90,8 +92,8 @@ struct ConfirmSheet: View {
             Spacer()
             
             Picker("**Album**", selection: $titleSelection) {
-                ForEach(0..<store.album!.albumTitleCandidates.count) { index in
-                    Text("\(Array(store.album!.albumTitleCandidates)[index])")
+                ForEach(0..<album.albumTitleCandidates.count) { index in
+                    Text("\(Array(album.albumTitleCandidates)[index])")
                         .tag(index)
                 }
                 Divider()
@@ -99,7 +101,7 @@ struct ConfirmSheet: View {
             }
             .foregroundColor(.secondary)
             .onAppear {
-                if store.album!.albumTitleCandidates.count == 0 {
+                if album.albumTitleCandidates.count == 0 {
                     titleSelection = -1
                     titleCusFocused = true
                 }
@@ -109,13 +111,12 @@ struct ConfirmSheet: View {
             }
             
             TextField("", text: $titleCus)
-                // .textFieldStyle(.roundedBorder) // Bad looking
                 .disabled(titleSelection != -1)
                 .focused($titleCusFocused)
             
             Picker("**Artist(s)**", selection: $artistsSelection) {
-                ForEach(0..<store.album!.albumArtistsCandidates.count) { index in
-                    Text("\(Array(store.album!.albumArtistsCandidates)[index])")
+                ForEach(0..<album.albumArtistsCandidates.count) { index in
+                    Text("\(Array(album.albumArtistsCandidates)[index])")
                         .tag(index)
                 }
                 Divider()
@@ -123,7 +124,7 @@ struct ConfirmSheet: View {
             }
             .foregroundColor(.secondary)
             .onAppear {
-                if store.album!.albumArtistsCandidates.count == 0 {
+                if album.albumArtistsCandidates.count == 0 {
                     artistsSelection = -1
                     artistsCusFocused = true
                 }
@@ -133,11 +134,10 @@ struct ConfirmSheet: View {
             }
             
             TextField("", text: $artistsCus)
-                // .textFieldStyle(.roundedBorder) // Bad looking
                 .disabled(artistsSelection != -1)
                 .focused($artistsCusFocused)
             
-            Spacer().frame(height: 16)
+            Spacer().frame(height: lilSpacing2x)
             
             HStack {
                 Spacer()
@@ -147,7 +147,7 @@ struct ConfirmSheet: View {
                 }
                 .buttonStyle(.borderless)
                 
-                Button(action: prepareSearching) {
+                Button(action: prepare) {
                     Text("**Search**")
                 }
                 .controlProminence(.increased)
@@ -159,6 +159,8 @@ struct ConfirmSheet: View {
 }
 
 extension ConfirmSheet {
+    private var album: Album { store.album! }
+    
     private var canSearch: Bool {
         titleSelection != -1 ||
         artistsSelection != -1 ||
@@ -166,14 +168,14 @@ extension ConfirmSheet {
         artistsSelection == -1 && artistsCus != ""
     }
     
-    private func prepareSearching() {
+    private func prepare() {
         store.album!.title = titleSelection == -1 ?
             (titleCus == "" ? nil : titleCus) :
-            Array(store.album!.albumTitleCandidates)[titleSelection]
+            Array(album.albumTitleCandidates)[titleSelection]
         
         store.album!.artists = artistsSelection == -1 ?
             (artistsCus == "" ? nil : artistsCus) :
-            Array(store.album!.albumArtistsCandidates)[artistsSelection]
+            Array(album.albumArtistsCandidates)[artistsSelection]
         
         store.makeSearchUrl()
         store.page = 2

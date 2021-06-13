@@ -29,6 +29,7 @@ struct ControlButton: View {
     var body: some View {
         Image(systemName: systemName)
             .font(.system(size: 12))
+            // TODO: Add helper text
             // .help(helpTExt)
             .opacity(alwaysHover ? 1 : (isHover ? 1 : 0.3))
             .onHover { hovering in

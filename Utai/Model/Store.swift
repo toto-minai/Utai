@@ -15,7 +15,6 @@ class Store: ObservableObject {
     
     @Published var searchUrl: URL?
     @Published var needUpdate: Bool = false
-//    @Published var searchResult: SearchResult?
     
     @Published var showMatchPanel: Bool = false
     

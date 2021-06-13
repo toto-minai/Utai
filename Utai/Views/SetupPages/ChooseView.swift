@@ -34,31 +34,33 @@ struct ChooseView: View {
             ZStack(alignment: .top) {
                 if let _ = searchResult { shelf }
                 
-                VStack(spacing: 16) {
+                VStack(spacing: lilSpacing2x) {
                     Spacer().frame(height: 12)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
-                            Spacer().frame(width: 2*8+12)
+                            Spacer().frame(width: lilSpacing2x+lilIconLength)
                             
-                            Text("**\(artistsText)**")
+                            // TODO: Add artists-only helper text
+                            Text("\(artists)")
+                                .fontWeight(.bold)
                                 .foregroundColor(.secondary)
-                            if store.album!.artists != nil && store.album!.title != nil {
-                                Text(" – ")
-                                    .fontWeight(.bold)
-                            }
-                            Text("**\(titleText)**")
-                            Text("**\(yearText)**")
+                            if album.artists != nil && album.title != nil
+                                { Text(" – ") .fontWeight(.bold) }
+                            Text("\(title)")
+                                .fontWeight(.bold)
+                            Text("\(yearText)")
+                                .fontWeight(.bold)
                                 .foregroundColor(.secondary)
                             
-                            Spacer().frame(width: 2*8+12)
+                            Spacer().frame(width: lilSpacing2x+lilIconLength)
                         }
                     }
                     
                     if let _ = searchResult {
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                Spacer().frame(width: 8+12)
+                            HStack(spacing: lilSpacing) {
+                                Spacer().frame(width: lilSpacing+lilIconLength)
                                 
                                 ForEach(0..<min(6, results.count)) { index in
                                     if let thumb = results[index].coverImage {
@@ -81,13 +83,13 @@ struct ChooseView: View {
                                     }
                                 }
                                 
-                                Spacer().frame(width: 8+12)
+                                Spacer().frame(width: lilSpacing+lilIconLength)
                             }
                         }
                         .padding(.vertical, -9.5)
                         .onAppear { chosen = 0 }
                         
-                        HStack(spacing: 8) {
+                        HStack(spacing: lilSpacing) {
                             ButtonCus(action: { isSettingsPresented = true },
                                       label: "Settings",
                                       systemName: "gear")
@@ -107,14 +109,17 @@ struct ChooseView: View {
                         }
 
                             ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    Spacer().frame(width: 2*8+12)
+                                HStack(spacing: lilSpacing) {
+                                    Spacer().frame(width: lilSpacing2x+lilIconLength)
                                     
                                     VStack(alignment: .trailing, spacing: 4) {
-                                        Text("**Versus**")
-                                        Text("**Format**")
+                                        Text("Versus")
+                                            .fontWeight(.bold)
+                                        Text("Format")
+                                            .fontWeight(.bold)
                                             .opacity(results[(chosen ?? 0)].format != nil ? 1 : 0.3)
-                                        Text("**Released**")
+                                        Text("Released")
+                                            .fontWeight(.bold)
                                             .opacity(results[(chosen ?? 0)].year != nil ? 1 : 0.3)
                                         
                                         Spacer()  // Keep 2 VStack aligned
@@ -123,14 +128,17 @@ struct ChooseView: View {
                                     .animation(.default, value: chosen)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("**\(results[(chosen ?? 0)].title.replacingOccurrences(of: " - ", with: " – ").replacingOccurrences(of: "*", with: "†"))**")
-                                        Text("**\(results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*")**")
-                                        Text("**\(results[(chosen ?? 0)].year ?? "")**")
+                                        Text("\(results[(chosen ?? 0)].title.replacingOccurrences(of: "*", with: "†"))")
+                                            .fontWeight(.bold)
+                                        Text("\(results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*")")
+                                            .fontWeight(.bold)
+                                        Text("\(results[(chosen ?? 0)].year ?? "")")
+                                            .fontWeight(.bold)
                                         
                                         Spacer()
                                     }
                                     
-                                    Spacer().frame(width: 2*8+12)
+                                    Spacer().frame(width: lilSpacing2x+lilIconLength)
                                 }
                             }
                         
@@ -141,13 +149,7 @@ struct ChooseView: View {
                 .frame(width: unitLength, height: unitLength)
                 
                 if store.page == 2 {
-                    Spacer()
-                        .onAppear {
-                            if store.needUpdate {
-                                query()
-                                
-                            }
-                        }
+                    Spacer().onAppear { if store.needUpdate { search() } }
                 }
             }
         }
@@ -155,14 +157,15 @@ struct ChooseView: View {
 }
 
 extension ChooseView {
-    private var titleText: String { store.album!.title ?? "" }
-    private var artistsText: String { store.album!.artists ?? "" }
+    private var album: Album { store.album! }
+    private var title: String { album.title ?? "" }
+    private var artists: String { album.artists ?? "" }
     private var yearText: String {
-        if let year = store.album!.year {
+        if let year = album.year {
             return " (\(year)"
         } else {
-            if store.album!.yearCandidates.count != 0
-                { return " (\(store.album!.yearCandidates.first!))" }
+            if album.yearCandidates.count != 0
+                { return " (\(album.yearCandidates.first!))" }
             else { return "" }
         }
     }
@@ -171,7 +174,7 @@ extension ChooseView {
         searchResult!.results
     }
     
-    private func query() {
+    private func search() {
         URLSession.shared.dataTask(with: store.searchUrl!) { data, _, _ in
             do {
                 if let data = data {
@@ -206,7 +209,7 @@ struct SettingsSheet: View {
             
             Spacer()
             
-            Spacer().frame(height: 16)
+            Spacer().frame(height: lilSpacing2x)
             
             HStack {
                 Spacer()
