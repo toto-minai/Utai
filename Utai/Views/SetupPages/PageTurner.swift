@@ -15,11 +15,11 @@ struct PageTurnerControl: View {
     let helpText: String
     
     var body: some View {
-        ControlButton(alwaysHover: page == target, systemName: systemName, helpText: helpText)
+        ButtonMini(alwaysHover: page == target, systemName: systemName, helpText: helpText)
     }
 }
 
-struct ControlButton: View {
+struct ButtonMini: View {
     @State private var isHover = false
     var alwaysHover: Bool = false
     
@@ -29,6 +29,7 @@ struct ControlButton: View {
     var body: some View {
         Image(systemName: systemName)
             .font(.system(size: 12))
+            .shadow(radius: 2)
             // TODO: Add helper text
             .help(helpText)
             .opacity(alwaysHover ? 1 : (isHover ? 1 : 0.3))

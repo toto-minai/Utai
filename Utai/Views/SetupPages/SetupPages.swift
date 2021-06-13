@@ -32,7 +32,7 @@ struct ReferencesControl: View {
             HStack {
                 Spacer()
                 
-                ControlButton(systemName: "book", helpText: "Read Cookbook")
+                ButtonMini(systemName: "book", helpText: "Read Cookbook")
                     .padding(8)
             }
             
