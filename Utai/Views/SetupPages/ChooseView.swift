@@ -233,7 +233,9 @@ extension ChooseView {
     }
     
     private var chosenTitle: String {
-        results[(chosen ?? 0)].title.replacingOccurrences(of: "*", with: "†")
+        results[(chosen ?? 0)].title
+            .replacingOccurrences(of: " - ", with: " – ")
+            .replacingOccurrences(of: "*", with: "†")
     }
     private var chosenFormat: String {
         results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*"
