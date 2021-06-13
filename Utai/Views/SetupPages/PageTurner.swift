@@ -10,12 +10,12 @@ import SwiftUI
 struct PageTurnerControl: View {
     @Binding var page: Int
     
-    let toPage: Int
+    let target: Int
     let systemName: String
-    // let helpText: String
+    let helpText: String
     
     var body: some View {
-        ControlButton(alwaysHover: page == toPage, systemName: systemName)
+        ControlButton(alwaysHover: page == target, systemName: systemName, helpText: helpText)
     }
 }
 
@@ -24,13 +24,13 @@ struct ControlButton: View {
     var alwaysHover: Bool = false
     
     let systemName: String
-    // let helpText: String
+    let helpText: String
     
     var body: some View {
         Image(systemName: systemName)
             .font(.system(size: 12))
             // TODO: Add helper text
-            // .help(helpTExt)
+            .help(helpText)
             .opacity(alwaysHover ? 1 : (isHover ? 1 : 0.3))
             .onHover { hovering in
                 isHover = hovering
@@ -47,13 +47,13 @@ struct PageTurner: View {
             Spacer()
             
             HStack(spacing: 8) {
-                PageTurnerControl(page: $store.page, toPage: 1, systemName: "circle.fill")
+                PageTurnerControl(page: $store.page, target: 1, systemName: "circle.fill", helpText: "Import")
                     .onTapGesture {
                         store.page = 1
                         store.showMatchPanel = false
                     }
                 
-                PageTurnerControl(page: $store.page, toPage: 2, systemName: "triangle.fill")
+                PageTurnerControl(page: $store.page, target: 2, systemName: "triangle.fill", helpText: "Choose")
                     .onTapGesture {
                         if store.page != 2 {
                             store.page = 2
@@ -61,7 +61,7 @@ struct PageTurner: View {
                     }
                     .disabled(store.album == nil)
                 
-                PageTurnerControl(page: $store.page, toPage: 3, systemName: "square.fill")
+                PageTurnerControl(page: $store.page, target: 3, systemName: "square.fill", helpText: "Match")
                     .onTapGesture {
                         store.page = 3
                         store.showMatchPanel = true
