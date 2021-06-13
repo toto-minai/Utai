@@ -43,7 +43,7 @@ struct ImportView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .foregroundColor(Color.black.opacity(0.2))
-                        .frame(width: 114, height: 114)
+                        .frame(width: 110, height: 110)
                     
                     Image("SimpleIcon")
                         .resizable()
@@ -67,7 +67,7 @@ struct ImportView: View {
                     .focusable(false)
                 }
             }
-            .offset(y: 66)
+            .offset(y: 59)
             
             Spacer()
         }

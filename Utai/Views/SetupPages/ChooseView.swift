@@ -42,7 +42,7 @@ struct ChooseView: View {
                 }
                 
                 VStack(spacing: 16) {
-                    Spacer().frame(height: 12+8)
+                    Spacer().frame(height: 12)
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
                             Spacer().frame(width: 2*8+12)

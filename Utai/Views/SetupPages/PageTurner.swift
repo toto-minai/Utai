@@ -66,6 +66,6 @@ struct PageTurner: View {
                 PageTurnerControl(page: $store.page, toPage: 3, systemName: "square.fill")
             }
         }
-        .padding(.bottom, 2*8)
+        .padding(.bottom, 2*8+12)
     }
 }
