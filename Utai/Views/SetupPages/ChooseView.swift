@@ -95,20 +95,32 @@ struct ChooseView: View {
                                 Spacer().frame(width: lilSpacing+lilIconLength)
                                 
                                 ForEach(0..<min(6, results.count)) { index in
-                                    if let thumb = results[index].coverImage {
-                                        AsyncImage(url: URL(string: thumb)!) { image in
-                                            image.resizable()
-                                                .scaledToFill()
-                                                .cornerRadius(4)
-                                                .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
-                                                .focusable(true)
-                                                .focused($chosen, equals: index)
-                                                .onTapGesture { chosen = index }
-                                        } placeholder: {
-                                            ProgressView()
+                                    ZStack {
+                                        if let thumb = results[index].coverImage {
+                                            AsyncImage(url: URL(string: thumb)!) { image in
+                                                image.resizable()
+                                                    .scaledToFill()
+                                                    .cornerRadius(4)
+                                                    .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
+                                                    .focusable(true)
+                                                    .focused($chosen, equals: index)
+                                                    .onTapGesture { chosen = index }
+                                            } placeholder: {
+                                                ProgressView()
+                                            }
+                                            .frame(width: 80, height: 80)
+                                            .frame(height: 100)
                                         }
-                                        .frame(width: 80, height: 80)
-                                        .frame(height: 100)
+                                    }
+                                    .contextMenu {
+                                        Button(action: {
+                                            
+                                        }) { Text("Pick-It") }
+                                        Divider()
+                                        Button(action: { openURL(URL(string: chosenUri)!) })
+                                            { Text("View on Discogs") }
+                                        Button(action: { openURL(URL(string: chosenArtwork)!) })
+                                            { Text("View Artwork in Broswer") }
                                     }
                                 }
                                 
@@ -128,10 +140,7 @@ struct ChooseView: View {
                                     "Adjust global settings for picking rather album.")
                             }
                             
-                            ButtonCus(action: {
-                                let discogs = "https://discogs.com\(results[(chosen ?? 0)].uri)"
-                                openURL(URL(string: discogs)!)
-                            }, label: "View on Discogs",
+                            ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",
                                       systemName: "smallcircle.fill.circle.fill")
                             
                             ButtonCus(action: {}, label: "Pick-It", systemName: "bag")
@@ -213,6 +222,13 @@ extension ChooseView {
     
     private var results: [SearchResult.Results] {
         searchResult!.results
+    }
+    
+    private var chosenUri: String {
+        "https://discogs.com\(results[(chosen ?? 0)].uri)"
+    }
+    private var chosenArtwork: String {
+        results[(chosen ?? 0)].coverImage!
     }
     
     private var chosenTitle: String {
