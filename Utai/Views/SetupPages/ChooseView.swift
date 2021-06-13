@@ -117,9 +117,9 @@ struct ChooseView: View {
                                             
                                         }) { Text("Pick-It") }
                                         Divider()
-                                        Button(action: { openURL(URL(string: chosenUri)!) })
+                                        Button(action: { openURL(URL(string: "https://discogs.com\(results[index].uri)")!) })
                                             { Text("View on Discogs") }
-                                        Button(action: { openURL(URL(string: chosenArtwork)!) })
+                                        Button(action: { openURL(URL(string: results[index].coverImage!)!) })
                                             { Text("View Artwork in Broswer") }
                                     }
                                 }
@@ -205,7 +205,10 @@ struct ChooseView: View {
                 .frame(width: unitLength, height: unitLength)
                 
                 if store.page == 2 {
-                    Spacer().onAppear { if store.needUpdate { search() } }
+                    Spacer().onAppear { if store.needUpdate {
+                        search()
+                        chosen = 0
+                    } }
                 }
             }
         }
@@ -226,9 +229,6 @@ extension ChooseView {
     
     private var chosenUri: String {
         "https://discogs.com\(results[(chosen ?? 0)].uri)"
-    }
-    private var chosenArtwork: String {
-        results[(chosen ?? 0)].coverImage!
     }
     
     private var chosenTitle: String {
