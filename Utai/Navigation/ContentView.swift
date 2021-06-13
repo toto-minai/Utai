@@ -28,7 +28,7 @@ struct ContentView: View {
         .ignoresSafeArea()
         .frame(width: unitLength, height: unitLength-titlebarHeight)
         .background(EffectsView(
-            material: .sidebar,
+            material: .popover,
             blendingMode: .behindWindow).ignoresSafeArea())
     }
 }

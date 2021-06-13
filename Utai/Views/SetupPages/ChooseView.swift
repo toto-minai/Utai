@@ -50,7 +50,9 @@ struct ChooseView: View {
                             if store.album!.artists != nil && store.album!.title != nil {
                                 Text(" – ")
                             }
-                            Text("**\(titleText)\(yearText)**")
+                            Text("**\(titleText)**")
+                            Text("**\(yearText)**")
+                                .foregroundColor(.secondary)
                             
                             Spacer().frame(width: 2*8+12)
                         }
