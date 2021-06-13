@@ -15,6 +15,8 @@ struct SetupPages: View {
             ImportView()
             
             ChooseView()
+            
+            MatchView()
         }
         .offset(x: CGFloat(1 - store.page) * unitLength)
         .frame(width: unitLength, alignment: .leading)

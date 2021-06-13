@@ -12,6 +12,7 @@ class Store: ObservableObject {
     @Published var page: Int = 1
     @Published var album: Album?
     @Published var searchResult: SearchResult?
+    @Published var showMatchPanel: Bool = false
     
     func searchOnDiscogs() {
         let title = album!.title

@@ -14,22 +14,28 @@ struct ContentView: View {
     @EnvironmentObject var store: Store
     
     var body: some View {
-        ZStack {
-            SetupPages()
+        HStack (spacing: 0) {
+            ZStack {
+                SetupPages()
+                
+                PageTurner()
+                
+                ReferencesControl(page: $store.page)
+            }
+            .font(.custom("Yanone Kaffeesatz", size: 16))
+            // Translucent background
+            .frame(width: unitLength, height: unitLength)
+            .ignoresSafeArea()
+            .frame(width: unitLength, height: unitLength-titlebarHeight)
+            .background(EffectsView(
+                material: .popover,
+                blendingMode: .behindWindow).ignoresSafeArea())
             
-            PageTurner()
-            
-            ReferencesControl(page: $store.page)
+//            if store.showMatchPanel {
+                MatchPanel()
+//            }
         }
-        .font(.custom("Yanone Kaffeesatz", size: 16))
-//        .foregroundColor(.white)
-        // Translucent background
-        .frame(width: unitLength, height: unitLength)
-        .ignoresSafeArea()
-        .frame(width: unitLength, height: unitLength-titlebarHeight)
-        .background(EffectsView(
-            material: .popover,
-            blendingMode: .behindWindow).ignoresSafeArea())
+        .frame(width: (store.showMatchPanel ? 3 : 1) * unitLength, alignment: .leading)
     }
 }
 

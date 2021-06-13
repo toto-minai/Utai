@@ -21,6 +21,8 @@
 		99D046F82674D07D0076D972 /* ChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F72674D07D0076D972 /* ChooseView.swift */; };
 		99D046FA2674E5B80076D972 /* SearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F92674E5B80076D972 /* SearchResult.swift */; };
 		99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046FB2674E6AA0076D972 /* Secrets.swift */; };
+		99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE32675F0F900CCA6D7 /* MatchView.swift */; };
+		99DB1BE62675F18400CCA6D7 /* MatchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +41,8 @@
 		99D046F72674D07D0076D972 /* ChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseView.swift; sourceTree = "<group>"; };
 		99D046F92674E5B80076D972 /* SearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResult.swift; sourceTree = "<group>"; };
 		99D046FB2674E6AA0076D972 /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		99DB1BE32675F0F900CCA6D7 /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
+		99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +72,8 @@
 				99747F1A2672EA7200995E85 /* ImportView.swift */,
 				99747F182672EA3300995E85 /* PageTurner.swift */,
 				99D046F72674D07D0076D972 /* ChooseView.swift */,
+				99DB1BE32675F0F900CCA6D7 /* MatchView.swift */,
+				99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */,
 			);
 			path = SetupPages;
 			sourceTree = "<group>";
@@ -243,11 +249,13 @@
 				99D046FA2674E5B80076D972 /* SearchResult.swift in Sources */,
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
 				99747F192672EA3300995E85 /* PageTurner.swift in Sources */,
+				99DB1BE62675F18400CCA6D7 /* MatchPanel.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
 				99747F1D2672EAD400995E85 /* Album.swift in Sources */,
 				99747F1B2672EA7200995E85 /* ImportView.swift in Sources */,
 				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
+				99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */,
 				99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

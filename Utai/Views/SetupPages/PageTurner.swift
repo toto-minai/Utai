@@ -48,22 +48,23 @@ struct PageTurner: View {
             HStack(spacing: 8) {
                 PageTurnerControl(page: $store.page, toPage: 1, systemName: "circle.fill")
                     .onTapGesture {
-                        withAnimation(.spring()) {
-                            store.page = 1
-                        }
+                        store.page = 1
+                        store.showMatchPanel = false
                     }
                 
                 PageTurnerControl(page: $store.page, toPage: 2, systemName: "triangle.fill")
                     .onTapGesture {
                         if store.page != 2 {
-                            withAnimation {
-                                store.page = 2
-                            }
+                            store.page = 2
                         }
                     }
                     .disabled(store.album == nil)
                 
                 PageTurnerControl(page: $store.page, toPage: 3, systemName: "square.fill")
+                    .onTapGesture {
+                        store.page = 3
+                        store.showMatchPanel = true
+                    }
             }
         }
         .padding(.bottom, 2*8+12)
