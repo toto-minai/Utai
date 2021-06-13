@@ -14,7 +14,7 @@ struct ButtonCus: View {
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 0) {
+            HStack(spacing: 2) {
                 Image(systemName: systemName)
                     .font(.system(size: 12))
                     .offset(y: -1.2)
