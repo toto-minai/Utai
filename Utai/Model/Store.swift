@@ -10,11 +10,16 @@ import SwiftUI
 
 class Store: ObservableObject {
     @Published var page: Int = 1
+    
     @Published var album: Album?
-    @Published var searchResult: SearchResult?
+    
+    @Published var searchUrl: URL?
+    @Published var needUpdate: Bool = false
+//    @Published var searchResult: SearchResult?
+    
     @Published var showMatchPanel: Bool = false
     
-    func searchOnDiscogs() {
+    func makeSearchUrl() {
         let title = album!.title
         let artists = album!.artists
         
@@ -34,16 +39,8 @@ class Store: ObservableObject {
             componets.queryItems!.append(URLQueryItem(name: "artist", value: artists))
         }
         
-        URLSession.shared.dataTask(with: componets.url!) { data, _, _ in
-            do {
-                if let data = data {
-                    let result = try JSONDecoder().decode(SearchResult.self, from: data)
-                    
-                    withAnimation {
-                        self.searchResult = result
-                    }
-                }
-            } catch { print(error) }
-        }.resume()
+        searchUrl = componets.url
+        
+        needUpdate = true
     }
 }

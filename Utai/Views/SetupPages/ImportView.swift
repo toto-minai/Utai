@@ -10,11 +10,12 @@ import SwiftUI
 struct ImportView: View {
     @EnvironmentObject var store: Store
     
-    @State private var dragOver = false
+    // TODO: Drag
+    // @State private var dragOver = false
     @State private var isConfirmPresented = false
     
     private func importFile() {
-        store.searchResult = nil
+//        store.album = nil
         
         let panel = NSOpenPanel()
         panel.title = "􀑪 Add Music"
@@ -31,56 +32,43 @@ struct ImportView: View {
         if !store.album!.completed {
             isConfirmPresented = true
         } else {
-            withAnimation(.spring()) {
-                store.page = 2
-            }
+            store.makeSearchUrl()
+            store.page = 2
         }
     }
     
     var body: some View {
         return VStack(spacing: 0) {
-            VStack(spacing: 16) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .foregroundColor(Color.black.opacity(0.2))
-                        .frame(width: 110, height: 110)
-                    
-                    Image("SimpleIcon")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 54)
-                        .foregroundColor(Color.white.opacity(0.4))
-                }
+            VStack(spacing: lilSpacing2x) {
+                WelcomeIcon()
                 
                 HStack(spacing: 2) {
-                    Text("**Drag** or")
+                    Text("**Drag or**")
                     
-                    Button(action: importFile) {
-                        HStack(spacing: 0) {
-                            Image(systemName: "music.note")
-                                .font(.system(size: 12))
-                                .offset(y: -1.2)
-                            Text("**Add Music**")
+                    ButtonCus(action: importFile,
+                              label: "Add Music",
+                              systemName: "music.note")
+                        .sheet(isPresented: $isConfirmPresented, onDismiss: {}) {
+                            ConfirmSheet(systemName: "music.note",
+                                         instruction:
+                                "Might want to confirm the title and artists before searching on Discogs.")
                         }
-                    }
-                    .buttonStyle(.borderless)
-                    .focusable(false)
-                    .shadow(radius: 3)
                 }
             }
-            .offset(y: 59)
+            .offset(y: 59)  // Align with album artworks on search page
+            // TODO: Make it clear how to calc
             
             Spacer()
         }
         .frame(width: unitLength, height: unitLength)
-        .sheet(isPresented: $isConfirmPresented, onDismiss: {}) {
-            ConfirmSheet()
-        }
     }
 }
 
 struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
+    
+    let systemName: String
+    let instruction: String
     
     @Environment(\.dismiss) var dismiss
     
@@ -92,7 +80,86 @@ struct ConfirmSheet: View {
     @State var artistsCus: String = ""
     @FocusState private var artistsCusFocused: Bool
     
-    var canSearch: Bool {
+    var body: some View {
+        Form {
+            Group {
+                Text(instruction)
+                Divider()
+            }.offset(y: 1.2)
+            
+            Spacer()
+            
+            Picker("**Album**", selection: $titleSelection) {
+                ForEach(0..<store.album!.albumTitleCandidates.count) { index in
+                    Text("\(Array(store.album!.albumTitleCandidates)[index])")
+                        .tag(index)
+                }
+                Divider()
+                Text("Other…").tag(-1)
+            }
+            .foregroundColor(.secondary)
+            .onAppear {
+                if store.album!.albumTitleCandidates.count == 0 {
+                    titleSelection = -1
+                    titleCusFocused = true
+                }
+            }
+            .onChange(of: titleSelection) { value in
+                if value == -1 { titleCusFocused = true }
+            }
+            
+            TextField("", text: $titleCus)
+                // .textFieldStyle(.roundedBorder) // Bad looking
+                .disabled(titleSelection != -1)
+                .focused($titleCusFocused)
+            
+            Picker("**Artist(s)**", selection: $artistsSelection) {
+                ForEach(0..<store.album!.albumArtistsCandidates.count) { index in
+                    Text("\(Array(store.album!.albumArtistsCandidates)[index])")
+                        .tag(index)
+                }
+                Divider()
+                Text("Other…").tag(-1)
+            }
+            .foregroundColor(.secondary)
+            .onAppear {
+                if store.album!.albumArtistsCandidates.count == 0 {
+                    artistsSelection = -1
+                    artistsCusFocused = true
+                }
+            }
+            .onChange(of: artistsSelection) { value in
+                if value == -1 { artistsCusFocused = true }
+            }
+            
+            TextField("", text: $artistsCus)
+                // .textFieldStyle(.roundedBorder) // Bad looking
+                .disabled(artistsSelection != -1)
+                .focused($artistsCusFocused)
+            
+            Spacer().frame(height: 16)
+            
+            HStack {
+                Spacer()
+                
+                Button(action: { dismiss() }) {
+                    Text("Cancel")
+                }
+                .buttonStyle(.borderless)
+                
+                Button(action: prepareSearching) {
+                    Text("**Search**")
+                }
+                .controlProminence(.increased)
+                .disabled(!canSearch)
+            }
+        }
+        .modifier(ConfigureSheet(systemName: systemName))
+    }
+}
+
+extension ConfirmSheet {
+    private var canSearch: Bool {
         titleSelection != -1 ||
         artistsSelection != -1 ||
         titleSelection == -1 && titleCus != "" ||
@@ -108,95 +175,25 @@ struct ConfirmSheet: View {
             (artistsCus == "" ? nil : artistsCus) :
             Array(store.album!.albumArtistsCandidates)[artistsSelection]
         
-        withAnimation(.spring()) {
-            store.page = 2
-        }
+        store.makeSearchUrl()
+        store.page = 2
         
         dismiss()
     }
-    
+}
+
+struct WelcomeIcon: View {
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Image(systemName: "music.note")
-                .font(.system(size: 12))
-                .padding(8)
+        ZStack {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .foregroundColor(Color.black.opacity(0.2))
+                .frame(width: 110, height: 110)
             
-            Form {
-                Group {
-                    Text("Might want to confirm the title and artists before searching on Discogs.")
-                    Divider()
-                }.offset(y: 1.2)
-                
-                Spacer()
-                
-                Picker("**Album**", selection: $titleSelection) {
-                    ForEach(0..<store.album!.albumTitleCandidates.count) { index in
-                        Text("\(Array(store.album!.albumTitleCandidates)[index])")
-                            .tag(index)
-                    }
-                    Divider()
-                    Text("Other…").tag(-1)
-                }
-                .foregroundColor(.secondary)
-                .onAppear {
-                    if store.album!.albumTitleCandidates.count == 0 {
-                        titleSelection = -1
-                        titleCusFocused = true
-                    }
-                }
-                .onChange(of: titleSelection) { value in
-                    if value == -1 { titleCusFocused = true }
-                }
-                
-                TextField("", text: $titleCus)
-                    // .textFieldStyle(.roundedBorder) // Bad looking
-                    .disabled(titleSelection != -1)
-                    .focused($titleCusFocused)
-                
-                Picker("**Artist(s)**", selection: $artistsSelection) {
-                    ForEach(0..<store.album!.albumArtistsCandidates.count) { index in
-                        Text("\(Array(store.album!.albumArtistsCandidates)[index])")
-                            .tag(index)
-                    }
-                    Divider()
-                    Text("Other…").tag(-1)
-                }
-                .foregroundColor(.secondary)
-                .onAppear {
-                    if store.album!.albumArtistsCandidates.count == 0 {
-                        artistsSelection = -1
-                        artistsCusFocused = true
-                    }
-                }
-                .onChange(of: artistsSelection) { value in
-                    if value == -1 { artistsCusFocused = true }
-                }
-                
-                TextField("", text: $artistsCus)
-                    // .textFieldStyle(.roundedBorder) // Bad looking
-                    .disabled(artistsSelection != -1)
-                    .focused($artistsCusFocused)
-                
-                Spacer().frame(height: 16)
-                
-                HStack {
-                    Spacer()
-                    
-                    Button(action: { dismiss() }) {
-                        Text("Cancel")
-                    }
-                    .buttonStyle(.borderless)
-                    
-                    Button(action: prepareSearching) {
-                        Text("**Search**")
-                    }
-                    .controlProminence(.increased)
-                    .disabled(!canSearch)
-                }
-            }
-            .padding([.leading], 16)
-            .padding([.trailing, .bottom, .top], 8)
-            .frame(width: 256, height: 256)
+            Image("SimpleIcon")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 54)
+                .foregroundColor(Color.white.opacity(0.4))
         }
     }
 }

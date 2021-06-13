@@ -13,36 +13,30 @@ struct ChooseView: View {
     @Environment(\.openURL) var openURL
     
     @State private var isSettingsPresented: Bool = false
+    @State private var searchResult: SearchResult?
+    
     @FocusState private var chosen: Int?
     
-    var titleText: String { store.album!.title ?? "" }
-    var artistsText: String { store.album!.artists ?? "" }
-    var yearText: String {
-        if let year = store.album!.year {
-            return " (\(year)"
-        } else {
-            if store.album!.yearCandidates.count != 0
-                { return " (\(store.album!.yearCandidates.first!))" }
-            else { return "" }
-        }
+    var shelf: some View {
+        Rectangle()
+            .frame(height: 84)
+            .foregroundColor(.clear)
+            .background(LinearGradient(
+                stops: [Gradient.Stop(color: Color.white.opacity(0), location: 0),
+                        Gradient.Stop(color: Color.white.opacity(0.12), location: 0.4),
+                        Gradient.Stop(color: Color.white.opacity(0), location: 1)],
+                startPoint: .top, endPoint: .bottom))
+            .offset(y: 108)
     }
     
     var body: some View {
-        if store.page == 2 {
+        if let _ = store.album {
             ZStack(alignment: .top) {
-                if let _ = store.searchResult {
-                    Rectangle()
-                        .frame(height: 84)
-                        .foregroundColor(.clear)
-                        .background(LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0), location: 0),
-                                                           Gradient.Stop(color: Color.white.opacity(0.12), location: 0.4),
-                                                           Gradient.Stop(color: Color.white.opacity(0), location: 1)],
-                                                   startPoint: .top, endPoint: .bottom))
-                        .offset(y: 108)
-                }
+                if let _ = searchResult { shelf }
                 
                 VStack(spacing: 16) {
                     Spacer().frame(height: 12)
+                    
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
                             Spacer().frame(width: 2*8+12)
@@ -61,13 +55,13 @@ struct ChooseView: View {
                         }
                     }
                     
-                    if let r = store.searchResult {
+                    if let _ = searchResult {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
                                 Spacer().frame(width: 8+12)
                                 
-                                ForEach(0..<min(6, r.results.count)) { index in
-                                    if let thumb = r.results[index].coverImage {
+                                ForEach(0..<min(6, results.count)) { index in
+                                    if let thumb = results[index].coverImage {
                                         AsyncImage(url: URL(string: thumb)!) { image in
                                             image.resizable()
                                                 .scaledToFill()
@@ -94,48 +88,24 @@ struct ChooseView: View {
                         .onAppear { chosen = 0 }
                         
                         HStack(spacing: 8) {
-                            Button(action: { isSettingsPresented = true }) {
-                                HStack(spacing: 2) {
-                                    Image(systemName: "gear")
-                                        .font(.system(size: 12))
-                                        .offset(y: -1.2)
-                                    Text("**Settings**")
-                                }
-                            }
-                            .buttonStyle(.borderless)
-                            .focusable(false)
+                            ButtonCus(action: { isSettingsPresented = true },
+                                      label: "Settings",
+                                      systemName: "gear")
                             .sheet(isPresented: $isSettingsPresented, onDismiss: {}) {
-                                SettingsSheet()
+                                SettingsSheet(systemName: "gear",
+                                              instruction:
+                                    "Adjust global settings for picking rather album.")
                             }
                             
-                            Button(action: {
-                                let discogs = "https://discogs.com\(r.results[(chosen ?? 0)].uri)"
+                            ButtonCus(action: {
+                                let discogs = "https://discogs.com\(results[(chosen ?? 0)].uri)"
                                 openURL(URL(string: discogs)!)
-                            }) {
-                                HStack(spacing: 2) {
-                                    Image(systemName: "smallcircle.fill.circle.fill")
-                                        .font(.system(size: 12))
-                                        .offset(y: -1.2)
-                                    Text("**View on Discogs**")
-                                }
-                            }
-                            .buttonStyle(.borderless)
-                            .focusable(false)
+                            }, label: "View on Discogs",
+                                      systemName: "smallcircle.fill.circle.fill")
                             
-                            Button(action: {}) {
-                                HStack(spacing: 2) {
-                                    Image(systemName: "bag")
-                                        .font(.system(size: 12))
-                                        .offset(y: -1.2)
-                                    Text("**Pick-It**")
-                                }
-                            }
-                            .buttonStyle(.borderless)
-                            .focusable(false)
+                            ButtonCus(action: {}, label: "Pick-It", systemName: "bag")
                         }
-                        .shadow(radius: 3)
-                        
-//                        if let chosen = chosen {
+
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 8) {
                                     Spacer().frame(width: 2*8+12)
@@ -143,9 +113,9 @@ struct ChooseView: View {
                                     VStack(alignment: .trailing, spacing: 4) {
                                         Text("**Versus**")
                                         Text("**Format**")
-                                            .opacity(r.results[(chosen ?? 0)].format != nil ? 1 : 0.3)
+                                            .opacity(results[(chosen ?? 0)].format != nil ? 1 : 0.3)
                                         Text("**Released**")
-                                            .opacity(r.results[(chosen ?? 0)].year != nil ? 1 : 0.3)
+                                            .opacity(results[(chosen ?? 0)].year != nil ? 1 : 0.3)
                                         
                                         Spacer()  // Keep 2 VStack aligned
                                     }
@@ -153,9 +123,9 @@ struct ChooseView: View {
                                     .animation(.default, value: chosen)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("**\(r.results[(chosen ?? 0)].title.replacingOccurrences(of: " - ", with: " – ").replacingOccurrences(of: "*", with: "†"))**")
-                                        Text("**\(r.results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*")**")
-                                        Text("**\(r.results[(chosen ?? 0)].year ?? "")**")
+                                        Text("**\(results[(chosen ?? 0)].title.replacingOccurrences(of: " - ", with: " – ").replacingOccurrences(of: "*", with: "†"))**")
+                                        Text("**\(results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*")**")
+                                        Text("**\(results[(chosen ?? 0)].year ?? "")**")
                                         
                                         Spacer()
                                     }
@@ -163,65 +133,90 @@ struct ChooseView: View {
                                     Spacer().frame(width: 2*8+12)
                                 }
                             }
-//                        }
                         
                     }
                     
                     Spacer()
                 }
                 .frame(width: unitLength, height: unitLength)
-            }
-            .onAppear {
-                if store.searchResult == nil {
-                    store.searchOnDiscogs()
+                
+                if store.page == 2 {
+                    Spacer()
+                        .onAppear {
+                            if store.needUpdate {
+                                query()
+                                
+                            }
+                        }
                 }
             }
         }
     }
 }
 
+extension ChooseView {
+    private var titleText: String { store.album!.title ?? "" }
+    private var artistsText: String { store.album!.artists ?? "" }
+    private var yearText: String {
+        if let year = store.album!.year {
+            return " (\(year)"
+        } else {
+            if store.album!.yearCandidates.count != 0
+                { return " (\(store.album!.yearCandidates.first!))" }
+            else { return "" }
+        }
+    }
+    
+    private var results: [SearchResult.Results] {
+        searchResult!.results
+    }
+    
+    private func query() {
+        URLSession.shared.dataTask(with: store.searchUrl!) { data, _, _ in
+            do {
+                if let data = data {
+                    let result = try JSONDecoder().decode(SearchResult.self, from: data)
+                    
+                    searchResult = result
+                }
+            } catch { print(error) }
+        }.resume()
+        
+        store.needUpdate = false
+    }
+}
+
 struct SettingsSheet: View {
     @Environment(\.dismiss) var dismiss
     
+    let systemName: String
+    let instruction: String
+    
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            Image(systemName: "gear")
-                .font(.system(size: 12))
-                .padding(8)
+        Form {
+            Group {
+                Text(instruction)
+                Divider()
+            }.offset(y: 1.2)
             
-            Form {
-                Group {
-                    Text("Adjust global settings for picking rather album.")
-                    Divider()
-                }.offset(y: 1.2)
-                
+            Spacer()
+            
+            TextField("**Debugging**", text: .constant(""))
+                .foregroundColor(.secondary)
+            
+            Spacer()
+            
+            Spacer().frame(height: 16)
+            
+            HStack {
                 Spacer()
                 
-                TextField("**Debugging**", text: .constant(""))
-                    .foregroundColor(.secondary)
-                
-                Spacer()
-                
-                Spacer().frame(height: 16)
-                
-                HStack {
-                    Spacer()
-                    
-//                    Button(action: { dismiss() }) {
-//                        Text("Cancel")
-//                    }
-//                    .buttonStyle(.borderless)
-                    
-                    Button(action: { dismiss() }) {
-                        Text("**Apply**")
-                    }
-                    .controlProminence(.increased)
+                Button(action: { dismiss() }) {
+                    Text("**Apply**")
                 }
+                .controlProminence(.increased)
             }
-            .padding([.leading], 16)
-            .padding([.trailing, .bottom, .top], 8)
-            .frame(width: 256, height: 256)
-        }
+        }.modifier(ConfigureSheet(systemName: systemName))
     }
 }
 
