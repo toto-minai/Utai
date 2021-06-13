@@ -151,6 +151,7 @@ struct ChooseView: View {
                                     Spacer().frame(width: lilSpacing2x+lilIconLength)
                                 }
                             }
+                            .transition(.opacity)
                         
                     }
                     
@@ -162,12 +163,12 @@ struct ChooseView: View {
                     Spacer()
                         .onAppear {
                             async {
-                                do {
-                                    try await search()
-                                } catch { print(error) }
+                                searchResult = nil
+                                do { try await search() }
+                                    catch { print(error) }
+                                store.needUpdate = false
+                                chosen = 0
                             }
-                            store.needUpdate = false
-                            chosen = 0
                         }
                 }
             }
@@ -224,10 +225,15 @@ extension ChooseView {
     private func search() async throws {
         let (data, response) = try await URLSession.shared.data(from: store.searchUrl!)
         guard (response as? HTTPURLResponse)?.statusCode == 200
-            else { throw SearchError.urlNotSucceed }
+        else { throw SearchError.urlNotSucceed }
         
-        do { searchResult = try JSONDecoder().decode(SearchResult.self, from: data) }
-            catch { throw error }
+        do {
+            let result = try JSONDecoder().decode(SearchResult.self, from: data)
+            withAnimation {
+                searchResult = result
+            }
+        }
+        catch { throw error }
     }
 }
 

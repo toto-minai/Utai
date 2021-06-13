@@ -15,7 +15,8 @@ struct PageTurnerControl: View {
     let helpText: String
     
     var body: some View {
-        ButtonMini(alwaysHover: page == target, systemName: systemName, helpText: helpText)
+        ButtonMini(alwaysHover: page == target,
+                   systemName: systemName, helpText: helpText)
     }
 }
 
