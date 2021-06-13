@@ -57,36 +57,6 @@ struct ChooseView: View {
                             Spacer().frame(width: lilSpacing2x+lilIconLength)
                         }
                         .textSelection(.enabled)
-                        .contextMenu {
-                            Menu("Copy") {
-                                if let title = album.title {
-                                    Button(action: {
-                                        pasteboard.declareTypes([.string], owner: nil)
-                                        pasteboard.setString(title, forType: .string)
-                                    }) { Text("Title") }
-                                }
-                                if let artists = album.artists {
-                                    Button(action: {
-                                        pasteboard.declareTypes([.string], owner: nil)
-                                        pasteboard.setString(artists, forType: .string)
-                                    }) { Text("Artist(s)") }
-                                }
-                                if let year = album.year {
-                                    Button(action: {
-                                        pasteboard.declareTypes([.string], owner: nil)
-                                        pasteboard.setString("\(year)", forType: .string)
-                                    }) { Text("Year") }
-                                }
-                                Divider()
-                                Button(action: {
-                                    let seperator = album.artists != nil && album.title != nil ? " – " : ""
-                                    
-                                    pasteboard.declareTypes([.string], owner: nil)
-                                    pasteboard.setString(artists + seperator + title + yearText,
-                                                         forType: .string)
-                                }) { Text("All") }
-                            }
-                        }
                     }
                     
                     if let _ = searchResult {
@@ -169,28 +139,10 @@ struct ChooseView: View {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("\(chosenTitle)")
                                             .fontWeight(.bold)
-                                            .contextMenu {
-                                                Button(action: {
-                                                    pasteboard.declareTypes([.string], owner: nil)
-                                                    pasteboard.setString(chosenTitle, forType: .string)
-                                                }) { Text("Copy") }
-                                            }
                                         Text("\(chosenFormat)")
                                             .fontWeight(.bold)
-                                            .contextMenu {
-                                                Button(action: {
-                                                    pasteboard.declareTypes([.string], owner: nil)
-                                                    pasteboard.setString(chosenFormat, forType: .string)
-                                                }) { Text("Copy") }
-                                            }
                                         Text("\(chosenYear)")
                                             .fontWeight(.bold)
-                                            .contextMenu {
-                                                Button(action: {
-                                                    pasteboard.declareTypes([.string], owner: nil)
-                                                    pasteboard.setString(chosenYear, forType: .string)
-                                                }) { Text("Copy") }
-                                            }
                                         
                                         Spacer()
                                     }
