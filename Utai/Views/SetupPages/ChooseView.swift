@@ -90,7 +90,7 @@ struct ChooseView: View {
                                 Spacer().frame(width: 8+12)
                             }
                         }
-                        .padding(.vertical, -10)
+                        .padding(.vertical, -9.5)
                         .onAppear { chosen = 0 }
                         
                         HStack(spacing: 8) {
@@ -133,6 +133,7 @@ struct ChooseView: View {
                             .buttonStyle(.borderless)
                             .focusable(false)
                         }
+                        .shadow(radius: 3)
                         
 //                        if let chosen = chosen {
                             ScrollView(.horizontal, showsIndicators: false) {

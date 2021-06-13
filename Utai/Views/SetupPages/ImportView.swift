@@ -65,6 +65,7 @@ struct ImportView: View {
                     }
                     .buttonStyle(.borderless)
                     .focusable(false)
+                    .shadow(radius: 3)
                 }
             }
             .offset(y: 59)
