@@ -99,19 +99,16 @@ struct ChooseView: View {
                                         AsyncImage(url: URL(string: thumb)!) { image in
                                             image.resizable()
                                                 .scaledToFill()
-                                                .frame(width: 80, height: 80)
                                                 .cornerRadius(4)
+                                                .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
+                                                .focusable(true)
+                                                .focused($chosen, equals: index)
+                                                .onTapGesture { chosen = index }
                                         } placeholder: {
                                             ProgressView()
                                         }
                                         .frame(width: 80, height: 80)
-                                        .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
                                         .frame(height: 100)
-                                        .focusable(true)
-                                        .focused($chosen, equals: index)
-                                        .onTapGesture {
-                                            chosen = index
-                                        }
                                     }
                                 }
                                 
