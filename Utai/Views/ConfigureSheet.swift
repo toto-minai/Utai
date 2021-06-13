@@ -14,6 +14,7 @@ struct ConfigureSheet: ViewModifier {
         ZStack(alignment: .topLeading) {
             Image(systemName: systemName)
                 .font(.system(size: 12))
+                .foregroundColor(.secondary)
                 .padding(.leading, -8)
             
             content
