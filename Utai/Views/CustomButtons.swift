@@ -27,3 +27,24 @@ struct ButtonCus: View {
         .shadow(radius: 2)
     }
 }
+
+struct ButtonMini: View {
+    @State private var isHover = false
+    var alwaysHover: Bool = false
+    
+    let systemName: String
+    let helpText: String
+    
+    var body: some View {
+        Image(systemName: systemName)
+            .font(.system(size: 12))
+            .shadow(radius: 2)
+            // TODO: Add helper text
+            .help(helpText)
+            .opacity(alwaysHover ? 1 : (isHover ? 1 : 0.3))
+            .onHover { hovering in
+                isHover = hovering
+            }
+            .animation(.easeOut, value: isHover)
+    }
+}

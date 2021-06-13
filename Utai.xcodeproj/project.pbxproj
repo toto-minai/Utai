@@ -23,7 +23,7 @@
 		99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046FB2674E6AA0076D972 /* Secrets.swift */; };
 		99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE32675F0F900CCA6D7 /* MatchView.swift */; };
 		99DB1BE62675F18400CCA6D7 /* MatchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */; };
-		99DB1BE82675FC1C00CCA6D7 /* ButtonCus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE72675FC1C00CCA6D7 /* ButtonCus.swift */; };
+		99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */; };
 		99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */; };
 /* End PBXBuildFile section */
 
@@ -45,7 +45,7 @@
 		99D046FB2674E6AA0076D972 /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		99DB1BE32675F0F900CCA6D7 /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPanel.swift; sourceTree = "<group>"; };
-		99DB1BE72675FC1C00CCA6D7 /* ButtonCus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCus.swift; sourceTree = "<group>"; };
+		99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
 		99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -74,10 +74,9 @@
 			children = (
 				99747F162672EA0000995E85 /* SetupPages.swift */,
 				99747F1A2672EA7200995E85 /* ImportView.swift */,
-				99747F182672EA3300995E85 /* PageTurner.swift */,
 				99D046F72674D07D0076D972 /* ChooseView.swift */,
 				99DB1BE32675F0F900CCA6D7 /* MatchView.swift */,
-				99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */,
+				99747F182672EA3300995E85 /* PageTurner.swift */,
 			);
 			path = SetupPages;
 			sourceTree = "<group>";
@@ -138,8 +137,9 @@
 			isa = PBXGroup;
 			children = (
 				99747F152672E9E500995E85 /* SetupPages */,
-				99DB1BE72675FC1C00CCA6D7 /* ButtonCus.swift */,
+				99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */,
 				99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */,
+				99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -264,7 +264,7 @@
 				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
 				99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */,
 				99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */,
-				99DB1BE82675FC1C00CCA6D7 /* ButtonCus.swift in Sources */,
+				99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
