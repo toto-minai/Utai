@@ -14,6 +14,8 @@ struct ImportView: View {
     // @State private var dragOver = false
     @State private var isConfirmPresented = false
     
+    @State private var newAlbum: Album?
+    
     var body: some View {
         return VStack(spacing: 0) {
             VStack(spacing: lilSpacing2x) {
@@ -26,7 +28,7 @@ struct ImportView: View {
                               label: "Add Music",
                               systemName: "music.note")
                         .sheet(isPresented: $isConfirmPresented, onDismiss: {}) {
-                            ConfirmSheet(systemName: "music.note",
+                            ConfirmSheet(newAlbum: $newAlbum, systemName: "music.note",
                                          instruction:
                                 "Might want to confirm the title and artists before searching on Discogs.")
                         }
@@ -55,19 +57,23 @@ extension ImportView {
             return
         }
         
-        store.album = Album(urls: panel.urls)
+        let anAlbum = Album(urls: panel.urls)
         
-        if !album.completed {
-            isConfirmPresented = true
-        } else {
+        if anAlbum.completed {
+            store.album = anAlbum
             store.makeSearchUrl()
             store.page = 2
+        } else {
+            newAlbum = anAlbum
+            isConfirmPresented = true
         }
     }
 }
 
 struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
+    
+    @Binding var newAlbum: Album?
     
     let systemName: String
     let instruction: String
@@ -159,7 +165,7 @@ struct ConfirmSheet: View {
 }
 
 extension ConfirmSheet {
-    private var album: Album { store.album! }
+    private var album: Album { newAlbum! }
     
     private var canSearch: Bool {
         titleSelection != -1 ||
@@ -169,6 +175,7 @@ extension ConfirmSheet {
     }
     
     private func prepare() {
+        store.album = album
         store.album!.title = titleSelection == -1 ?
             (titleCus == "" ? nil : titleCus) :
             Array(album.albumTitleCandidates)[titleSelection]
