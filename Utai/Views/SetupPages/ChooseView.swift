@@ -66,7 +66,7 @@ struct ChooseView: View {
                             HStack(spacing: 8) {
                                 Spacer().frame(width: 8+12)
                                 
-                                ForEach(0..<min(10, r.results.count)) { index in
+                                ForEach(0..<min(6, r.results.count)) { index in
                                     if let thumb = r.results[index].coverImage {
                                         AsyncImage(url: URL(string: thumb)!) { image in
                                             image.resizable()
