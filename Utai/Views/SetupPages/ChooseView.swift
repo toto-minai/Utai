@@ -158,11 +158,17 @@ struct ChooseView: View {
                 }
                 .frame(width: unitLength, height: unitLength)
                 
-                if store.page == 2 {
-                    Spacer().onAppear { if store.needUpdate {
-                        search()
-                        chosen = 0
-                    } }
+                if store.page == 2 && store.needUpdate {
+                    Spacer()
+                        .onAppear {
+                            async {
+                                do {
+                                    try await search()
+                                } catch { print(error) }
+                            }
+                            store.needUpdate = false
+                            chosen = 0
+                        }
                 }
             }
         }
@@ -197,18 +203,31 @@ extension ChooseView {
         results[(chosen ?? 0)].year ?? ""
     }
     
-    private func search() {
-        URLSession.shared.dataTask(with: store.searchUrl!) { data, _, _ in
-            do {
-                if let data = data {
-                    let result = try JSONDecoder().decode(SearchResult.self, from: data)
-                    
-                    searchResult = result
-                }
-            } catch { print(error) }
-        }.resume()
+//    private func search() {
+//        URLSession.shared.dataTask(with: store.searchUrl!) { data, _, _ in
+//            do {
+//                if let data = data {
+//                    let result = try JSONDecoder().decode(SearchResult.self, from: data)
+//
+//                    searchResult = result
+//                }
+//            } catch { print(error) }
+//        }.resume()
+//
+//        store.needUpdate = false
+//    }
+    
+    enum SearchError: Error {
+        case urlNotSucceed
+    }
+    
+    private func search() async throws {
+        let (data, response) = try await URLSession.shared.data(from: store.searchUrl!)
+        guard (response as? HTTPURLResponse)?.statusCode == 200
+            else { throw SearchError.urlNotSucceed }
         
-        store.needUpdate = false
+        do { searchResult = try JSONDecoder().decode(SearchResult.self, from: data) }
+            catch { throw error }
     }
 }
 
