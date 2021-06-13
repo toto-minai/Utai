@@ -22,6 +22,7 @@ struct ContentView: View {
             ReferencesControl(page: $store.page)
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
+        .foregroundColor(.white)
         // Translucent background
         .frame(width: unitLength, height: unitLength)
         .ignoresSafeArea()

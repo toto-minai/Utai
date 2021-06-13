@@ -33,7 +33,7 @@ struct ChooseView: View {
                         .frame(height: 84)
                         .foregroundColor(.clear)
                         .background(LinearGradient(stops: [Gradient.Stop(color: Color.white.opacity(0), location: 0),
-                                                           Gradient.Stop(color: Color.white.opacity(0.12), location: 0.3),
+                                                           Gradient.Stop(color: Color.white.opacity(0.12), location: 0.4),
                                                            Gradient.Stop(color: Color.white.opacity(0), location: 1)],
                                                    startPoint: .top, endPoint: .bottom))
                         .offset(y: 108)
@@ -51,6 +51,8 @@ struct ChooseView: View {
                                 Text(" – ")
                             }
                             Text("**\(titleText)\(yearText)**")
+                            
+                            Spacer().frame(width: 2*8+12)
                         }
                     }
                     
@@ -137,6 +139,8 @@ struct ChooseView: View {
                                         
                                         Spacer()
                                     }
+                                    
+                                    Spacer().frame(width: 2*8+12)
                                 }
                             }
 //                        }
