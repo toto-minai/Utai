@@ -119,7 +119,7 @@ struct ChooseView: View {
 
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: lilSpacing) {
-                                    Spacer().frame(width: lilSpacing2x+lilIconLength)
+                                    Spacer().frame(width: lilSpacing+lilIconLength)
                                     
                                     VStack(alignment: .trailing, spacing: 4) {
                                         Text("Versus")
@@ -148,7 +148,7 @@ struct ChooseView: View {
                                     }
                                     .textSelection(.enabled)
                                     
-                                    Spacer().frame(width: lilSpacing2x+lilIconLength)
+                                    Spacer().frame(width: lilSpacing+lilIconLength)
                                 }
                             }
                             .transition(.opacity)
