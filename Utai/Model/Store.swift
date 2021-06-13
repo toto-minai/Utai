@@ -5,7 +5,6 @@
 //  Created by Toto Minai on 2021/06/12.
 //
 
-import Foundation
 import SwiftUI
 
 class Store: ObservableObject {
