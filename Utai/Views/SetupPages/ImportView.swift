@@ -115,10 +115,16 @@ struct ConfirmSheet: View {
     }
     
     var body: some View {
+<<<<<<< HEAD
         ZStack(alignment: .topLeading) {
             Image(systemName: "music.note")
                 .font(.system(size: 12))
                 .padding(8)
+=======
+        Form {
+            Text("I½. Might want to confirm the title and artists before searching on Discogs.")
+            Divider()
+>>>>>>> main
             
             Form {
                 Group {
