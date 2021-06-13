@@ -10,11 +10,10 @@ import SwiftUI
 struct ImportView: View {
     @EnvironmentObject var store: Store
     
-    // TODO: Drag
-    // @State private var dragOver = false
-    @State private var isConfirmPresented = false
+    @State private var dragOver = false
     
     @State private var newAlbum: Album?
+    @State private var isConfirmPresented = false
     
     var body: some View {
         return VStack(spacing: 0) {
@@ -40,6 +39,32 @@ struct ImportView: View {
             Spacer()
         }
         .frame(width: unitLength, height: unitLength)
+        .onDrop(of: ["public.file-url"], isTargeted: $dragOver) { providers in
+            var urls: [URL] = []
+            
+            let cnt = providers.count
+            for (i, provider) in providers.enumerated() {
+                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
+                    guard let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) else { return }
+                    urls.append(url)
+                    
+                    if i == cnt-1 {
+                        let anAlbum = Album(urls: urls)
+                        
+                        if anAlbum.completed {
+                            store.album = anAlbum
+                            store.makeSearchUrl()
+                            store.page = 2
+                        } else {
+                            newAlbum = anAlbum
+                            isConfirmPresented = true
+                        }
+                    }
+                }
+            }
+            
+            return true
+        }
     }
 }
 
