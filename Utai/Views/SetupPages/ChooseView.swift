@@ -17,6 +17,8 @@ struct ChooseView: View {
     
     @FocusState private var chosen: Int?
     
+    let pasteboard = NSPasteboard.general
+    
     var shelf: some View {
         Rectangle()
             .frame(height: 84)
@@ -54,6 +56,36 @@ struct ChooseView: View {
                                 .foregroundColor(.secondary)
                             
                             Spacer().frame(width: lilSpacing2x+lilIconLength)
+                        }
+                        .contextMenu {
+                            Menu("Copy") {
+                                if let title = album.title {
+                                    Button(action: {
+                                        pasteboard.declareTypes([.string], owner: nil)
+                                        pasteboard.setString(title, forType: .string)
+                                    }) { Text("Title") }
+                                }
+                                if let artists = album.artists {
+                                    Button(action: {
+                                        pasteboard.declareTypes([.string], owner: nil)
+                                        pasteboard.setString(artists, forType: .string)
+                                    }) { Text("Artist(s)") }
+                                }
+                                if let year = album.year {
+                                    Button(action: {
+                                        pasteboard.declareTypes([.string], owner: nil)
+                                        pasteboard.setString("\(year)", forType: .string)
+                                    }) { Text("Year") }
+                                }
+                                Divider()
+                                Button(action: {
+                                    let seperator = album.artists != nil && album.title != nil ? " – " : ""
+                                    
+                                    pasteboard.declareTypes([.string], owner: nil)
+                                    pasteboard.setString(artists + seperator + title + yearText,
+                                                         forType: .string)
+                                }) { Text("All") }
+                            }
                         }
                     }
                     
@@ -128,12 +160,30 @@ struct ChooseView: View {
                                     .animation(.default, value: chosen)
                                     
                                     VStack(alignment: .leading, spacing: 4) {
-                                        Text("\(results[(chosen ?? 0)].title.replacingOccurrences(of: "*", with: "†"))")
+                                        Text("\(chosenTitle)")
                                             .fontWeight(.bold)
-                                        Text("\(results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*")")
+                                            .contextMenu {
+                                                Button(action: {
+                                                    pasteboard.declareTypes([.string], owner: nil)
+                                                    pasteboard.setString(chosenTitle, forType: .string)
+                                                }) { Text("Copy") }
+                                            }
+                                        Text("\(chosenFormat)")
                                             .fontWeight(.bold)
-                                        Text("\(results[(chosen ?? 0)].year ?? "")")
+                                            .contextMenu {
+                                                Button(action: {
+                                                    pasteboard.declareTypes([.string], owner: nil)
+                                                    pasteboard.setString(chosenFormat, forType: .string)
+                                                }) { Text("Copy") }
+                                            }
+                                        Text("\(chosenYear)")
                                             .fontWeight(.bold)
+                                            .contextMenu {
+                                                Button(action: {
+                                                    pasteboard.declareTypes([.string], owner: nil)
+                                                    pasteboard.setString(chosenYear, forType: .string)
+                                                }) { Text("Copy") }
+                                            }
                                         
                                         Spacer()
                                     }
@@ -161,17 +211,21 @@ extension ChooseView {
     private var title: String { album.title ?? "" }
     private var artists: String { album.artists ?? "" }
     private var yearText: String {
-        if let year = album.year {
-            return " (\(year)"
-        } else {
-            if album.yearCandidates.count != 0
-                { return " (\(album.yearCandidates.first!))" }
-            else { return "" }
-        }
+        if let year = album.year { return " (\(year))" } else { return "" }
     }
     
     private var results: [SearchResult.Results] {
         searchResult!.results
+    }
+    
+    private var chosenTitle: String {
+        results[(chosen ?? 0)].title.replacingOccurrences(of: "*", with: "†")
+    }
+    private var chosenFormat: String {
+        results[(chosen ?? 0)].format?.uniqued().joined(separator: " / ") ?? "*"
+    }
+    private var chosenYear: String {
+        results[(chosen ?? 0)].year ?? ""
     }
     
     private func search() {

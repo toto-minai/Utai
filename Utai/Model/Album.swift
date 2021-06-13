@@ -20,7 +20,7 @@ struct Album: Identifiable {
     
     var title: String?
     var artists: String?
-    var year: String?
+    var year: Int?
     
     struct Track: Identifiable {
         let id = UUID()
@@ -84,5 +84,6 @@ struct Album: Identifiable {
         
         if albumTitleCandidates.count == 1 { title = albumTitleCandidates.first }
         if albumArtistsCandidates.count == 1 { artists = albumArtistsCandidates.first }
+        if yearCandidates.count == 1 { year = yearCandidates.first }
     }
 }
