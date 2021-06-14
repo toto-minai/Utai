@@ -12,6 +12,20 @@ struct MatchPanel: View {
     
     var body: some View {
         ZStack {
+            VStack {
+                HStack {
+                    ButtonMini(systemName: "xmark", helpText: "Close Match Panel")
+                        .padding(8)
+                        .onTapGesture {
+                            store.showMatchPanel = false
+                        }
+                    
+                    Spacer()
+                }
+                
+                Spacer()
+            }
+            
             ScrollView([.vertical]) {
                 VStack(alignment: .leading, spacing: lilSpacing2x) {
                     Spacer().frame(height: lilIconLength)
@@ -32,8 +46,8 @@ struct MatchPanel: View {
                                         .frame(width: 16)
                                     
                                     
-                                    VStack(alignment: .leading, spacing: 0) {
-                                        Text("**\(track.title ?? track.filename)**")
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text("**\(track.title ?? track.filename.withoutExtension)**")
                                             .foregroundColor(.primary)
                                         if album.artists == nil ||
                                             track.artist != nil && track.artist != album.artists! {
@@ -65,6 +79,12 @@ struct MatchPanel: View {
             .padding(.leading, lilSpacing2x+lilIconLength)
         }
         .frame(width: unitLength)
+    }
+}
+
+extension String {
+    var withoutExtension: String {
+        self.split(separator: ".").dropLast().joined(separator: ".")
     }
 }
 

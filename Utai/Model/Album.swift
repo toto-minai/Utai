@@ -38,7 +38,7 @@ struct Album: Identifiable {
         var trackNoText: String {
             if let trackNo = trackNo {
                 return "\(trackNo)"
-            } else { return "" }
+            } else { return "?" }
         }
         
         var lengthText: String {
