@@ -30,9 +30,12 @@ struct ContentView: View {
             .frame(width: unitLength, height: unitLength)
             .ignoresSafeArea()
             .frame(width: unitLength, height: unitLength-titlebarHeight)
-            .background(EffectsView(
+            .background(
+//                Color.clear
+                EffectsView(
                 material: .popover,
-                blendingMode: .behindWindow).ignoresSafeArea())
+                blendingMode: .behindWindow).ignoresSafeArea()
+            )
             
             MatchPanel()
         }

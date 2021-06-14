@@ -15,7 +15,8 @@ struct ChooseView: View {
     @State private var isSettingsPresented: Bool = false
     @State private var searchResult: SearchResult?
     
-    @FocusState private var chosen: Int?
+    @FocusState private var focused: Int?
+    @State private var chosen: Int?
     
     let pasteboard = NSPasteboard.general
     
@@ -76,11 +77,14 @@ struct ChooseView: View {
                                                 image.resizable()
                                                     .scaledToFill()
                                                     .frame(width: 80, height: 80)
-                                                    .cornerRadius(4)
+                                                    .cornerRadius(2)
                                                     .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
                                                     .focusable(true)
-                                                    .focused($chosen, equals: index)
-                                                    .onTapGesture { chosen = index }
+                                                    .focused($focused, equals: index)
+                                                    .onTapGesture {
+                                                        focused = index
+                                                        chosen = index
+                                                    }
                                             } placeholder: {
                                                 ProgressView()
                                             }
@@ -104,7 +108,10 @@ struct ChooseView: View {
                             }
                         }
                         .padding(.vertical, -9.5)
-                        .onAppear { chosen = 0 }
+                        .onAppear {
+                            focused = 0
+                            chosen = 0
+                        }
                         
                         HStack(spacing: lilSpacing) {
                             ButtonCus(action: { isSettingsPresented = true },
@@ -175,6 +182,7 @@ struct ChooseView: View {
                                 withAnimation {
                                     store.goal = nil
                                 }
+                                focused = 0
                                 chosen = 0
                             }
                         }

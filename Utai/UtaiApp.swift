@@ -29,6 +29,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             window.isMovableByWindowBackground = true
             window.level = .floating
             
+//            window.backgroundColor = NSColor.clear
+//            window.hasShadow = false
+            
             window.styleMask.remove(.miniaturizable)
             window.styleMask.remove(.fullScreen)
 
