@@ -32,6 +32,7 @@ struct MatchPanel: View {
                     
                     Text(store.page < 3 ? "Tracklist" : "Mismatched")
                         .fontWeight(.bold)
+                        .foregroundColor(.secondary)
                         
                     VStack(spacing: 8) {
                         ForEach(tracksSortedByNo) { track in
@@ -49,10 +50,12 @@ struct MatchPanel: View {
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("**\(track.title ?? track.filename.withoutExtension)**")
                                             .foregroundColor(.primary)
+                                            .textSelection(.enabled)
                                         if album.artists == nil ||
                                             track.artist != nil && track.artist != album.artists! {
                                             Text("**\(track.artist!)**")
                                                 .foregroundColor(.secondary)
+                                                .textSelection(.enabled)
                                         }
                                     }.padding(8)
                                         .background(EffectsView(
