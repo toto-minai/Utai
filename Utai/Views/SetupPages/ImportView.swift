@@ -18,6 +18,8 @@ struct ImportView: View {
     @State private var goal: Int?
     
     var body: some View {
+        let delegate = MusicDropDelegate(urls: $urls, goal: $goal, dropOver: $dragOver)
+        
         return VStack(spacing: 0) {
             VStack(spacing: lilSpacing2x) {
                 WelcomeIcon()
@@ -46,6 +48,9 @@ struct ImportView: View {
                         .onAppear {
                             let anAlbum = Album(urls: urls)
                             
+                            urls = []
+                            self.goal = nil
+
                             if anAlbum.completed {
                                 store.album = anAlbum
                                 store.makeSearchUrl()
@@ -59,17 +64,39 @@ struct ImportView: View {
             }
         }
         .frame(width: unitLength, height: unitLength)
-        .onDrop(of: ["public.file-url"], isTargeted: $dragOver) { providers in
-            goal = providers.count
-            for provider in providers {
-                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
-                    guard let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) else { return }
-                    urls.append(url)
-                }
+        .onDrop(of: ["public.file-url"], delegate: delegate)
+    }
+}
+
+struct MusicDropDelegate: DropDelegate {
+    @Binding var urls: [URL]
+    @Binding var goal: Int?
+    @Binding var dropOver: Bool
+    
+    let performer = NSHapticFeedbackManager.defaultPerformer
+    
+    func dropEntered(info: DropInfo) {
+        dropOver = true
+        performer.perform(.generic, performanceTime: .now)
+    }
+    
+    func dropExited(info: DropInfo) {
+        dropOver = false
+        performer.perform(.generic, performanceTime: .now)
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        let providers = info.itemProviders(for: ["public.file-url"])
+        
+        goal = providers.count
+        for provider in providers {
+            provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
+                guard let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) else { return }
+                urls.append(url)
             }
-            
-            return true
         }
+        
+        return true
     }
 }
 
