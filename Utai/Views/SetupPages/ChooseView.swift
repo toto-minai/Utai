@@ -167,7 +167,9 @@ struct ChooseView: View {
                                 do { try await search() }
                                     catch { print(error) }
                                 store.needUpdate = false
-                                store.goal = nil
+                                withAnimation {
+                                    store.goal = nil
+                                }
                                 chosen = 0
                             }
                         }
