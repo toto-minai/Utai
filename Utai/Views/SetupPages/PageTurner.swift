@@ -32,7 +32,6 @@ struct PageTurner: View {
                 PageTurnerControl(page: $store.page, target: 1, systemName: "circle.fill", helpText: "Import")
                     .onTapGesture {
                         store.page = 1
-                        store.showMatchPanel = false
                     }
                 
                 PageTurnerControl(page: $store.page, target: 2, systemName: "triangle.fill", helpText: "Choose")
@@ -46,7 +45,6 @@ struct PageTurner: View {
                 PageTurnerControl(page: $store.page, target: 3, systemName: "square.fill", helpText: "Match")
                     .onTapGesture {
                         store.page = 3
-                        store.showMatchPanel = true
                     }
             }
         }

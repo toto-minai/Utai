@@ -20,6 +20,7 @@ struct UtaiApp: App {
                 .environmentObject(store)
         }
         .windowStyle(.hiddenTitleBar)
+        .windowToolbarStyle(.unifiedCompact)
     }
 }
 

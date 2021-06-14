@@ -51,6 +51,7 @@ struct ImportView: View {
 
                             if anAlbum.completed {
                                 store.album = anAlbum
+                                store.showMatchPanel = true
                                 store.makeSearchUrl()
                                 store.page = 2
                             } else {
@@ -116,6 +117,7 @@ extension ImportView {
         
         if anAlbum.completed {
             store.album = anAlbum
+            store.showMatchPanel = true
             store.makeSearchUrl()
             store.page = 2
         } else {
@@ -240,6 +242,7 @@ extension ConfirmSheet {
             (artistsCus == "" ? nil : artistsCus) :
             Array(album.albumArtistsCandidates)[artistsSelection]
         
+        store.showMatchPanel = true
         store.makeSearchUrl()
         store.page = 2
         

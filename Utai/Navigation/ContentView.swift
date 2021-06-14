@@ -25,21 +25,28 @@ struct ContentView: View {
                 
                 ReferencesControl(page: $store.page)
             }
-            .font(.custom("Yanone Kaffeesatz", size: 16))
-            // Translucent background
-            .frame(width: unitLength, height: unitLength)
-            .ignoresSafeArea()
-            .frame(width: unitLength, height: unitLength-titlebarHeight)
-            .background(
-//                Color.clear
-                EffectsView(
-                material: .popover,
-                blendingMode: .behindWindow).ignoresSafeArea()
-            )
-            
-            MatchPanel()
+            .frame(width: unitLength)
+
+            if store.showMatchPanel {
+                Rectangle()
+                    .frame(width: 1, height: unitLength-1)
+                    .foregroundColor(Color.secondary.opacity(0.4))
+                    .offset(y: 0.5)
+                MatchPanel()
+                    .frame(width: store.showMatchPanel ? unitLength : 0, alignment: .leading)
+            }
         }
-        .frame(width: (store.showMatchPanel ? 3 : 1) * unitLength, alignment: .leading)
+        .font(.custom("Yanone Kaffeesatz", size: 16))
+        // Translucent background
+        .frame(height: unitLength)
+        .ignoresSafeArea()
+        .frame(height: unitLength-titlebarHeight)
+        .background(
+//                Color.clear
+            EffectsView(
+            material: .popover,
+            blendingMode: .behindWindow).ignoresSafeArea()
+        )
     }
 }
 

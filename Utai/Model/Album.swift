@@ -31,6 +31,27 @@ struct Album: Identifiable {
         
         var trackNo: Int?
         var diskNo: Int?
+        
+        let url: URL
+        var filename: String
+        
+        var trackNoText: String {
+            if let trackNo = trackNo {
+                return "\(trackNo)"
+            } else { return "" }
+        }
+        
+        var lengthText: String {
+            var second = Int(length!)
+            let hour = second / 3600
+            second -= hour * 3600
+            let minute = second / 60
+            second -= minute * 60
+            
+            return (hour > 0 ? "\(String(format: "%02d", hour)):" : "") +
+                (minute > 0 ? "\(String(format: "%02d", minute)):" : "") +
+                String(format: "%02d", second)
+        }
     }
     
     var tracks = [Track]()
@@ -75,7 +96,8 @@ struct Album: Identifiable {
                     let diskNo = (tags.frames[.discPosition] as? ID3FramePartOfTotal)?.part
                     
                     let track = Track(title: title, artist: artist,
-                                      length: length, trackNo: trackNo, diskNo: diskNo)
+                                      length: length, trackNo: trackNo, diskNo: diskNo,
+                                      url: url, filename: url.lastPathComponent)
                     
                     tracks.append(track)
                 }
