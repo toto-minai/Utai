@@ -34,7 +34,7 @@ struct ChooseView: View {
     var body: some View {
         if let _ = store.album {
             ZStack(alignment: .top) {
-                if let _ = searchResult { shelf }
+                if searchResult != nil && store.goal == nil { shelf }
                 
                 VStack(spacing: lilSpacing2x) {
                     Spacer().frame(height: 12)
@@ -59,7 +59,7 @@ struct ChooseView: View {
                         .textSelection(.enabled)
                     }
                     
-                    if let _ = searchResult {
+                    if searchResult != nil && store.goal == nil {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: lilSpacing) {
                                 Spacer().frame(width: lilSpacing+lilIconLength)
@@ -167,6 +167,7 @@ struct ChooseView: View {
                                 do { try await search() }
                                     catch { print(error) }
                                 store.needUpdate = false
+                                store.goal = nil
                                 chosen = 0
                             }
                         }

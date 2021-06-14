@@ -17,6 +17,8 @@ class Store: ObservableObject {
     
     @Published var showMatchPanel: Bool = false
     
+    @Published var goal: Int?
+
     func makeSearchUrl() {
         let title = album!.title
         let artists = album!.artists

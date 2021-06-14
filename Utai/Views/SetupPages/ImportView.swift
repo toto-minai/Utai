@@ -15,10 +15,9 @@ struct ImportView: View {
     @State private var newAlbum: Album?
     @State private var isConfirmPresented = false
     @State private var urls: [URL] = []
-    @State private var goal: Int?
     
     var body: some View {
-        let delegate = MusicDropDelegate(urls: $urls, goal: $goal, dropOver: $dragOver)
+        let delegate = MusicDropDelegate(urls: $urls, goal: $store.goal, dropOver: $dragOver)
         
         return VStack(spacing: 0) {
             VStack(spacing: lilSpacing2x) {
@@ -42,14 +41,13 @@ struct ImportView: View {
             
             Spacer()
             
-            if let goal = goal {
+            if let goal = store.goal {
                 if urls.count == goal {
                     Spacer().frame(height: 0)
                         .onAppear {
                             let anAlbum = Album(urls: urls)
                             
                             urls = []
-                            self.goal = nil
 
                             if anAlbum.completed {
                                 store.album = anAlbum
