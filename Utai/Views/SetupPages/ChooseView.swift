@@ -205,20 +205,6 @@ extension ChooseView {
         results[(chosen ?? 0)].year ?? ""
     }
     
-//    private func search() {
-//        URLSession.shared.dataTask(with: store.searchUrl!) { data, _, _ in
-//            do {
-//                if let data = data {
-//                    let result = try JSONDecoder().decode(SearchResult.self, from: data)
-//
-//                    searchResult = result
-//                }
-//            } catch { print(error) }
-//        }.resume()
-//
-//        store.needUpdate = false
-//    }
-    
     enum SearchError: Error {
         case urlNotSucceed
     }
