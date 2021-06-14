@@ -34,7 +34,7 @@ struct ChooseView: View {
     var body: some View {
         if let _ = store.album {
             ZStack(alignment: .top) {
-                if searchResult != nil && store.goal == nil { shelf }
+                if searchResult != nil && store.goal == nil && !store.needUpdate { shelf }
                 
                 VStack(spacing: lilSpacing2x) {
                     Spacer().frame(height: 12)
@@ -46,7 +46,6 @@ struct ChooseView: View {
                             if title == "" {
                                 Text("Music by ")
                                     .fontWeight(.bold)
-                                    .textSelection(.disabled)
                             }
                             Text("\(artists)")
                                 .fontWeight(.bold)
@@ -65,7 +64,7 @@ struct ChooseView: View {
                         .textSelection(.enabled)
                     }
                     
-                    if searchResult != nil && store.goal == nil {
+                    if searchResult != nil && store.goal == nil && !store.needUpdate {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: lilSpacing) {
                                 Spacer().frame(width: lilSpacing+lilIconLength)
