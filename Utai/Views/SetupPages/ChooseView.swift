@@ -47,18 +47,17 @@ struct ChooseView: View {
                             if title == "" {
                                 Text("Music by ")
                                     .fontWeight(.bold)
+                                    .textSelection(.disabled)
                             }
                             Text("\(artists)")
                                 .fontWeight(.bold)
                                 .foregroundColor(.secondary) +
                             Text(album.artists != nil && album.title != nil ? " – " : "") .fontWeight(.bold) +
                             Text("\(title)")
+                                .fontWeight(.bold) +
+                            Text(title != "" ? "\(yearText)" : "")
                                 .fontWeight(.bold)
-                            if title != "" {
-                                Text("\(yearText)")
-                                    .fontWeight(.bold)
-                                    .foregroundColor(.secondary)
-                            }
+                                .foregroundColor(.secondary)
                             
                             Spacer().frame(width: lilSpacing2x+lilIconLength)
                         }
