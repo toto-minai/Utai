@@ -15,7 +15,8 @@ struct UtaiApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView().colorScheme(.dark)
+            ContentView()
+                .colorScheme(.dark)
                 .environmentObject(store)
         }
         .windowStyle(.hiddenTitleBar)

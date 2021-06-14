@@ -147,6 +147,7 @@ struct ConfirmSheet: View {
         Form {
             Group {
                 Text(instruction)
+                    .lineSpacing(4)
                 Divider()
             }.offset(y: 1.2)
             
