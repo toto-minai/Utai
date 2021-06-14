@@ -14,6 +14,8 @@ struct ImportView: View {
     
     @State private var newAlbum: Album?
     @State private var isConfirmPresented = false
+    @State private var urls: [URL] = []
+    @State private var goal: Int?
     
     var body: some View {
         return VStack(spacing: 0) {
@@ -37,29 +39,32 @@ struct ImportView: View {
             // TODO: Make it clear how to calc
             
             Spacer()
+            
+            if let goal = goal {
+                if urls.count == goal {
+                    Spacer().frame(height: 0)
+                        .onAppear {
+                            let anAlbum = Album(urls: urls)
+                            
+                            if anAlbum.completed {
+                                store.album = anAlbum
+                                store.makeSearchUrl()
+                                store.page = 2
+                            } else {
+                                newAlbum = anAlbum
+                                isConfirmPresented = true
+                            }
+                        }
+                }
+            }
         }
         .frame(width: unitLength, height: unitLength)
         .onDrop(of: ["public.file-url"], isTargeted: $dragOver) { providers in
-            var urls: [URL] = []
-            
-            let cnt = providers.count
-            for (i, provider) in providers.enumerated() {
+            goal = providers.count
+            for provider in providers {
                 provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
                     guard let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) else { return }
                     urls.append(url)
-                    
-                    if i == cnt-1 {
-                        let anAlbum = Album(urls: urls)
-                        
-                        if anAlbum.completed {
-                            store.album = anAlbum
-                            store.makeSearchUrl()
-                            store.page = 2
-                        } else {
-                            newAlbum = anAlbum
-                            isConfirmPresented = true
-                        }
-                    }
                 }
             }
             
