@@ -43,9 +43,8 @@ struct ContentView: View {
         .frame(height: unitLength-titlebarHeight)
         .background(
 //                Color.clear
-            EffectsView(
-            material: .popover,
-            blendingMode: .behindWindow).ignoresSafeArea()
+            TranslucentBackground()
+            
         )
     }
 }

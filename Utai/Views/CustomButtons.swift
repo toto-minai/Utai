@@ -38,6 +38,7 @@ struct ButtonMini: View {
     var body: some View {
         Image(systemName: systemName)
             .font(.system(size: 12))
+            .background(Color.black.opacity(0.001))
             .shadow(radius: 2)
             // TODO: Add helper text
             .help(helpText)

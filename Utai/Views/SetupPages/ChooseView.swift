@@ -113,6 +113,7 @@ struct ChooseView: View {
                         }
                         
                         HStack(spacing: lilSpacing) {
+                            /*
                             ButtonCus(action: { isSettingsPresented = true },
                                       label: "Settings",
                                       systemName: "gear")
@@ -121,6 +122,7 @@ struct ChooseView: View {
                                               instruction:
                                     "Adjust global settings for picking rather album.")
                             }
+                             */
                             
                             ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",
                                       systemName: "smallcircle.fill.circle.fill")

@@ -25,3 +25,17 @@ struct EffectsView: NSViewRepresentable {
         view.blendingMode = blendingMode
     }
 }
+
+struct TranslucentBackground: View {
+    var body: some View {
+        ZStack {
+            EffectsView(
+                material: .popover,
+                blendingMode: .behindWindow)
+                
+            
+            Rectangle()
+                .foregroundColor(Color.black.opacity(0.1))
+        }.ignoresSafeArea()
+    }
+}

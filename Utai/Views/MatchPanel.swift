@@ -49,18 +49,19 @@ struct MatchPanel: View {
                                     
                                     VStack(alignment: .leading, spacing: 4) {
                                         Text("**\(track.title ?? track.filename.withoutExtension)**")
+                                            .lineSpacing(4)
                                             .foregroundColor(.primary)
                                             .textSelection(.enabled)
+                                            
                                         if album.artists == nil ||
                                             track.artist != nil && track.artist != album.artists! {
                                             Text("**\(track.artist!)**")
+                                                .lineSpacing(4)
                                                 .foregroundColor(.secondary)
                                                 .textSelection(.enabled)
                                         }
                                     }.padding(8)
-                                        .background(EffectsView(
-                                            material: .popover,
-                                            blendingMode: .behindWindow).cornerRadius(4))
+                                        .background(TranslucentBackground())
                                     
                                     Text("\(track.lengthText)")
                                         .monospacedDigit()
