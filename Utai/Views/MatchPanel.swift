@@ -57,7 +57,8 @@ struct MatchPanel: View {
                                                             .textSelection(.enabled)
                                                     }
                                                 }
-                                                .padding(8)
+                                                .padding(.vertical, 6.8)
+                                                .padding(.horizontal, 8)
                                                 .background(TranslucentBackground())
                                                 .cornerRadius(4)
                                                 

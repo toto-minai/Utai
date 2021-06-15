@@ -10,14 +10,16 @@ import SwiftUI
 class Store: ObservableObject {
     @Published var page: Int = 1
     
+    @Published var goal: Int?
     @Published var album: Album?
     
     @Published var searchUrl: URL?
     @Published var needUpdate: Bool = false
     
-    @Published var showMatchPanel: Bool = false
+    @Published var matchUrl: URL?
+    @Published var needMatch: Bool = false
     
-    @Published var goal: Int?
+    @Published var showMatchPanel: Bool = false
 
     func makeSearchUrl() {
         let title = album!.title

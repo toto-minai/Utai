@@ -53,6 +53,22 @@ struct Album: Identifiable {
                 "\(String(format: "%02d", minute)):" +
                 String(format: "%02d", second)
         }
+        
+        struct Matched: Identifiable {
+            let id = UUID()
+            
+            var title: String?
+            var artists: String?
+            
+            var trackNo: Int?
+            var diskNo: Int?
+        }
+        
+        var matched: Matched?
+        
+        var matchedTitle: String?
+        var matchedArtists: String?
+        var matchedYear: String?
     }
     
     var tracks = [Track]()

@@ -17,23 +17,29 @@ struct ContentView: View {
     @EnvironmentObject var store: Store
     
     var body: some View {
-        HStack (spacing: 0) {
-            ZStack {
-                SetupPages()
-                
-                PageTurner()
-                
-                ReferencesControl(page: $store.page)
-            }
-            .frame(width: unitLength)
+        ZStack {
+            HStack (spacing: 0) {
+                ZStack {
+                    SetupPages()
+                    
+                    PageTurner()
+                    
+                    ReferencesControl(page: $store.page)
+                }
+                .frame(width: unitLength)
 
-            if store.showMatchPanel {
-                Rectangle()
-                    .frame(width: 1, height: unitLength-1)
-                    .foregroundColor(Color.secondary.opacity(0.4))
-                    .offset(y: 0.5)
-                MatchPanel()
-                    .frame(width: store.showMatchPanel ? unitLength : 0, alignment: .leading)
+                if store.showMatchPanel {
+                    Rectangle()
+                        .frame(width: 1, height: unitLength-1)
+                        .foregroundColor(Color.secondary.opacity(0.4))
+                        .offset(y: 0.5)
+                    MatchPanel()
+                        .frame(width: store.showMatchPanel ? unitLength : 0, alignment: .leading)
+                }
+            }
+            
+            if store.page == 3 {
+                MatchView()
             }
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))

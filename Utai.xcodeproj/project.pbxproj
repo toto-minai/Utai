@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		993C9FA32678C787007E4387 /* MatchSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993C9FA22678C787007E4387 /* MatchSearchResult.swift */; };
 		99747F142672E78100995E85 /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F132672E78100995E85 /* EffectsView.swift */; };
 		99747F172672EA0000995E85 /* SetupPages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F162672EA0000995E85 /* SetupPages.swift */; };
 		99747F192672EA3300995E85 /* PageTurner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F182672EA3300995E85 /* PageTurner.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		993C9FA22678C787007E4387 /* MatchSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchSearchResult.swift; sourceTree = "<group>"; };
 		996C0E842674FB6B00BA5A6C /* Utai.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Utai.entitlements; sourceTree = "<group>"; };
 		99747F132672E78100995E85 /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
 		99747F162672EA0000995E85 /* SetupPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPages.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 				99747F1C2672EAD400995E85 /* Album.swift */,
 				99D046F22674730A0076D972 /* Store.swift */,
 				99D046F92674E5B80076D972 /* SearchResult.swift */,
+				993C9FA22678C787007E4387 /* MatchSearchResult.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 				99D046F82674D07D0076D972 /* ChooseView.swift in Sources */,
 				99D046FA2674E5B80076D972 /* SearchResult.swift in Sources */,
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
+				993C9FA32678C787007E4387 /* MatchSearchResult.swift in Sources */,
 				99747F192672EA3300995E85 /* PageTurner.swift in Sources */,
 				99DB1BE62675F18400CCA6D7 /* MatchPanel.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,

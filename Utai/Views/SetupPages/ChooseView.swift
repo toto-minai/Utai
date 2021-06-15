@@ -83,13 +83,16 @@ struct ChooseView: View {
                                                     .scaledToFill()
                                                     .frame(width: 80, height: 80)
                                                     .cornerRadius(2)
-                                                    .shadow(color: Color.black.opacity(0.5), radius: 4, x: 0, y: 2)
                                                     .focusable(true)
                                                     .focused($focused, equals: index)
+                                                    .onTapGesture(count: 2) {
+                                                        pick(from: index)
+                                                    }
                                                     .onTapGesture {
                                                         focused = index
                                                         chosen = index
                                                     }
+                                                    
                                             } placeholder: {
                                                 ProgressView()
                                             }
@@ -98,9 +101,7 @@ struct ChooseView: View {
                                         }
                                     }
                                     .contextMenu {
-                                        Button(action: {
-                                            
-                                        }) { Text("Pick-It") }
+                                        Button(action: { pick(from: index) }) { Text("Pick-It") }
                                         Divider()
                                         Button(action: { openURL(URL(string: "https://discogs.com\(results[index].uri)")!) })
                                             { Text("View on Discogs") }
@@ -152,7 +153,7 @@ struct ChooseView: View {
                             ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",
                                       systemName: "smallcircle.fill.circle")
                             
-                            ButtonCus(action: {}, label: "Pick-It", systemName: "bag")
+                            ButtonCus(action: { pick(from: chosen ?? 0) }, label: "Pick-It", systemName: "bag")
                         }
 
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -190,7 +191,6 @@ struct ChooseView: View {
                                 }
                             }
                             .transition(.opacity)
-                        
                     }
                     
                     Spacer()
@@ -203,7 +203,7 @@ struct ChooseView: View {
                             async {
                                 searchResult = nil
                                 do { try await search() }
-                                    catch { print(error) }
+                                catch { print(error) }
                                 store.needUpdate = false
                                 withAnimation {
                                     store.goal = nil
@@ -260,8 +260,20 @@ extension ChooseView {
             withAnimation {
                 searchResult = result
             }
-        }
-        catch { throw error }
+        } catch { throw error }
+    }
+    
+    private func pick(from index: Int) {
+        var componets = URLComponents(url: results[index].resourceURL, resolvingAgainstBaseURL: false)!
+        componets.queryItems = [
+            URLQueryItem(name: "key", value: discogs_key),
+            URLQueryItem(name: "secret", value: discogs_secret)
+        ]
+        
+        store.matchUrl = componets.url
+        
+        store.page = 3
+        store.needMatch = true
     }
 }
 
