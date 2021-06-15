@@ -90,23 +90,23 @@ struct MatchPanel: View {
                 }
             }
             
-            VStack(spacing: 0) {
-                ZStack {
+            if scrolled > -27 {
+                VStack(spacing: 0) {
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .background(TranslucentBackground())
+                            .frame(height: lilSpacing2x+lilIconLength-0.5)
+                    }
+                        
                     Rectangle()
-                        .foregroundColor(.clear)
-                        .background(TranslucentBackground())
-                        .frame(height: lilSpacing2x+lilIconLength-0.5)
+                        .frame(width: unitLength-1, height: 1)
+                        .foregroundColor(Color.secondary.opacity(0.4))
+                        .offset(x: -0.5)
                     
+                    Spacer()
                 }
-                    
-                Rectangle()
-                    .frame(width: unitLength-1, height: 1)
-                    .foregroundColor(Color.secondary.opacity(0.4))
-                    .offset(x: -0.5)
-                
-                Spacer()
             }
-            .opacity(scrolled > 0 ? 1 : 0)
             
             VStack {
                 HStack {
