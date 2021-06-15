@@ -76,8 +76,9 @@ extension MatchView {
 
         do {
             let result = try JSONDecoder().decode(MatchSearchResult.self, from: data)
-            self.result = result
-            print(result)
+            withAnimation {
+                self.result = result
+            }
         } catch { throw error }
     }
 }

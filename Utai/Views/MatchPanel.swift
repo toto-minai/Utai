@@ -114,18 +114,20 @@ struct MatchPanel: View {
                 }
             }
             
-            VStack {
-                HStack {
-                    Spacer()
+            if store.page != 3 {
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match")
+                            .onTapGesture {
+                                store.showMatchPanel = false
+                            }
+                    }
+                    .padding(8)
                     
-                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match")
-                        .onTapGesture {
-                            store.showMatchPanel = false
-                        }
+                    Spacer()
                 }
-                .padding(8)
-                
-                Spacer()
             }
         }
         .frame(width: unitLength)

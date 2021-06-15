@@ -272,6 +272,7 @@ extension ChooseView {
         
         store.matchUrl = componets.url
         
+        store.showMatchPanel = true
         store.page = 3
         store.needMatch = true
     }

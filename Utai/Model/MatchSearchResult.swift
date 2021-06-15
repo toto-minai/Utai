@@ -52,7 +52,7 @@ struct MatchSearchResult: Codable {
         let position: String
         let type: String
         let title: String
-        let extraArtists: [Artist]
+        let extraArtists: [Artist]?
         let duration: String?
 
         private enum CodingKeys: String, CodingKey {
