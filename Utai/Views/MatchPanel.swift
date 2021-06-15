@@ -91,18 +91,21 @@ struct MatchPanel: View {
             }
             
             if scrolled > -27 {
-                VStack(spacing: 0) {
-                    ZStack {
+                VStack {
+                    VStack(spacing: 0) {
+                        ZStack {
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .frame(height: lilSpacing2x+lilIconLength-0.5)
+                        }
+                            
                         Rectangle()
-                            .foregroundColor(.clear)
-                            .background(TranslucentBackground())
-                            .frame(height: lilSpacing2x+lilIconLength-0.5)
-                    }
+                            .frame(width: unitLength-1, height: 1)
+                            .foregroundColor(Color.secondary.opacity(0.4))
+                            .offset(x: -0.5)
                         
-                    Rectangle()
-                        .frame(width: unitLength-1, height: 1)
-                        .foregroundColor(Color.secondary.opacity(0.4))
-                        .offset(x: -0.5)
+                    }
+                    .background(TranslucentBackground())
                     
                     Spacer()
                 }
