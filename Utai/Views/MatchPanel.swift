@@ -14,25 +14,24 @@ struct MatchPanel: View {
         ZStack {
             VStack {
                 HStack {
-                    ButtonMini(systemName: "xmark", helpText: "Close Match Panel")
+                    Spacer()
+                    
+                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match Panel")
                         .padding(8)
                         .onTapGesture {
                             store.showMatchPanel = false
                         }
-                    
-                    Spacer()
                 }
                 
                 Spacer()
             }
             
-            ScrollView([.vertical]) {
+            ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: lilSpacing2x) {
                     Spacer().frame(height: lilIconLength)
                     
                     Text(store.page < 3 ? "Tracklist" : "Mismatched")
                         .fontWeight(.bold)
-                        .foregroundColor(.secondary)
                         
                     VStack(spacing: 8) {
                         ForEach(tracksSortedByNo) { track in
@@ -60,8 +59,9 @@ struct MatchPanel: View {
                                                 .foregroundColor(.secondary)
                                                 .textSelection(.enabled)
                                         }
-                                    }.padding(8)
-                                        .background(TranslucentBackground())
+                                    }
+                                    .padding(8)
+                                    .background(TranslucentBackground())
                                     
                                     Text("\(track.lengthText)")
                                         .monospacedDigit()

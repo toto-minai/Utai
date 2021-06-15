@@ -41,11 +41,7 @@ struct ContentView: View {
         .frame(height: unitLength)
         .ignoresSafeArea()
         .frame(height: unitLength-titlebarHeight)
-        .background(
-//                Color.clear
-            TranslucentBackground()
-            
-        )
+        .background(TranslucentBackground())
     }
 }
 
