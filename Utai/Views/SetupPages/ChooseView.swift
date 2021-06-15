@@ -131,7 +131,7 @@ struct ChooseView: View {
                                 })
                                 Divider()
                                 Picker("Sort by", selection: $showing, content: {
-                                    Text("Default")
+                                    Text("Discogs")
                                         .tag(Showing.master)
                                     Text("Year")
                                         .tag(Showing.release)

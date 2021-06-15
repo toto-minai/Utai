@@ -77,6 +77,7 @@ struct MatchPanel: View {
                                 }
                             }
                             .frame(maxWidth: .infinity)
+                            .padding(.bottom, 4)
                             
                             Spacer()
                         }
