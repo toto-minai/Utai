@@ -114,19 +114,19 @@ struct ChooseView: View {
                         
                         HStack(spacing: lilSpacing) {
                             Menu {
-                                Text("Masters Only")
-                                Text("Releases Only")
+                                Toggle("Masters Only", isOn: .constant(false))
+                                Toggle("Releases Only", isOn: .constant(false))
                                 Divider()
-                                Text("Both")
+                                Toggle("Both", isOn: .constant(true))
                             } label: {
-                                Text("Show")
+                                Text("Showing")
                                     .fontWeight(.bold)
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
                                     .foregroundColor(.secondary)
                             }
                             .menuStyle(BorderlessButtonMenuStyle())
                             .menuButtonStyle(BorderlessButtonMenuButtonStyle())
-                            .frame(width: 35, alignment: .leading)
+                            .frame(width: 50, alignment: .leading)
                             .padding(.trailing, -2)
                             
                             ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",
