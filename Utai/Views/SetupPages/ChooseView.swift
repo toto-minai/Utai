@@ -76,7 +76,6 @@ struct ChooseView: View {
                                 Spacer().frame(width: lilSpacing+lilIconLength)
                                 
                                 ForEach(Array(resultsClipped.enumerated()), id: \.offset) { index, element in
-//                                ForEach(0..<min(6, results.count)) { index in
                                     ZStack {
                                         if let thumb = results[index].coverImage {
                                             AsyncImage(url: URL(string: thumb)!) { image in
@@ -142,8 +141,9 @@ struct ChooseView: View {
                                 })
                             } label: {
                                 Text("Options")
-                                    .fontWeight(.bold)
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
+                                    .fontWeight(.bold)
+                                    
                                     .foregroundColor(.secondary)
                             }
                             .menuStyle(BorderlessButtonMenuStyle())

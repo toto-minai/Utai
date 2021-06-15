@@ -63,10 +63,10 @@ struct MatchPanel: View {
                                                     .background(TranslucentBackground())
                                                     .cornerRadius(4)
                                                     
-                                                    Text("\(track.lengthText)")
-                                                        .fontWeight(.bold)
-                                                        .monospacedDigit()
-                                                        .foregroundColor(.secondary)
+                                                    MatchButton(length: Int(track.length),
+                                                                lengthText: track.lengthText)
+                                                    
+                                                    
                                                 }
                                                 .padding(.horizontal, 4)
                                             }
@@ -166,5 +166,49 @@ extension MatchPanel {
     
     private func delta(outter: GeometryProxy, inner: GeometryProxy) -> CGFloat {
         return outter.frame(in: .global).minY - inner.frame(in: .global).minY
+    }
+}
+
+struct MatchButton: View {
+    let length: Int
+    let lengthText: String
+    
+    @State private var hover: Bool = false
+    
+    var body: some View {
+        ZStack {
+            if hover {
+                Menu {
+                    Text("Unmatched")
+                    Divider()
+                    Text("Matched")
+                } label: {
+                    Text("Match")
+                        .font(.custom("Yanone Kaffeesatz", size: 16))
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                }
+                .menuStyle(BorderlessButtonMenuStyle())
+                .menuButtonStyle(BorderlessButtonMenuButtonStyle())
+                .menuIndicator(.hidden)
+                .frame(width: 29)
+                .padding(.leading, 2.5)
+                .padding(.trailing, -2.5)
+            }
+            
+            if !hover {
+                Text(lengthText)
+                    .font(.custom("Yanone Kaffeesatz", size: 16))
+                    .fontWeight(.bold)
+                    .monospacedDigit()
+                    .foregroundColor(.secondary)
+            }
+        }
+        .frame(width: length >= 3600 ? 47 : 29)
+        .onHover { hovering in
+            withAnimation {
+                hover = hovering
+            }
+        }
     }
 }

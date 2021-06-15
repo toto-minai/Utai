@@ -27,7 +27,7 @@ struct Album: Identifiable {
         
         var title: String?
         var artist: String?
-        var length: Double?
+        var length: Double
         
         var trackNo: Int?
         var diskNo: Int?
@@ -43,7 +43,7 @@ struct Album: Identifiable {
         }
         
         var lengthText: String {
-            var second = Int(length!)
+            var second = Int(length)
             let hour = second / 3600
             second -= hour * 3600
             let minute = second / 60
