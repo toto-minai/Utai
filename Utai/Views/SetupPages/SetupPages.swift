@@ -25,16 +25,25 @@ struct SetupPages: View {
 }
 
 struct ReferencesControl: View {
+    @EnvironmentObject var store: Store
+    
     @Binding var page: Int
     
     var body: some View {
         VStack {
-            HStack {
+            HStack(spacing: lilSpacing) {
                 Spacer()
                 
                 ButtonMini(systemName: "book", helpText: "Read Cookbook")
-                    .padding(8)
+                
+                if store.album != nil && !store.showMatchPanel {
+                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Show Match Panel")
+                        .onTapGesture {
+                            store.showMatchPanel = true
+                        }
+                }
             }
+            .padding(lilSpacing)
             
             Spacer()
         }

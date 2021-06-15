@@ -56,7 +56,6 @@ struct ChooseView: View {
                             Text("\(title)")
                                 .fontWeight(.bold) +
                             Text(title != "" ? "\(yearText)" : "")
-                                .fontWeight(.bold)
                                 .foregroundColor(.secondary)
                             
                             Spacer().frame(width: lilSpacing2x+lilIconLength)

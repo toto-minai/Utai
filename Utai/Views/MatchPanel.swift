@@ -12,26 +12,19 @@ struct MatchPanel: View {
     
     var body: some View {
         ZStack {
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match Panel")
-                        .padding(8)
-                        .onTapGesture {
-                            store.showMatchPanel = false
-                        }
-                }
-                
-                Spacer()
-            }
+            
             
             ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: lilSpacing2x) {
                     Spacer().frame(height: lilIconLength)
                     
-                    Text(store.page < 3 ? "Tracklist" : "Mismatched")
-                        .fontWeight(.bold)
+                    HStack(spacing: 0) {
+                        Text(store.page < 3 ? "Tracklist" : "Mismatched")
+                            .fontWeight(.bold)
+                        
+                        Text(" (\(tracks.count) track\(tracks.count == 1 ? "" : "s"))")
+                            .foregroundColor(.secondary)
+                    }
                         
                     VStack(spacing: 8) {
                         ForEach(tracksSortedByNo) { track in
@@ -81,6 +74,21 @@ struct MatchPanel: View {
                 }
             }
             .padding(.leading, lilSpacing2x+lilIconLength)
+            
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match Panel")
+                        .onTapGesture {
+                            store.showMatchPanel = false
+                        }
+                }
+                .padding(8)
+                
+                Spacer()
+            }
         }
         .frame(width: unitLength)
     }
