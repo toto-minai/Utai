@@ -85,8 +85,10 @@ struct MatchPanel: View {
                 }
                 .padding(.leading, lilSpacing2x+lilIconLength)
                 .padding(.top, lilSpacing2x+lilIconLength)
-                .onPreferenceChange(ScrolledPreferenceKey.self) { value in
-                    scrolled = value[0]
+                .onPreferenceChange(ScrolledPreferenceKey.self) { values in
+                    DispatchQueue.main.async {
+                        scrolled = values[0]
+                    }
                 }
             }
             
