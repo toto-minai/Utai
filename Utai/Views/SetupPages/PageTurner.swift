@@ -28,26 +28,50 @@ struct PageTurner: View {
         VStack {
             Spacer()
             
-            HStack(spacing: 8) {
-                PageTurnerControl(page: $store.page, target: 1, systemName: "circle.fill", helpText: "Import")
-                    .onTapGesture {
-                        store.page = 1
-                    }
-                
-                PageTurnerControl(page: $store.page, target: 2, systemName: "triangle.fill", helpText: "Choose")
-                    .onTapGesture {
-                        if store.page != 2 {
-                            store.page = 2
+            if store.page != 3 || store.artworkMode {
+                HStack(spacing: 8) {
+                    PageTurnerControl(page: $store.page, target: 1, systemName: "circle.fill", helpText: "Import")
+                        .onTapGesture {
+                            store.page = 1
+                            store.artworkMode = false
                         }
-                    }
-                    .disabled(store.album == nil)
+                    
+                    PageTurnerControl(page: $store.page, target: 2, systemName: "triangle.fill", helpText: "Choose")
+                        .onTapGesture {
+                            if store.page != 2 {
+                                store.page = 2
+                                store.artworkMode = false
+                            }
+                        }
+                        .disabled(store.album == nil)
+                    
+                    PageTurnerControl(page: $store.page, target: 3, systemName: "square.fill", helpText: "Match")
+                        .onTapGesture {
+                            store.page = 3
+                        }
+                }
+                .padding(8)
+                .background(PageTurnerBackground())
+                .cornerRadius(4)
                 
-                PageTurnerControl(page: $store.page, target: 3, systemName: "square.fill", helpText: "Match")
-                    .onTapGesture {
-                        store.page = 3
-                    }
             }
         }
-        .padding(.bottom, 2*8+12)
+        .padding(.bottom, lilSpacing2x+lilIconLength)
+    }
+}
+
+struct PageTurnerBackground: View {
+    @EnvironmentObject var store: Store
+    
+    var body: some View {
+        ZStack {
+            Color.clear
+            
+            if store.page == 3 && store.artworkMode {
+                Rectangle()
+                    .fill(.ultraThickMaterial)
+                    
+            }
+        }
     }
 }

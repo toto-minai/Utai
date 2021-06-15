@@ -11,26 +11,53 @@ struct MatchView: View {
     @EnvironmentObject var store: Store
     
     @State private var result: MatchSearchResult?
+    @State private var hoverArtworkPrimary: Bool = false
     
     var body: some View {
         ZStack {
-//            Text("\(store.matchUrl!.absoluteString)")
-//                .textSelection(.enabled)
-                
             if let _ = result {
                 HStack(spacing: 0) {
                     ZStack {
                         if let thumb = artworkPrimaryURL.first {
-                            AsyncImage(url: thumb) { image in
-                                image.resizable()
-                                    .scaledToFill()
-                                    .frame(width: 256, height: 256)
-                                    .cornerRadius(8)
-                            } placeholder: {
-                                ProgressView()
-                                    .frame(width: 256, height: 256)
+                            ZStack {
+                                AsyncImage(url: thumb) { image in
+                                    image.resizable()
+                                        .scaledToFill()
+                                        .frame(width: 256, height: 256)
+                                        .cornerRadius(store.artworkMode ? 0 : 8)
+                                        .onTapGesture {
+                                            withAnimation(.easeOut) {
+                                                store.artworkMode.toggle()
+                                            }
+                                        }
+                                        .scaleEffect(store.artworkMode ? 1.219 : 1)
+                                } placeholder: {
+                                    ProgressView()
+                                        .frame(width: 256, height: 256)
+                                }
+                                .padding(lilSpacing2x+lilIconLength)
+                                
+                                VStack {
+                                    VStack(spacing: 0) {
+                                        ZStack {
+                                            Rectangle()
+                                                .foregroundColor(.clear)
+                                                .frame(height: lilSpacing2x+lilIconLength-0.5)
+                                        }
+                                            
+                                        Rectangle()
+                                            .frame(width: unitLength-1, height: 1)
+                                            .foregroundColor(Color.secondary.opacity(0.4))
+                                            .offset(x: 0.5)
+                                    }
+                                    .background(.ultraThickMaterial)
+                                    
+                                    Spacer()
+                                }
+                                .opacity(store.artworkMode ? 1 : 0)
+                                .animation(nil, value: store.artworkMode)
                             }
-                            .padding(lilSpacing2x+lilIconLength)
+                            .frame(width: unitLength-1, height: unitLength)
                         }
                     }
                     
@@ -49,6 +76,10 @@ struct MatchView: View {
                         }
                     }
             }
+            
+            // For API testing:
+            // Text("\(store.matchUrl!.absoluteString)")
+            //     .textSelection(.enabled)
         }
         .frame(width: 2*unitLength, height: unitLength)
     }

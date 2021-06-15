@@ -20,6 +20,8 @@ class Store: ObservableObject {
     @Published var needMatch: Bool = false
     
     @Published var showMatchPanel: Bool = false
+    
+    @Published var artworkMode: Bool = false
 
     func makeSearchUrl() {
         let title = album!.title

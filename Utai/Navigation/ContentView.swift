@@ -18,11 +18,9 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            HStack (spacing: 0) {
+            HStack(spacing: 0) {
                 ZStack {
                     SetupPages()
-                    
-                    PageTurner()
                     
                     ReferencesControl(page: $store.page)
                 }
@@ -38,9 +36,15 @@ struct ContentView: View {
                 }
             }
             
-            if store.page == 3 {
-                MatchView()
+            if store.page == 3 { MatchView() }
+            
+            HStack(spacing: 0) {
+                PageTurner()
+                    .frame(width: unitLength)
+                
+                Spacer()
             }
+            .frame(width: store.showMatchPanel ? 2*unitLength : unitLength, alignment: .leading)
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
