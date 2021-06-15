@@ -113,17 +113,21 @@ struct ChooseView: View {
                         }
                         
                         HStack(spacing: lilSpacing) {
-                            /*
-                            ButtonCus(action: { isSettingsPresented = true },
-                                      label: "Settings",
-                                      systemName: "gear")
-                            .sheet(isPresented: $isSettingsPresented, onDismiss: {}) {
-                                SettingsSheet(systemName: "gear",
-                                              instruction:
-                                    "Adjust global settings for picking rather album.")
+                            Menu {
+                                Text("Masters Only")
+                                Text("Releases Only")
+                                Divider()
+                                Text("Both")
+                            } label: {
+                                Text("Show")
+                                    .fontWeight(.bold)
+                                    .font(.custom("Yanone Kaffeesatz", size: 16))
+                                    .foregroundColor(.secondary)
                             }
-                             */
-                            ButtonCus(action: {}, label: "Show Only", systemName: "rosette")
+                            .menuStyle(BorderlessButtonMenuStyle())
+                            .menuButtonStyle(BorderlessButtonMenuButtonStyle())
+                            .frame(width: 35, alignment: .leading)
+                            .padding(.trailing, -2)
                             
                             ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",
                                       systemName: "smallcircle.fill.circle")
