@@ -81,7 +81,7 @@ struct MatchSearchResult: Codable {
     let year: Int?
     let uri: URL
     let artists: [Artist]
-    let artistsSort: String
+    let artistsSort: String?
     let labels: [Label]?
     let formats: [Format]?
     let masterURL: URL?

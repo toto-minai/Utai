@@ -82,7 +82,7 @@ struct ChooseView: View {
                                                 image.resizable()
                                                     .scaledToFill()
                                                     .frame(width: 80, height: 80)
-                                                    .cornerRadius(2)
+                                                    .cornerRadius(4)
                                                     .focusable(true)
                                                     .focused($focused, equals: index)
                                                     .onTapGesture(count: 2) {
@@ -143,8 +143,6 @@ struct ChooseView: View {
                                 Text("Options")
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
                                     .fontWeight(.bold)
-                                    
-                                    .foregroundColor(.secondary)
                             }
                             .menuStyle(BorderlessButtonMenuStyle())
                             .menuButtonStyle(BorderlessButtonMenuButtonStyle())

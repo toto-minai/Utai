@@ -49,6 +49,7 @@ struct MatchPanel: View {
                                                             .lineSpacing(4)
                                                             .foregroundColor(.primary)
                                                             .textSelection(.enabled)
+                                                            .minimumScaleFactor(0.01)
                                                             
                                                         if album.artists == nil ||
                                                             track.artist != nil && track.artist != album.artists! {
@@ -186,7 +187,7 @@ struct MatchButton: View {
                     Text("Match")
                         .font(.custom("Yanone Kaffeesatz", size: 16))
                         .fontWeight(.bold)
-                        .foregroundColor(.secondary)
+//                        .foregroundColor(.secondary)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
                 .menuButtonStyle(BorderlessButtonMenuButtonStyle())
