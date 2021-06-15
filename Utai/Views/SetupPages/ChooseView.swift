@@ -18,6 +18,12 @@ struct ChooseView: View {
     @FocusState private var focused: Int?
     @State private var chosen: Int?
     
+    enum Showing {
+        case master, release, both
+    }
+    
+    @State private var showing: Showing = .both
+    
     let pasteboard = NSPasteboard.general
     
     var shelf: some View {
@@ -114,19 +120,33 @@ struct ChooseView: View {
                         
                         HStack(spacing: lilSpacing) {
                             Menu {
-                                Toggle("Masters Only", isOn: .constant(false))
-                                Toggle("Releases Only", isOn: .constant(false))
+                                Picker("Show", selection: $showing, content: {
+                                    Text("Masters Only")
+                                        .tag(Showing.master)
+                                    Text("Releases Only")
+                                        .tag(Showing.release)
+                                    Divider()
+                                    Text("Both")
+                                        .tag(Showing.both)
+                                })
                                 Divider()
-                                Toggle("Both", isOn: .constant(true))
+                                Picker("Sort by", selection: $showing, content: {
+                                    Text("Default")
+                                        .tag(Showing.master)
+                                    Text("Year")
+                                        .tag(Showing.release)
+                                    Text("Country / Region")
+                                        .tag(Showing.both)
+                                })
                             } label: {
-                                Text("Showing")
+                                Text("Options")
                                     .fontWeight(.bold)
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
                                     .foregroundColor(.secondary)
                             }
                             .menuStyle(BorderlessButtonMenuStyle())
                             .menuButtonStyle(BorderlessButtonMenuButtonStyle())
-                            .frame(width: 50, alignment: .leading)
+                            .frame(width: 45, alignment: .leading)
                             .padding(.trailing, -2)
                             
                             ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",

@@ -27,7 +27,7 @@ struct MatchPanel: View {
                                 Text(store.page < 3 ? "Tracklist" : "Mismatched")
                                     .fontWeight(.bold)
                                 
-                                Text(" (\(tracks.count) track\(tracks.count == 1 ? "" : "s"))")
+                                Text(" (\(tracks.count) Track\(tracks.count == 1 ? "" : "s"))")
                                     .fontWeight(.bold)
                                     .foregroundColor(.secondary)
                             }
