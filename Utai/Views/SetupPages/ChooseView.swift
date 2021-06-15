@@ -156,41 +156,41 @@ struct ChooseView: View {
                             ButtonCus(action: { pick(from: chosen ?? 0) }, label: "Pick-It", systemName: "bag")
                         }
 
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: lilSpacing) {
-                                    Spacer().frame(width: lilSpacing+lilIconLength)
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: lilSpacing) {
+                                Spacer().frame(width: lilSpacing+lilIconLength)
+                                
+                                VStack(alignment: .trailing, spacing: 4) {
+                                    Text("Versus")
+                                        .fontWeight(.bold)
+                                    Text("Format")
+                                        .fontWeight(.bold)
+                                        .opacity(results[(chosen ?? 0)].format != nil ? 1 : 0.3)
+                                    Text("Released")
+                                        .fontWeight(.bold)
+                                        .opacity(results[(chosen ?? 0)].year != nil ? 1 : 0.3)
                                     
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        Text("Versus")
-                                            .fontWeight(.bold)
-                                        Text("Format")
-                                            .fontWeight(.bold)
-                                            .opacity(results[(chosen ?? 0)].format != nil ? 1 : 0.3)
-                                        Text("Released")
-                                            .fontWeight(.bold)
-                                            .opacity(results[(chosen ?? 0)].year != nil ? 1 : 0.3)
-                                        
-                                        Spacer()  // Keep 2 VStack aligned
-                                    }
-                                    .foregroundColor(.secondary)
-                                    .animation(.default, value: chosen)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("\(chosenTitle)")
-                                            .fontWeight(.bold)
-                                        Text("\(chosenFormat)")
-                                            .fontWeight(.bold)
-                                        Text("\(chosenYear)")
-                                            .fontWeight(.bold)
-                                        
-                                        Spacer()
-                                    }
-                                    .textSelection(.enabled)
-                                    
-                                    Spacer().frame(width: lilSpacing+lilIconLength)
+                                    Spacer()  // Keep 2 VStack aligned
                                 }
+                                .foregroundColor(.secondary)
+                                .animation(.default, value: chosen)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("\(chosenTitle)")
+                                        .fontWeight(.bold)
+                                    Text("\(chosenFormat)")
+                                        .fontWeight(.bold)
+                                    Text("\(chosenYear)")
+                                        .fontWeight(.bold)
+                                    
+                                    Spacer()
+                                }
+                                .textSelection(.enabled)
+                                
+                                Spacer().frame(width: lilSpacing+lilIconLength)
                             }
-                            .transition(.opacity)
+                        }
+                        .transition(.opacity)
                     }
                     
                     Spacer()

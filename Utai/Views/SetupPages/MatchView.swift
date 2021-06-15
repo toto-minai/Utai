@@ -26,16 +26,20 @@ struct MatchView: View {
                                         .frame(width: 256, height: 256)
                                         .cornerRadius(store.artworkMode ? 0 : 8)
                                         .onTapGesture {
-                                            withAnimation(.easeOut) {
-                                                store.artworkMode.toggle()
-                                            }
+                                            store.artworkMode.toggle()
                                         }
                                         .scaleEffect(store.artworkMode ? 1.219 : 1)
+                                        .animation(.easeOut, value: store.artworkMode)
                                 } placeholder: {
                                     ProgressView()
                                         .frame(width: 256, height: 256)
                                 }
                                 .padding(lilSpacing2x+lilIconLength)
+                                
+//                                RoundedRectangle(cornerRadius: 60)
+//                                    .fill(.thinMaterial)
+//                                    .frame(width: 240, height: 240)
+//                                    .blur(radius: 40)
                                 
                                 VStack {
                                     VStack(spacing: 0) {

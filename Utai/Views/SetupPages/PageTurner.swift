@@ -47,7 +47,6 @@ struct PageTurner: View {
                     
                     PageTurnerControl(page: $store.page, target: 3, systemName: "square.fill", helpText: "Match")
                         .onTapGesture {
-                            store.page = 3
                         }
                 }
                 .padding(8)
@@ -57,6 +56,7 @@ struct PageTurner: View {
             }
         }
         .padding(.bottom, lilSpacing2x+lilIconLength)
+        .animation(.easeOut, value: store.artworkMode)
     }
 }
 
