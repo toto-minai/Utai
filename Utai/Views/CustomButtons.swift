@@ -24,7 +24,6 @@ struct ButtonCus: View {
         }
         .buttonStyle(.borderless)
         .focusable(false)
-        .shadow(radius: 2)
     }
 }
 
@@ -39,7 +38,6 @@ struct ButtonMini: View {
         Image(systemName: systemName)
             .font(.system(size: 12))
             .background(Color.black.opacity(0.001))
-            .shadow(radius: 2)
             // TODO: Add helper text
             .help(helpText)
             .opacity(alwaysHover ? 1 : (isHover ? 1 : 0.3))

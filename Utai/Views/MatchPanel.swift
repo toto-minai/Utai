@@ -99,8 +99,9 @@ struct MatchPanel: View {
                 }
                     
                 Rectangle()
-                    .frame(height: 1)
+                    .frame(width: unitLength-1, height: 1)
                     .foregroundColor(Color.secondary.opacity(0.4))
+                    .offset(x: -0.5)
                 
                 Spacer()
             }
