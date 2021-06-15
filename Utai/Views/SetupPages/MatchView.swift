@@ -71,7 +71,10 @@ struct MatchView: View {
                         async {
                             result = nil
                             do { try await search() }
-                            catch { print(error) }
+                            catch {
+                                print(store.matchUrl!.absoluteString)
+                                print(error)
+                            }
                             store.needMatch = false
                         }
                     }

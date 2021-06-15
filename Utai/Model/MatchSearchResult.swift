@@ -14,7 +14,7 @@ struct MatchSearchResult: Codable {
         let join: String?
         let role: String?
         let tracks: String?
-        let resourceURL: URL
+        let resourceURL: String
 
         private enum CodingKeys: String, CodingKey {
             case name
