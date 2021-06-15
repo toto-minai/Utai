@@ -30,9 +30,8 @@ struct TranslucentBackground: View {
     var body: some View {
         ZStack {
             EffectsView(
-                material: .popover,
+                material: .menu,
                 blendingMode: .behindWindow)
-                
             
             Rectangle()
                 .foregroundColor(Color.black.opacity(0.1))
