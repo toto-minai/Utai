@@ -75,7 +75,8 @@ struct ChooseView: View {
                             HStack(spacing: lilSpacing) {
                                 Spacer().frame(width: lilSpacing+lilIconLength)
                                 
-                                ForEach(0..<min(6, results.count)) { index in
+                                ForEach(Array(resultsClipped.enumerated()), id: \.offset) { index, element in
+//                                ForEach(0..<min(6, results.count)) { index in
                                     ZStack {
                                         if let thumb = results[index].coverImage {
                                             AsyncImage(url: URL(string: thumb)!) { image in
@@ -226,8 +227,12 @@ extension ChooseView {
         if let year = album.year { return " (\(year))" } else { return "" }
     }
     
-    private var results: [SearchResult.Results] {
+    private var results: [SearchResult.Result] {
         searchResult!.results
+    }
+    
+    private var resultsClipped: [SearchResult.Result] {
+        Array(results.prefix(6))
     }
     
     private var chosenUri: String {

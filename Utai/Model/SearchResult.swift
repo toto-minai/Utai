@@ -29,7 +29,7 @@ struct SearchResult: Codable {
         }
     }
 
-    struct Results: Codable {
+    struct Result: Codable {
         struct Formats: Codable {
             let descriptions: [String]?
             let name: String
@@ -75,5 +75,5 @@ struct SearchResult: Codable {
     }
 
     let pagination: Pagination?
-    let results: [Results]
+    let results: [Result]
 }
