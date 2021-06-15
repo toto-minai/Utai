@@ -37,7 +37,7 @@ struct ReferencesControl: View {
                 ButtonMini(systemName: "book", helpText: "Read Cookbook")
                 
                 if store.album != nil && !store.showMatchPanel {
-                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Show Match Panel")
+                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Show Match")
                         .onTapGesture {
                             store.showMatchPanel = true
                         }

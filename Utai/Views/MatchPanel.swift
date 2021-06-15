@@ -80,7 +80,7 @@ struct MatchPanel: View {
                 HStack {
                     Spacer()
                     
-                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match Panel")
+                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Hide Match")
                         .onTapGesture {
                             store.showMatchPanel = false
                         }
