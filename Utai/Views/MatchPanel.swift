@@ -23,48 +23,51 @@ struct MatchPanel: View {
                             .fontWeight(.bold)
                         
                         Text(" (\(tracks.count) track\(tracks.count == 1 ? "" : "s"))")
+                            .fontWeight(.bold)
                             .foregroundColor(.secondary)
                     }
                         
                     VStack(spacing: 8) {
                         ForEach(tracksSortedByNo) { track in
                             HStack(spacing: 0) {
-                            GroupBox {
-                                HStack(spacing: 8) {
-                                    Text("\(track.trackNoText)")
-                                        .fontWeight(.bold)
-                                        .monospacedDigit()
-                                    
-                                        .foregroundColor(.secondary)
-                                        .frame(width: 16)
-                                    
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("**\(track.title ?? track.filename.withoutExtension)**")
-                                            .lineSpacing(4)
-                                            .foregroundColor(.primary)
-                                            .textSelection(.enabled)
-                                            
-                                        if album.artists == nil ||
-                                            track.artist != nil && track.artist != album.artists! {
-                                            Text("**\(track.artist!)**")
+                                GroupBox {
+                                    HStack(spacing: 8) {
+                                        Text("\(track.trackNoText)")
+                                            .fontWeight(.bold)
+                                            .monospacedDigit()
+                                            .foregroundColor(.secondary)
+                                            .frame(width: 16)
+                                        
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("**\(track.title ?? track.filename.withoutExtension)**")
                                                 .lineSpacing(4)
-                                                .foregroundColor(.secondary)
+                                                .foregroundColor(.primary)
                                                 .textSelection(.enabled)
+                                                
+                                            if album.artists == nil ||
+                                                track.artist != nil && track.artist != album.artists! {
+                                                Text("**\(track.artist!)**")
+                                                    .lineSpacing(4)
+                                                    .foregroundColor(.secondary)
+                                                    .textSelection(.enabled)
+                                            }
                                         }
+                                        .padding(8)
+                                        .background(TranslucentBackground())
+                                        .cornerRadius(4)
+                                        
+                                        Text("\(track.lengthText)")
+                                            .fontWeight(.bold)
+                                            .monospacedDigit()
+                                            .foregroundColor(.secondary)
                                     }
-                                    .padding(8)
-                                    .background(TranslucentBackground())
-                                    
-                                    Text("\(track.lengthText)")
-                                        .monospacedDigit()
-                                        .foregroundColor(.secondary)
+                                    .padding(.horizontal, 4)
                                 }
-                                .padding(.horizontal, 4)
-                            }
-                            Spacer()
+                                    
+                                Spacer()
                                     .frame(width: lilSpacing2x+lilIconLength)
-                            Spacer()
+                                
+                                Spacer()
                             }
                         }
                     }

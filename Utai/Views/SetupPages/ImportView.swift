@@ -25,6 +25,7 @@ struct ImportView: View {
                 
                 HStack(spacing: 2) {
                     Text("Drag or")
+                        .fontWeight(.bold)
                     
                     ButtonCus(action: importFiles,
                               label: "Add Music",

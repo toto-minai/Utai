@@ -37,6 +37,7 @@ struct Album: Identifiable {
         
         var trackNoText: String {
             if let trackNo = trackNo {
+                if trackNo == 0 { return "?" }
                 return "\(trackNo)"
             } else { return "?" }
         }
@@ -49,7 +50,7 @@ struct Album: Identifiable {
             second -= minute * 60
             
             return (hour > 0 ? "\(String(format: "%02d", hour)):" : "") +
-                (minute > 0 ? "\(String(format: "%02d", minute)):" : "") +
+                "\(String(format: "%02d", minute)):" +
                 String(format: "%02d", second)
         }
     }

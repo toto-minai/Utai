@@ -56,6 +56,7 @@ struct ChooseView: View {
                             Text("\(title)")
                                 .fontWeight(.bold) +
                             Text(title != "" ? "\(yearText)" : "")
+                                .fontWeight(.bold)
                                 .foregroundColor(.secondary)
                             
                             Spacer().frame(width: lilSpacing2x+lilIconLength)
@@ -122,9 +123,10 @@ struct ChooseView: View {
                                     "Adjust global settings for picking rather album.")
                             }
                              */
+                            ButtonCus(action: {}, label: "Show Only", systemName: "rosette")
                             
                             ButtonCus(action: { openURL(URL(string: chosenUri)!) }, label: "View on Discogs",
-                                      systemName: "smallcircle.fill.circle.fill")
+                                      systemName: "smallcircle.fill.circle")
                             
                             ButtonCus(action: {}, label: "Pick-It", systemName: "bag")
                         }
