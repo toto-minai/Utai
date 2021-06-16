@@ -28,20 +28,23 @@ struct ChooseView: View {
     
     var shelf: some View {
         Rectangle()
-            .frame(height: 84)
-            .foregroundColor(.clear)
-            .background(LinearGradient(
+            .fill(LinearGradient(
                 stops: [Gradient.Stop(color: Color.primary.opacity(0), location: 0),
-                        Gradient.Stop(color: Color.primary.opacity(0.16), location: 0.4),
+                        Gradient.Stop(color: Color.primary.opacity(0.2), location: 0.4),
                         Gradient.Stop(color: Color.primary.opacity(0), location: 1)],
                 startPoint: .top, endPoint: .bottom))
-            .offset(y: 108)
+            .frame(width: 2*unitLength)
+            .frame(width: unitLength, height: 84, alignment: .leading)
+            .clipped()
+            .blur(radius: 10)
+            .offset(x: lilIconLength, y: 98)
+            
     }
     
     var body: some View {
         if let _ = store.album {
             ZStack(alignment: .top) {
-                if searchResult != nil && store.goal == nil && !store.needUpdate { shelf }
+//                if searchResult != nil && store.goal == nil && !store.needUpdate { shelf }
                 
                 VStack(spacing: lilSpacing2x) {
                     Spacer().frame(height: 12)
@@ -79,20 +82,36 @@ struct ChooseView: View {
                                     ZStack {
                                         if let thumb = results[index].coverImage {
                                             AsyncImage(url: URL(string: thumb)!) { image in
-                                                image.resizable()
-                                                    .scaledToFill()
-                                                    .frame(width: 80, height: 80)
-                                                    .cornerRadius(4)
-                                                    .focusable(true)
-                                                    .focused($focused, equals: index)
-                                                    .onTapGesture {
-                                                        if focused == index {
-                                                            pick(from: index)
-                                                        } else {
-                                                            focused = index
-                                                            chosen = index
-                                                        }
+                                                ZStack {
+                                                    ZStack {
+                                                        image.resizable()
+                                                            .scaledToFill()
+                                                            .frame(width: 80, height: 80)
+                                                        
+//                                                        Color.black.opacity(0.2)
                                                     }
+                                                        .scaleEffect(0.9)
+                                                        .cornerRadius(30)
+                                                        .blur(radius: 3.6)
+//                                                        .blendMode(.darken)
+                                                        .offset(y: 5.4)
+                                                    
+                                                    image.resizable()
+                                                        .scaledToFill()
+                                                        .frame(width: 80, height: 80)
+                                                        .cornerRadius(4)
+                                                        .shadow(color: Color.black.opacity(0.54), radius: 3.6, x: 0, y: 3)
+                                                        .focusable(true)
+                                                        .focused($focused, equals: index)
+                                                        .onTapGesture {
+                                                            if focused == index {
+                                                                pick(from: index)
+                                                            } else {
+                                                                focused = index
+                                                                chosen = index
+                                                            }
+                                                        }
+                                                }
                                                     
                                             } placeholder: {
                                                 ProgressView()
