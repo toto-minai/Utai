@@ -20,7 +20,6 @@ struct PageTurnerControl: View {
     }
 }
 
-
 struct PageTurner: View {
     @EnvironmentObject var store: Store
     
@@ -69,7 +68,7 @@ struct PageTurnerBackground: View {
             
             if store.page == 3 && store.artworkMode {
                 Rectangle()
-                    .fill(.ultraThickMaterial)
+                    .fill(.ultraThinMaterial)
                     
             }
         }

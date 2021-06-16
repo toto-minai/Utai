@@ -33,6 +33,9 @@ struct ContentView: View {
                         .offset(y: 0.5)
                     MatchPanel()
                         .frame(width: store.showMatchPanel ? unitLength : 0, alignment: .leading)
+                        .background(EffectsView(
+                            material: .contentBackground,
+                            blendingMode: .behindWindow).ignoresSafeArea())
                 }
             }
             
@@ -51,7 +54,9 @@ struct ContentView: View {
         .frame(height: unitLength)
         .ignoresSafeArea()
         .frame(height: unitLength-titlebarHeight)
-        .background(TranslucentBackground())
+        .background(EffectsView(
+            material: .sidebar,
+            blendingMode: .behindWindow).ignoresSafeArea())
     }
 }
 

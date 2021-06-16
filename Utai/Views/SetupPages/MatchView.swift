@@ -54,7 +54,7 @@ struct MatchView: View {
                                             .foregroundColor(Color.secondary.opacity(0.4))
                                             .offset(x: 0.5)
                                     }
-                                    .background(.ultraThickMaterial)
+                                    .background(.ultraThinMaterial)
                                     
                                     Spacer()
                                 }

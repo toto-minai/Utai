@@ -30,7 +30,7 @@ struct TranslucentBackground: View {
     var body: some View {
         ZStack {
             EffectsView(
-                material: .menu,
+                material: .underWindowBackground,
                 blendingMode: .behindWindow)
             
             Rectangle()

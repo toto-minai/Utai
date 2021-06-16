@@ -31,9 +31,9 @@ struct ChooseView: View {
             .frame(height: 84)
             .foregroundColor(.clear)
             .background(LinearGradient(
-                stops: [Gradient.Stop(color: Color.white.opacity(0), location: 0),
-                        Gradient.Stop(color: Color.white.opacity(0.12), location: 0.4),
-                        Gradient.Stop(color: Color.white.opacity(0), location: 1)],
+                stops: [Gradient.Stop(color: Color.primary.opacity(0), location: 0),
+                        Gradient.Stop(color: Color.primary.opacity(0.16), location: 0.4),
+                        Gradient.Stop(color: Color.primary.opacity(0), location: 1)],
                 startPoint: .top, endPoint: .bottom))
             .offset(y: 108)
     }

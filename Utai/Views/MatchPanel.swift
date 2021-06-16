@@ -61,7 +61,9 @@ struct MatchPanel: View {
                                                     }
                                                     .padding(.vertical, 6.8)
                                                     .padding(.horizontal, 8)
-                                                    .background(TranslucentBackground())
+                                                    .background(EffectsView(
+                                                        material: .sidebar,
+                                                        blendingMode: .behindWindow))
                                                     .cornerRadius(4)
                                                     
                                                     MatchButton(length: Int(track.length),
@@ -108,7 +110,9 @@ struct MatchPanel: View {
                                 .offset(x: -0.5)
                             
                         }
-                        .background(TranslucentBackground())
+                        .background(EffectsView(
+                            material: .contentBackground,
+                            blendingMode: .behindWindow))
                         
                         Spacer()
                     }
