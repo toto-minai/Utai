@@ -81,8 +81,7 @@ struct ChooseView: View {
                                                             .overlay(
                                                                 RoundedRectangle(cornerRadius: 4)
                                                                     .stroke(Color.accentColor.opacity(
-                                                                        (chosen != nil && chosen! == index) ? 1 : 0.001),
-                                                                            lineWidth: 2.6)
+                                                                        (chosen != nil && chosen! == index) ? 1 : 0.001), lineWidth: 2.6)
                                                             )
                                                             .shadow(color: Color.black.opacity(0.54),
                                                                     radius: 3.6, x: 0, y: 2.7)
@@ -92,13 +91,13 @@ struct ChooseView: View {
                                                                 } else {
                                                                     withAnimation(.easeOut) {
                                                                         chosen = index
-                                                                        
                                                                     }
                                                                 }
                                                             }
                                                     }
                                                     .id(results[index].id)
                                                     .help(chosenInfoShort)
+                                                    // Bug: Will still display even when clipped
                                                         
                                                 } placeholder: {
                                                     ProgressView()
