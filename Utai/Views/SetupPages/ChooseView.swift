@@ -85,12 +85,13 @@ struct ChooseView: View {
                                                     .cornerRadius(4)
                                                     .focusable(true)
                                                     .focused($focused, equals: index)
-                                                    .onTapGesture(count: 2) {
-                                                        pick(from: index)
-                                                    }
                                                     .onTapGesture {
-                                                        focused = index
-                                                        chosen = index
+                                                        if focused == index {
+                                                            pick(from: index)
+                                                        } else {
+                                                            focused = index
+                                                            chosen = index
+                                                        }
                                                     }
                                                     
                                             } placeholder: {
