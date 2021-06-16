@@ -67,26 +67,11 @@ struct ChooseView: View {
                     Spacer()
                 }
                 .padding(.top, lilSpacing2x+lilIconLength)
-                
-                void.onAppear {
-                    chosen = nil
-                }
-                
-                if store.page == 2 && store.needUpdate {
-                    void.onAppear {
-                        async {
-                            pending = true
-                            
-                            do { try await search() }
-                            catch { print(error) }
-                            
-                            store.needUpdate = false
-                            
-                            withAnimation {
-                                store.goal = nil
-                            }
-                        }
-                    }
+                                
+                if store.page == 2 {
+                    refreshWhenTurnThisPage
+                    
+                    if store.needUpdate  { refreshWhenNeededUpdate }
                 }
             }
             .frame(width: unitLength, height: unitLength)
@@ -200,6 +185,27 @@ extension ChooseView {
         store.showMatchPanel = true
         store.page = 3
         store.needMatch = true
+    }
+    
+    var refreshWhenTurnThisPage: some View {
+        void.onAppear { chosen = nil }
+    }
+    
+    var refreshWhenNeededUpdate: some View {
+        void.onAppear {
+            async {
+                pending = true
+                
+                do { try await search() }
+                catch { print(error) }
+                
+                store.needUpdate = false
+                
+                withAnimation {
+                    store.goal = nil
+                }
+            }
+        }
     }
 }
 
