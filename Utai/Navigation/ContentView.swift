@@ -14,6 +14,8 @@ let lilSpacing2x: CGFloat = 16
 let lilIconLength: CGFloat = 12
 
 struct ContentView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @EnvironmentObject var store: Store
     
     var body: some View {
@@ -27,10 +29,16 @@ struct ContentView: View {
                 .frame(width: unitLength)
 
                 if store.showMatchPanel {
-                    Rectangle()
-                        .frame(width: 1, height: unitLength-1)
-                        .foregroundColor(Color.secondary.opacity(0.4))
-                        .offset(y: 0.5)
+                    if colorScheme == .light {
+                        Rectangle()
+                            .frame(width: 1, height: unitLength+2)
+                            .foregroundColor(Color.secondary.opacity(0.4))
+                    } else {
+                        Rectangle()
+                            .frame(width: 1, height: unitLength-1)
+                            .foregroundColor(Color.secondary.opacity(0.4))
+                            .offset(y: 0.5)
+                    }
                     MatchPanel()
                         .frame(width: store.showMatchPanel ? unitLength : 0, alignment: .leading)
                         .background(EffectsView(

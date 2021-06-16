@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MatchPanel: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @EnvironmentObject var store: Store
     @State private var scrolled: CGFloat = 0
     
@@ -105,16 +107,20 @@ struct MatchPanel: View {
                                     .foregroundColor(.clear)
                                     .frame(height: lilSpacing2x+lilIconLength-0.5)
                             }
-                                
-                            Rectangle()
-                                .frame(width: unitLength-1, height: 1)
-                                .foregroundColor(Color.secondary.opacity(0.4))
-                                .offset(x: -0.5)
+                               
+                            if colorScheme == .light {
+                                Rectangle()
+                                    .frame(width: unitLength, height: 1)
+                                    .foregroundColor(Color.secondary.opacity(0.4))
+                            } else {
+                                Rectangle()
+                                    .frame(width: unitLength-1, height: 1)
+                                    .foregroundColor(Color.secondary.opacity(0.4))
+                                    .offset(x: -0.5)
+                            }
                             
                         }
-                        .background(EffectsView(
-                            material: .contentBackground,
-                            blendingMode: .behindWindow))
+                        .background(.ultraThickMaterial)
                         
                         Spacer()
                     }
