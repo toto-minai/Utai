@@ -37,7 +37,7 @@ struct ChooseView: View {
                                             .opacity(results[chosen].formats != nil ? 1 : 0.3)
                                         Text("Released")
                                             .fontWeight(.medium)
-                                            .opacity(results[chosen].year != nil ? 1 : 0.3)
+                                            .opacity(chosenYearCR != " " ? 1 : 0.3)
                                         
                                         Spacer()  // Keep 2 VStack aligned
                                     }
@@ -154,7 +154,7 @@ extension ChooseView {
                              results[chosen].country]
             processed.removeAll { $0 == nil }
             
-            return processed.map { $0! }.joined(separator: ", ")
+            return processed.map { $0!.replacingOccurrences(of: " & ", with: ", ") }.joined(separator: ", ")
         } else { return " " }
     }
     
