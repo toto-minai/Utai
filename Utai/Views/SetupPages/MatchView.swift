@@ -104,6 +104,10 @@ struct MatchView: View {
 extension MatchView {
     var artworkPrimaryURL: [URL] {
         if let artworks = result!.artworks {
+            if artworks.count == 1 {
+                return [artworks.first!.resourceURL]
+            }
+            
             return artworks.filter {
                 $0.type == "primary"
             }.map { $0.resourceURL }
