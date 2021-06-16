@@ -55,7 +55,7 @@ struct ContentView: View {
                 
                 Spacer()
             }
-            .frame(width: store.showMatchPanel ? 2*unitLength+1 : unitLength, alignment: .leading)
+            .frame(width: store.showMatchPanel ? 2*unitLength+1 : unitLength, height: unitLength, alignment: .leading)
         }
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
