@@ -27,7 +27,7 @@ struct ChooseView: View {
         if let _ = store.album {
             ZStack(alignment: .top) {
                 VStack(spacing: lilSpacing2x) {
-                    Spacer().frame(height: 12)
+                    Spacer().frame(height: lilIconLength)
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 0) {
@@ -103,7 +103,7 @@ struct ChooseView: View {
                                                     ProgressView()
                                                 }
                                                 .frame(width: 80, height: 80)
-                                                .frame(height: 100)
+                                                .frame(height: 120)
                                             }
                                         }
                                         .contextMenu {
@@ -119,7 +119,7 @@ struct ChooseView: View {
                                     Spacer().frame(width: lilSpacing+lilIconLength)
                                 }
                             }
-                            .padding(.vertical, -9.5)
+                            .padding(.vertical, -20)
                             .onAppear {
                                 // Should I?
                                 // chosen = 0
