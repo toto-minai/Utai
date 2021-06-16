@@ -18,7 +18,7 @@ struct MatchView: View {
     var body: some View {
         ZStack {
             if let _ = result {
-                HStack(spacing: 0) {
+                HStack(spacing: 1) {
                     ZStack {
                         if let thumb = artworkPrimaryURL.first {
                             ZStack {
@@ -74,7 +74,14 @@ struct MatchView: View {
                         }
                     }
                     
-                    Spacer()
+                    ZStack {
+                        Text("No Credits")
+                    }
+                    .frame(width: unitLength-0.5, height: unitLength)
+                    .background(EffectsView(
+                        material: .contentBackground,
+                        blendingMode: .behindWindow).ignoresSafeArea())
+                    .opacity(store.artworkMode ? 1 : 0)
                 }
             }
             
