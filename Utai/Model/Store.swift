@@ -13,7 +13,7 @@ class Store: ObservableObject {
     @Published var goal: Int?
     @Published var album: Album?
     
-    @Published var searchUrl: URL?
+    @Published var searchURL: URL?
     @Published var needUpdate: Bool = false
     
     @Published var matchUrl: URL?
@@ -43,7 +43,7 @@ class Store: ObservableObject {
             componets.queryItems!.append(URLQueryItem(name: "artist", value: artists))
         }
         
-        searchUrl = componets.url
+        searchURL = componets.url
         
         needUpdate = true
     }
