@@ -22,22 +22,9 @@ struct ChooseView: View {
                     header
                     
                     if !pending &&
-                        store.goal == nil && // Are them required?
+                        store.goal == nil && // Are they required?
                         !store.needUpdate {
-                        ScrollViewReader { proxy in
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                LazyHStack(alignment: .top, spacing: lilSpacing) {
-                                    ForEach(results.indices) { index in
-                                        Artwork80x80(chosen: $chosen, response: $response, index: index)
-                                    }
-                                }
-                                .padding(.horizontal, lilSpacing2x+lilIconLength)
-                                // Cancel shadow-clipping: 2. Left spacing to shrink
-                                .frame(height: 120)
-                            }
-                            // Cancel shadow-clipping: 3. Negative padding
-                            .padding(.vertical, -20)
-                        }
+                        artworks
                         
                         if let chosen = chosen {
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -99,6 +86,8 @@ struct ChooseView: View {
                 }
             }
             .frame(width: unitLength, height: unitLength)
+            // Deselect artwork
+            .onTapGesture { withAnimation(.easeOut) { chosen = nil } }
         }
     }
 }
@@ -165,6 +154,23 @@ extension ChooseView {
         } else { return " " }
     }
     
+    var artworks: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(alignment: .top, spacing: lilSpacing) {
+                    ForEach(results.indices) { index in
+                        Artwork80x80(chosen: $chosen, response: $response, index: index)
+                    }
+                }
+                .padding(.horizontal, lilSpacing2x+lilIconLength)
+                // Cancel shadow-clipping: 2. Left spacing to shrink
+                .frame(height: 120)
+            }
+            // Cancel shadow-clipping: 3. Negative padding
+            .padding(.vertical, -20)
+        }
+    }
+    
     enum SearchError: Error { case badURL }
     
     private func search() async throws {
@@ -223,13 +229,11 @@ struct Artwork80x80: View {
                                 .stroke(Color.accentColor
                                     .opacity(
                                         (chosen != nil && chosen! == index) ?
-                                            1 : 0.001), lineWidth: 2.6))
+                                            1 : 0.001), lineWidth: 2.7))
                             .onTapGesture {
                                 if chosen == index {
                                     pick(from: index)
-                                } else {
-                                    withAnimation(.easeOut) { chosen = index }
-                                }
+                                } else { withAnimation(.easeOut) { chosen = index } }
                             }
                     }
                     .id(result.id)
