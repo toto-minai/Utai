@@ -12,7 +12,7 @@ struct SearchResponse: Codable {
         struct Format: Codable {
             let name: String
             let qty: String
-            let descriptions: [String]
+            let descriptions: [String]?
         }
 
         let country: String?

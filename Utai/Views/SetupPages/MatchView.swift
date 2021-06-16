@@ -111,7 +111,7 @@ struct MatchView: View {
 extension MatchView {
     var artworkPrimaryURL: [URL] {
         if let artworks = result!.artworks {
-            if artworks.count == 1 {
+            if artworks.filter({ $0.type == "primary" }).isEmpty {
                 return [artworks.first!.resourceURL]
             }
             

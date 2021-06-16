@@ -68,6 +68,10 @@ struct ChooseView: View {
                 }
                 .padding(.top, lilSpacing2x+lilIconLength)
                 
+                void.onAppear {
+                    chosen = nil
+                }
+                
                 if store.page == 2 && store.needUpdate {
                     void.onAppear {
                         async {
@@ -135,9 +139,9 @@ extension ChooseView {
         if let chosen = chosen,
            let formats = results[chosen].formats,
            let first = formats.first {
-            let filtered = first.descriptions.filter {
+            let filtered = first.descriptions?.filter {
                 $0 != "LP" && $0 != "Album"
-            }
+            } ?? []
             
             return first.name + (filtered.isEmpty ?
                 " " : " (\(filtered.joined(separator: ", ")))")
