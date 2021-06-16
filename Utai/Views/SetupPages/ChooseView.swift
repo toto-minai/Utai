@@ -52,17 +52,17 @@ struct ChooseView: View {
                             
                             if title == "" {
                                 Text("Music by ")
-                                    .fontWeight(.bold)
+                                    .fontWeight(.medium)
                                     .textSelection(.disabled)
                             }
                             Text("\(artists)")
-                                .fontWeight(.bold)
+                                .fontWeight(.medium)
                                 .foregroundColor(.secondary) +
-                            Text(album.artists != nil && album.title != nil ? " – " : "") .fontWeight(.bold) +
+                            Text(album.artists != nil && album.title != nil ? " – " : "") .fontWeight(.medium) +
                             Text("\(title)")
-                                .fontWeight(.bold) +
+                                .fontWeight(.medium) +
                             Text(title != "" ? "\(yearText)" : "")
-                                .fontWeight(.bold)
+                                .fontWeight(.medium)
                                 .foregroundColor(.secondary)
                             
                             Spacer().frame(width: lilSpacing2x+lilIconLength)
@@ -142,7 +142,7 @@ struct ChooseView: View {
                             } label: {
                                 Text("Options")
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
-                                    .fontWeight(.bold)
+                                    .fontWeight(.medium)
                             }
                             .menuStyle(BorderlessButtonMenuStyle())
                             .menuButtonStyle(BorderlessButtonMenuButtonStyle())
@@ -161,12 +161,12 @@ struct ChooseView: View {
                                 
                                 VStack(alignment: .trailing, spacing: 4) {
                                     Text("Versus")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                     Text("Format")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                         .opacity(results[(chosen ?? 0)].format != nil ? 1 : 0.3)
                                     Text("Released")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                         .opacity(results[(chosen ?? 0)].year != nil ? 1 : 0.3)
                                     
                                     Spacer()  // Keep 2 VStack aligned
@@ -176,11 +176,11 @@ struct ChooseView: View {
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("\(chosenTitle)")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                     Text("\(chosenFormat)")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                     Text("\(chosenYear)")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                     
                                     Spacer()
                                 }

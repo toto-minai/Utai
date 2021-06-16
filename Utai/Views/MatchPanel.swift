@@ -26,10 +26,10 @@ struct MatchPanel: View {
                             VStack(alignment: .leading, spacing: lilSpacing2x) {
                                 HStack(spacing: 0) {
                                     Text(store.page < 3 ? "Tracklist" : "Mismatched")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                     
                                     Text(" (\(tracks.count) Track\(tracks.count == 1 ? "" : "s"))")
-                                        .fontWeight(.bold)
+                                        .fontWeight(.medium)
                                         .foregroundColor(.secondary)
                                 }
                                     
@@ -39,13 +39,14 @@ struct MatchPanel: View {
                                             GroupBox {
                                                 HStack(spacing: 8) {
                                                     Text("\(track.trackNoText)")
-                                                        .fontWeight(.bold)
+                                                        .fontWeight(.medium)
                                                         .monospacedDigit()
                                                         .foregroundColor(.secondary)
                                                         .frame(width: 16)
                                                     
                                                     VStack(alignment: .leading, spacing: 4) {
-                                                        Text("**\(track.title ?? track.filename.withoutExtension)**")
+                                                        Text("\(track.title ?? track.filename.withoutExtension)")
+                                                            .fontWeight(.medium)
                                                             .lineSpacing(4)
                                                             .foregroundColor(.primary)
                                                             .textSelection(.enabled)
@@ -53,7 +54,8 @@ struct MatchPanel: View {
                                                             
                                                         if album.artists == nil ||
                                                             track.artist != nil && track.artist != album.artists! {
-                                                            Text("**\(track.artist!)**")
+                                                            Text("\(track.artist!)")
+                                                                .fontWeight(.medium)
                                                                 .lineSpacing(4)
                                                                 .foregroundColor(.secondary)
                                                                 .textSelection(.enabled)
@@ -190,7 +192,7 @@ struct MatchButton: View {
                 } label: {
                     Text("Match")
                         .font(.custom("Yanone Kaffeesatz", size: 16))
-                        .fontWeight(.bold)
+                        .fontWeight(.medium)
 //                        .foregroundColor(.secondary)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
@@ -204,7 +206,7 @@ struct MatchButton: View {
             if !hover {
                 Text(lengthText)
                     .font(.custom("Yanone Kaffeesatz", size: 16))
-                    .fontWeight(.bold)
+                    .fontWeight(.medium)
                     .monospacedDigit()
                     .foregroundColor(.secondary)
             }

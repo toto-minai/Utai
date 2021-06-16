@@ -19,7 +19,7 @@ struct ButtonCus: View {
                     .font(.system(size: 12))
                     .offset(y: -1.2)
                 Text(label)
-                    .fontWeight(.bold)
+                    .fontWeight(.medium)
             }
         }
         .buttonStyle(.borderless)
