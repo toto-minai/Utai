@@ -30,7 +30,7 @@ struct MatchView: View {
                                         .onTapGesture {
                                             store.artworkMode.toggle()
                                         }
-                                        .scaleEffect(store.artworkMode ? 1.219 : 1)
+                                        .scaleEffect(store.artworkMode ? 1.22 : 1)
                                         .animation(.easeOut, value: store.artworkMode)
                                 } placeholder: {
                                     ProgressView()
@@ -69,7 +69,8 @@ struct MatchView: View {
                                 .opacity(store.artworkMode ? 1 : 0)
                                 .animation(nil, value: store.artworkMode)
                             }
-                            .frame(width: unitLength-1, height: unitLength)
+                            .frame(width: unitLength-0.5, height: unitLength)
+                            .clipped()
                         }
                     }
                     
