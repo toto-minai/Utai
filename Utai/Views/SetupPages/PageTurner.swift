@@ -54,7 +54,7 @@ struct PageTurner: View {
                 
             }
         }
-        .padding(.bottom, lilSpacing2x+lilIconLength)
+        .padding(.bottom, lilSpacing+lilIconLength)
         .animation(.easeOut, value: store.artworkMode)
     }
 }

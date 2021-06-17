@@ -11,11 +11,64 @@ struct ChooseView: View {
     @EnvironmentObject var store: Store
     
     @Environment(\.openURL) var openURL
+    @Environment(\.colorScheme) var colorScheme
     
     @State private var pending: Bool = false  // i.e. response != nil
     @State private var response: SearchResponse?
     
     @State private var chosen: Int?
+    
+    var header: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 0) {
+                if album.title == nil {
+                    Text("Music by ")
+                        .foregroundColor(.secondary)
+                        .fontWeight(.medium)
+                        .textSelection(.disabled)
+                }
+                Text("\(artistsRaw)")
+                    .fontWeight(.medium) +
+                Text(album.artists != nil &&
+                     album.title != nil ? " – " : "")
+                    .fontWeight(.medium) +
+                Text("\(titleRaw)")
+                    .fontWeight(.medium)
+            }
+            .textSelection(.enabled)
+            .padding(.horizontal, lilSpacing2x+lilIconLength)
+        }
+    }
+    
+    var artworks: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(alignment: .top, spacing: lilSpacing) {
+                    ForEach(results.indices) { index in
+                        Artwork80x80(chosen: $chosen, response: $response, index: index)
+                    }
+                }
+                .padding(.horizontal, lilSpacing2x+lilIconLength)
+                // Cancel shadow-clipping: 2. Left spacing to shrink
+                .frame(height: 120)
+            }
+            // Cancel shadow-clipping: 3. Negative padding
+            .padding(.vertical, -20)
+        }
+    }
+    
+    var footer: some View {
+        VStack {
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
+                    .padding(lilSpacing)
+            }
+        }
+    }
     
     var body: some View {
         if store.album != nil {
@@ -81,16 +134,37 @@ struct ChooseView: View {
                     Spacer()
                 }
                 .padding(.top, lilSpacing2x+lilIconLength)
-                                
+                
+                footer
+                
                 if store.page == 2 {
-                    refreshWhenTurnThisPage
+                    refreshWhenTurnToThisPage
                     
                     if store.needUpdate  { refreshWhenNeededUpdate }
                 }
             }
             .frame(width: unitLength, height: unitLength)
-            // Deselect artwork
-            .onTapGesture { withAnimation(.easeOut) { chosen = nil } }
+        }
+    }
+    
+    var refreshWhenTurnToThisPage: some View {
+        void.onAppear { }
+    }
+    
+    var refreshWhenNeededUpdate: some View {
+        void.onAppear {
+            async {
+                pending = true
+                
+                do { try await search() }
+                catch { print(error) }
+                
+                store.needUpdate = false
+                
+                withAnimation {
+                    store.goal = nil
+                }
+            }
         }
     }
 }
@@ -99,28 +173,6 @@ extension ChooseView {
     private var album: Album { store.album! }
     private var titleRaw: String { album.title ?? "" }
     private var artistsRaw: String { album.artists ?? "" }
-    
-    private var header: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 0) {
-                if album.title == nil {
-                    Text("Music by ")
-                        .foregroundColor(.secondary)
-                        .fontWeight(.medium)
-                        .textSelection(.disabled)
-                }
-                Text("\(artistsRaw)")
-                    .fontWeight(.medium) +
-                Text(album.artists != nil &&
-                     album.title != nil ? " – " : "")
-                    .fontWeight(.medium) +
-                Text("\(titleRaw)")
-                    .fontWeight(.medium)
-            }
-            .textSelection(.enabled)
-            .padding(.horizontal, lilSpacing2x+lilIconLength)
-        }
-    }
     
     private var results: [SearchResponse.Result] {
         response!.results
@@ -165,23 +217,6 @@ extension ChooseView {
         } else { return " " }
     }
     
-    var artworks: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .top, spacing: lilSpacing) {
-                    ForEach(results.indices) { index in
-                        Artwork80x80(chosen: $chosen, response: $response, index: index)
-                    }
-                }
-                .padding(.horizontal, lilSpacing2x+lilIconLength)
-                // Cancel shadow-clipping: 2. Left spacing to shrink
-                .frame(height: 120)
-            }
-            // Cancel shadow-clipping: 3. Negative padding
-            .padding(.vertical, -20)
-        }
-    }
-    
     enum SearchError: Error { case badURL }
     
     private func search() async throws {
@@ -207,27 +242,6 @@ extension ChooseView {
         store.showMatchPanel = true
         store.page = 3
         store.needMatch = true
-    }
-    
-    var refreshWhenTurnThisPage: some View {
-        void.onAppear { chosen = nil }
-    }
-    
-    var refreshWhenNeededUpdate: some View {
-        void.onAppear {
-            async {
-                pending = true
-                
-                do { try await search() }
-                catch { print(error) }
-                
-                store.needUpdate = false
-                
-                withAnimation {
-                    store.goal = nil
-                }
-            }
-        }
     }
 }
 

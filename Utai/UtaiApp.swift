@@ -26,7 +26,7 @@ struct UtaiApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         if let window = NSApp.windows.first {  // TODO: Not working when reopening a window
-            window.isMovableByWindowBackground = true
+//            window.isMovableByWindowBackground = true
             window.level = .floating
             
 //            window.backgroundColor = NSColor.clear
