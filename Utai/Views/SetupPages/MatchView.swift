@@ -23,25 +23,34 @@ struct MatchView: View {
                         if let thumb = artworkPrimaryURL.first {
                             ZStack {
                                 AsyncImage(url: thumb) { image in
-                                    image.resizable()
-                                        .scaledToFill()
-                                        .frame(width: 256, height: 256)
-                                        .cornerRadius(store.artworkMode ? 0 : 8)
-                                        .onTapGesture {
-                                            store.artworkMode.toggle()
-                                        }
-                                        .scaleEffect(store.artworkMode ? 1.22 : 1)
-                                        .animation(.easeOut, value: store.artworkMode)
+                                    ZStack {
+                                        image.resizable().scaledToFill()
+                                            .frame(width: 256, height: 256)
+                                            .frame(height: 128, alignment: .bottom)
+                                            .cornerRadius(72)
+                                            .blur(radius: 7.2)
+                                            .frame(width: 248, height: 312).clipped()
+                                            .offset(y: 2.4+64)
+                                            .scaleEffect(store.artworkMode ? 1.22 : 1)
+                                            .opacity(store.artworkMode ? 0 : 1)
+                                            .animation(.easeOut, value: store.artworkMode)
+                                        
+                                        image.resizable().scaledToFill()
+                                            .frame(width: 256, height: 256)
+                                            .cornerRadius(store.artworkMode ? 0 : 8)
+                                            .shadow(color: Color.black.opacity(0.54),
+                                                    radius: 7.2, x: 0, y: 2.4)
+                                            .onTapGesture {
+                                                store.artworkMode.toggle()
+                                            }
+                                            .scaleEffect(store.artworkMode ? 1.22 : 1)
+                                            .animation(.easeOut, value: store.artworkMode)
+                                    }
                                 } placeholder: {
                                     ProgressView()
                                         .frame(width: 256, height: 256)
                                 }
-                                .padding(lilSpacing2x+lilIconLength)
-                                
-//                                RoundedRectangle(cornerRadius: 60)
-//                                    .fill(.thinMaterial)
-//                                    .frame(width: 240, height: 240)
-//                                    .blur(radius: 40)
+                                .frame(width: 312, height: 312)
                                 
                                 VStack {
                                     VStack(spacing: 0) {

@@ -121,7 +121,6 @@ struct ChooseView: View {
                                             .opacity(results[chosen].formats != nil ? 1 : 0.3)
                                         Text("Labal")
                                             .fontWeight(.medium)
-                                        Text(" ")
                                         
                                         Spacer()  // Keep 2 VStack aligned
                                     }
@@ -146,6 +145,7 @@ struct ChooseView: View {
                                         }
                                         .buttonStyle(.borderless)
                                         .foregroundColor(.secondary)
+                                        .padding(.top, 2)
                                         .textSelection(.disabled)
                                         
                                         Spacer()
