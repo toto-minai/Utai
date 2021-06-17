@@ -102,7 +102,7 @@ struct ChooseView: View {
                 VStack(spacing: lilSpacing2x) {
                     header
                     
-                    if response != nil &&
+                    if response != nil &&  // `response == nil` means pending
                         store.goal == nil && // Are they required?
                         !store.needUpdate {
                         artworks
@@ -185,9 +185,9 @@ struct ChooseView: View {
                 do { try await search() }
                 catch { print(error) }
                 
-                chosen = 0
-                
                 store.needUpdate = false
+                
+                chosen = 0
                 
                 withAnimation {
                     store.goal = nil
@@ -292,7 +292,13 @@ struct Artwork80x80: View {
                     ZStack {
                         image.resizable().scaledToFill()
                             .frame(width: 80, height: 80)
-                            .cornerRadius(36).blur(radius: 3.6)
+                            .cornerRadius(36)
+                            .overlay(RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.accentColor
+                                    .opacity(
+                                        (chosen != nil && chosen! == index) ?
+                                        1 : 0.001), lineWidth: 1.5))
+                            .blur(radius: 3.6)
                             .frame(width: 80, height: 120).clipped()
                             .offset(y: 2.4)
                         
@@ -305,7 +311,7 @@ struct Artwork80x80: View {
                                 .stroke(Color.accentColor
                                     .opacity(
                                         (chosen != nil && chosen! == index) ?
-                                            1 : 0.001), lineWidth: 2.7))
+                                        1 : 0.001), lineWidth: 1.5))
                             .onTapGesture {
                                 if chosen == index {
                                     pick(from: index)
