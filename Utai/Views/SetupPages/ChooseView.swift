@@ -67,6 +67,10 @@ struct ChooseView: View {
         Binding { showMode } set: {
             showMode = $0
             
+            if showMode != .both && sortMode == .MR {
+                sortMode = .none
+            }
+            
             if let first = resultsProcessed.first {
                 chosen = first.id
             } else {
@@ -103,7 +107,9 @@ struct ChooseView: View {
                     Picker("Sort By", selection: $sortMode) {
                         Text("Discogs").tag(SortMode.none)
                         Divider()
-                        Text("Master, Release").tag(SortMode.MR).disabled(showMode != .both)
+                        if showMode == .both {
+                            Text("Master, Release").tag(SortMode.MR)
+                        }
                         Text("Country / Region").tag(SortMode.CR)
                         Text("Year").tag(SortMode.year)
                     }
