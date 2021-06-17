@@ -299,7 +299,7 @@ struct Artwork80x80: View {
                                         (chosen != nil && chosen! == index) ?
                                         1 : 0.001), lineWidth: 1.5))
                             .blur(radius: 3.6)
-                            .frame(width: 80, height: 120).clipped()
+                            .frame(width: 74, height: 120).clipped()
                             .offset(y: 2.4)
                         
                         image.resizable().scaledToFill()
