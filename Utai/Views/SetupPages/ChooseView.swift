@@ -64,8 +64,35 @@ struct ChooseView: View {
             HStack {
                 Spacer()
                 
-                ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
-                    .padding(lilSpacing)
+                Menu {
+                    Menu("Show") {
+                        Text("Masters Only")
+                        Text("Releases Only")
+                        Divider()
+                        Text("Both")
+                    }
+                    Menu("Filter") {
+                        Text("Label")
+                        Text("Country / Region")
+                        Text("Year")
+                    }
+                    Divider()
+                    Menu("Sort By") {
+                        Text("Default")
+                        Divider()
+                        Text("Masters, Releases")
+                        Text("Country / Region")
+                        Text("Year")
+                    }
+                } label: {
+                    ButtonMini(alwaysHover: true, systemName: "ellipsis.circle", helpText: "Options")
+                        .padding(lilSpacing)
+                }
+                .menuStyle(BorderlessButtonMenuStyle())
+                .menuIndicator(.hidden)
+                .frame(width: lilSpacing2x+lilIconLength,
+                       height: lilSpacing2x+lilIconLength)
+                .offset(x: 3, y: -0.5)
             }
         }
     }
@@ -148,7 +175,7 @@ struct ChooseView: View {
     }
     
     var refreshWhenTurnToThisPage: some View {
-        void.onAppear { }
+        void.onAppear { if chosen == nil { chosen = 0 } }
     }
     
     var refreshWhenNeededUpdate: some View {
@@ -158,6 +185,8 @@ struct ChooseView: View {
                 
                 do { try await search() }
                 catch { print(error) }
+                
+                chosen = 0
                 
                 store.needUpdate = false
                 
@@ -200,9 +229,11 @@ extension ChooseView {
         if let chosen = chosen,
            let formats = results[chosen].formats,
            let first = formats.first {
-            let filtered = first.descriptions?.filter {
-                $0 != "LP" && $0 != "Album"
-            } ?? []
+            let filtered = first.descriptions ?? []
+            
+//            let filtered = first.descriptions?.filter {
+//                $0 != "LP" && $0 != "Album"
+//            } ?? []
             
             return first.name + (filtered.isEmpty ?
                 " " : " (\(filtered.joined(separator: ", ")))")
