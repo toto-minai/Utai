@@ -17,7 +17,9 @@ struct ImportView: View {
     @State private var urls: [URL] = []
     
     var body: some View {
-        let delegate = MusicDropDelegate(urls: $urls, goal: $store.goal, dropOver: $dragOver)
+        let delegate = MusicDropDelegate(urls: $urls,
+                                         goal: $store.goal,
+                                         dropOver: $dragOver)
         
         return VStack(spacing: 0) {
             VStack(spacing: lilSpacing2x) {

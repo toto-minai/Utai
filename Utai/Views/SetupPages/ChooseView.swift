@@ -13,7 +13,6 @@ struct ChooseView: View {
     @Environment(\.openURL) var openURL
     @Environment(\.colorScheme) var colorScheme
     
-    @State private var pending: Bool = false  // i.e. response != nil
     @State private var response: SearchResponse?
     
     @State private var chosen: Int?
@@ -103,7 +102,7 @@ struct ChooseView: View {
                 VStack(spacing: lilSpacing2x) {
                     header
                     
-                    if !pending &&
+                    if response != nil &&
                         store.goal == nil && // Are they required?
                         !store.needUpdate {
                         artworks
@@ -181,7 +180,7 @@ struct ChooseView: View {
     var refreshWhenNeededUpdate: some View {
         void.onAppear {
             async {
-                pending = true
+                response = nil
                 
                 do { try await search() }
                 catch { print(error) }
@@ -256,8 +255,8 @@ extension ChooseView {
         else { throw SearchError.badURL }
         
         do {
-            response = try JSONDecoder().decode(SearchResponse.self, from: data)
-            withAnimation { pending = false }
+            let response = try JSONDecoder().decode(SearchResponse.self, from: data)
+            withAnimation { self.response = response }
         } catch { throw error }
     }
     
