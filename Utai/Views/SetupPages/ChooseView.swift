@@ -10,6 +10,8 @@ import SwiftUI
 struct ChooseView: View {
     @EnvironmentObject var store: Store
     
+    @Environment(\.openURL) var openURL
+    
     @State private var pending: Bool = false  // i.e. response != nil
     @State private var response: SearchResponse?
     
@@ -32,12 +34,15 @@ struct ChooseView: View {
                                     VStack(alignment: .trailing, spacing: 4) {
                                         Text("Versus")
                                             .fontWeight(.medium)
-                                        Text("Format")
-                                            .fontWeight(.medium)
-                                            .opacity(results[chosen].formats != nil ? 1 : 0.3)
                                         Text("Released")
                                             .fontWeight(.medium)
                                             .opacity(chosenYearCR != " " ? 1 : 0.3)
+                                        Text("Format")
+                                            .fontWeight(.medium)
+                                            .opacity(results[chosen].formats != nil ? 1 : 0.3)
+                                        Text("Labal")
+                                            .fontWeight(.medium)
+                                        Text(" ")
                                         
                                         Spacer()  // Keep 2 VStack aligned
                                     }
@@ -48,12 +53,21 @@ struct ChooseView: View {
                                         Text("\(chosenInfoRaw)")
                                             .fontWeight(.medium)
                                             .animation(nil)
-                                        Text("\(chosenFormatStyled)")
-                                            .fontWeight(.medium)
-                                            .animation(nil)
                                         Text("\(chosenYearCR)")
                                             .fontWeight(.medium)
                                             .animation(nil)
+                                        Text("\(chosenFormatStyled)")
+                                            .fontWeight(.medium)
+                                            .animation(nil)
+                                        Text("\(chosenLabelStyled)")
+                                            .fontWeight(.medium)
+                                            .animation(nil)
+                                        Button("**View on Discogs**") {
+                                            openURL(URL(string: "https://discogs.com\(results[chosen].uri)")!)
+                                        }
+                                        .buttonStyle(.borderless)
+                                        .foregroundColor(.secondary)
+                                        .textSelection(.disabled)
                                         
                                         Spacer()
                                     }
@@ -120,6 +134,16 @@ extension ChooseView {
         } else { return "" }
     }
     
+    private var chosenYearCR: String {
+        if let chosen = chosen {
+            var processed = [results[chosen].year,
+                             results[chosen].country]
+            processed.removeAll { $0 == nil }
+            
+            return processed.map { $0!.replacingOccurrences(of: " & ", with: ", ") }.joined(separator: ", ")
+        } else { return " " }
+    }
+    
     private var chosenFormatStyled: String {
         if let chosen = chosen,
            let formats = results[chosen].formats,
@@ -133,13 +157,11 @@ extension ChooseView {
         } else { return " " }
     }
     
-    private var chosenYearCR: String {
-        if let chosen = chosen {
-            var processed = [results[chosen].year,
-                             results[chosen].country]
-            processed.removeAll { $0 == nil }
-            
-            return processed.map { $0!.replacingOccurrences(of: " & ", with: ", ") }.joined(separator: ", ")
+    private var chosenLabelStyled: String {
+        if let chosen = chosen,
+           let label = results[chosen].label,
+           let first = label.first {
+            return first
         } else { return " " }
     }
     
@@ -254,7 +276,7 @@ struct Artwork80x80: View {
         // Cancel shadow-clipping: 1. Positive padding
         .padding(.vertical, 20)
         .contextMenu {
-            Button(action: { pick(from: index) }) { Text("Pick It") }
+            Button(action: { pick(from: index) }) { Text("Pick Up") }
             Divider()
             Button(action: { openURL(URL(string: "https://discogs.com\(result.uri)")!) })
             { Text("View on Discogs") }
