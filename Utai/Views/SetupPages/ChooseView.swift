@@ -121,7 +121,7 @@ struct ChooseView: View {
                 .menuIndicator(.hidden)
                 .frame(width: lilSpacing2x+lilIconLength,
                        height: lilSpacing2x+lilIconLength)
-                .offset(x: 3, y: -0.5)
+                .offset(x: 2, y: -0.5)
             }
         }
     }
