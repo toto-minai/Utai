@@ -43,8 +43,8 @@ struct ChooseView: View {
         ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(alignment: .top, spacing: lilSpacing) {
-                    ForEach(results.indices) { index in
-                        Artwork80x80(chosen: $chosen, response: $response, index: index)
+                    ForEach(resultsProcessed, id: \.id) { result in
+                        Artwork80x80(chosen: $chosen, result: result)
                     }
                 }
                 .padding(.horizontal, lilSpacing2x+lilIconLength)
@@ -53,8 +53,31 @@ struct ChooseView: View {
             }
             // Cancel shadow-clipping: 3. Negative padding
             .padding(.vertical, -20)
+            .onChange(of: showMode) { newValue in
+                // print(chosenResult)
+                proxy.scrollTo(chosen, anchor: .top)
+            }
         }
     }
+    
+    @State private var showMode: ShowMode = .both
+    private var showModeBinding: Binding<ShowMode> {
+        Binding  {
+            showMode
+        } set: {
+            showMode = $0
+            
+            if let first = resultsProcessed.first {
+                chosen = first.id
+            } else {
+                chosen = nil
+            }
+        }
+    }
+    
+    @State private var filterMode: FilterMode = .none
+    
+    @State private var sortMode: SortMode = .none
     
     var footer: some View {
         VStack {
@@ -64,24 +87,25 @@ struct ChooseView: View {
                 Spacer()
                 
                 Menu {
-                    Menu("Show") {
-                        Text("Masters Only")
-                        Text("Releases Only")
+                    Picker("Show", selection: showModeBinding) {
+                        Text("Masters Only").tag(ShowMode.master)
+                        Text("Releases Only").tag(ShowMode.release)
                         Divider()
-                        Text("Both")
+                        Text("Both").tag(ShowMode.both)
                     }
+                    
                     Menu("Filter") {
                         Text("Label")
                         Text("Country / Region")
                         Text("Year")
                     }
                     Divider()
-                    Menu("Sort By") {
-                        Text("Default")
+                    Picker("Sort By", selection: $sortMode) {
+                        Text("Discogs").tag(SortMode.none)
                         Divider()
-                        Text("Masters, Releases")
-                        Text("Country / Region")
-                        Text("Year")
+                        Text("Master, Release").tag(SortMode.MR)
+                        Text("Country / Region").tag(SortMode.CR)
+                        Text("Year").tag(SortMode.year)
                     }
                 } label: {
                     ButtonMini(alwaysHover: true, systemName: "ellipsis.circle", helpText: "Options")
@@ -118,7 +142,7 @@ struct ChooseView: View {
                                             .opacity(chosenYearCR != " " ? 1 : 0.3)
                                         Text("Format")
                                             .fontWeight(.medium)
-                                            .opacity(results[chosen].formats != nil ? 1 : 0.3)
+                                            .opacity(chosenResult.formats != nil ? 1 : 0.3)
                                         Text("Labal")
                                             .fontWeight(.medium)
                                         
@@ -141,7 +165,7 @@ struct ChooseView: View {
                                             .fontWeight(.medium)
                                             .animation(nil)
                                         Button("**View on Discogs**") {
-                                            openURL(URL(string: "https://discogs.com\(results[chosen].uri)")!)
+                                            openURL(URL(string: "https://discogs.com\(chosenResult.uri)")!)
                                         }
                                         .buttonStyle(.borderless)
                                         .foregroundColor(.secondary)
@@ -174,11 +198,19 @@ struct ChooseView: View {
     }
     
     var refreshWhenTurnToThisPage: some View {
-        void.onAppear { if chosen == nil { chosen = 0 } }
+        void.onAppear {
+            if chosen == nil && response != nil {
+                if let first = resultsProcessed.first {
+                    chosen = first.id
+                }
+            }
+        }
     }
     
     var refreshWhenNeededUpdate: some View {
         void.onAppear {
+            print("")
+            
             async {
                 response = nil
                 
@@ -187,7 +219,11 @@ struct ChooseView: View {
                 
                 store.needUpdate = false
                 
-                chosen = 0
+                if let first = resultsProcessed.first {
+                    chosen = first.id
+                } else {
+                    chosen = nil
+                }
                 
                 withAnimation {
                     store.goal = nil
@@ -206,18 +242,38 @@ extension ChooseView {
         response!.results
     }
     
+    private var resultsProcessed: [SearchResponse.Result] {
+        var processed = results
+        
+        switch showMode {
+        case .master:
+            processed = processed.filter {
+                $0.type == "master"
+            }
+        case .release:
+            processed = processed.filter {
+                $0.type == "release"
+            }
+        default: break
+        }
+        
+        return processed
+    }
+    
+    private var chosenResult: SearchResponse.Result { resultsProcessed.first { $0.id == chosen }! }
+    
     private var chosenInfoRaw: String {
-        if let chosen = chosen {
-            return results[chosen].title
+        if chosen != nil {
+            return chosenResult.title
                 .replacingOccurrences(of: " - ", with: " – ")
                 .replacingOccurrences(of: "*", with: "†")
         } else { return "" }
     }
     
     private var chosenYearCR: String {
-        if let chosen = chosen {
-            var processed = [results[chosen].year,
-                             results[chosen].country]
+        if chosen != nil {
+            var processed = [chosenResult.year,
+                             chosenResult.country]
             processed.removeAll { $0 == nil }
             
             return processed.map { $0!.replacingOccurrences(of: " & ", with: ", ") }.joined(separator: ", ")
@@ -225,8 +281,8 @@ extension ChooseView {
     }
     
     private var chosenFormatStyled: String {
-        if let chosen = chosen,
-           let formats = results[chosen].formats,
+        if let _ = chosen,
+           let formats = chosenResult.formats,
            let first = formats.first {
             let filtered = first.descriptions ?? []
             
@@ -240,8 +296,8 @@ extension ChooseView {
     }
     
     private var chosenLabelStyled: String {
-        if let chosen = chosen,
-           let label = results[chosen].label,
+        if let _ = chosen,
+           let label = chosenResult.label,
            let first = label.first {
             return first
         } else { return " " }
@@ -281,9 +337,8 @@ struct Artwork80x80: View {
     @Environment(\.openURL) var openURL
     
     @Binding var chosen: Int?
-    @Binding var response: SearchResponse?
     
-    let index: Int
+    let result: SearchResponse.Result
     
     var body: some View {
         ZStack {
@@ -297,7 +352,7 @@ struct Artwork80x80: View {
                             .overlay(RoundedRectangle(cornerRadius: 4)
                                 .stroke(Color.accentColor
                                     .opacity(
-                                        (chosen != nil && chosen! == index) ?
+                                        (chosen != nil && chosen! == result.id) ?
                                         1 : 0.001), lineWidth: 1.5))
                             .blur(radius: 3.6)
                             .frame(width: 76, height: 120).clipped()
@@ -311,12 +366,12 @@ struct Artwork80x80: View {
                             .overlay(RoundedRectangle(cornerRadius: 4)
                                 .stroke(Color.accentColor
                                     .opacity(
-                                        (chosen != nil && chosen! == index) ?
+                                        (chosen != nil && chosen! == result.id) ?
                                         1 : 0.001), lineWidth: 1.5))
                             .onTapGesture {
-                                if chosen == index {
-                                    pick(from: index)
-                                } else { withAnimation(.easeOut) { chosen = index } }
+                                if chosen == result.id {
+                                    pick(from: result.id)
+                                } else { withAnimation(.easeOut) { chosen = result.id } }
                             }
                     }
                     .id(result.id)
@@ -327,7 +382,7 @@ struct Artwork80x80: View {
         // Cancel shadow-clipping: 1. Positive padding
         .padding(.vertical, 20)
         .contextMenu {
-            Button(action: { pick(from: index) }) { Text("Pick Up") }
+            Button(action: { pick(from: result.id) }) { Text("Pick Up") }
             Divider()
             Button(action: { openURL(URL(string: "https://discogs.com\(result.uri)")!) })
             { Text("View on Discogs") }
@@ -338,12 +393,6 @@ struct Artwork80x80: View {
 }
 
 extension Artwork80x80 {
-    private var results: [SearchResponse.Result] {
-        response!.results
-    }
-    
-    private var result: SearchResponse.Result { results[index] }
-    
     private func pick(from index: Int) {
         var componets = URLComponents(url: result.resourceURL,
                                       resolvingAgainstBaseURL: false)!
