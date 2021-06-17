@@ -27,7 +27,7 @@ struct ChooseView: View {
         updateDefaultChosen()
     }}
     
-    @State private var formatGrounp: [String]?
+    @State private var formatGroup: [String]?
     @State private var formatGroupChoice: String?
     private var formatGroupChoiceMask: Binding<String?> { Binding {
         formatGroupChoice
@@ -35,6 +35,22 @@ struct ChooseView: View {
         formatGroupChoice = formatGroupChoice == $0 ? nil : $0
         
         updateDefaultChosen()
+    }}
+    @AppStorage(Settings.preferCD) var preferCD: Bool = false
+    private var preferCDMask: Binding<Bool> { Binding {
+        preferCD
+    } set: {
+        preferCD = $0
+        
+        if preferCD && formatGroupChoice == nil {
+            if let group = formatGroup {
+                if group.contains(where: { $0 == "CD" }) {
+                    formatGroupChoice = "CD"
+                    
+                    updateDefaultChosen()
+                }
+            }
+        }
     }}
     
     @State private var labelGroup: [String]?
@@ -128,7 +144,13 @@ struct ChooseView: View {
                     
                     Divider()
                     
-                    Button("Clear Filters Below") {}
+                    Button("Clear Filters") {
+                        yearGroupChoice = nil
+                        formatGroupChoice = nil
+                        labelGroupChoice = nil
+                        
+                        updateDefaultChosen()
+                    }
                     
                     Picker("Year", selection: yearGroupChoiceMask) {
                         if let group = yearGroup {
@@ -139,11 +161,13 @@ struct ChooseView: View {
                     }
                     
                     Picker("Format", selection: formatGroupChoiceMask) {
-                        if let group = formatGrounp {
+                        if let group = formatGroup {
                             ForEach(group, id: \.self) { member in
                                 Text(member).tag(member as String?)
                             }
                         }
+                        Divider()
+                        
                     }
                     
                     Picker("Label", selection: labelGroupChoiceMask) {
@@ -162,6 +186,12 @@ struct ChooseView: View {
                         Text("Year").tag(SortMode.year)
                         Divider()
                         Text("Default").tag(SortMode.none)
+                    }
+                    
+                    Divider()
+                    
+                    Menu("Options") {
+                        Toggle("Prefer CD", isOn: preferCDMask)
                     }
                 } label: {
                     ButtonMini(alwaysHover: true, systemName: "ellipsis.circle", helpText: "Options")
@@ -283,6 +313,17 @@ struct ChooseView: View {
                 
                 yearGroupChoice = nil
                 formatGroupChoice = nil
+                
+                if preferCD {
+                    if let group = formatGroup {
+                        if group.contains(where: { $0 == "CD" }) {
+                            formatGroupChoice = "CD"
+                            
+                            updateDefaultChosen()
+                        }
+                    }
+                }
+                
                 labelGroupChoice = nil
                 sortMode = .none
                 
@@ -442,7 +483,7 @@ extension ChooseView {
         }
         
         self.yearGroup = yearGroupSet.sorted()
-        self.formatGrounp = formatGroupSet.sorted()
+        self.formatGroup = formatGroupSet.sorted()
         
         var processed = labelGroupSet.sorted()
         if hasUnknown { processed.append("Unknown") }
