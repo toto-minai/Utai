@@ -17,10 +17,23 @@ struct ChooseView: View {
     
     @State private var chosen: Int?
     
-    @State private var formatGrounp: [String]?
-    @State private var yearGroup: [Int?]?
     @State private var labelGroup: [String?]?
     
+    @State private var yearGroup: [Int]?
+    @State private var yearGroupChoice: Int?
+    private var yearGroupChoiceMask: Binding<Int?> { Binding {
+        yearGroupChoice
+    } set: {
+        yearGroupChoice = yearGroupChoice == $0 ? nil : $0
+        
+        if let first = resultsProcessed.first {
+            chosen = first.id
+        } else {
+            chosen = nil
+        }
+    }}
+    
+    @State private var formatGrounp: [String]?
     @State private var formatGroupChoice: String?
     private var formatGroupChoiceMask: Binding<String?> { Binding {
         formatGroupChoice
@@ -119,6 +132,14 @@ struct ChooseView: View {
                     
                     Button("Clear Filters Below") {}
                     
+                    Picker("Year", selection: yearGroupChoiceMask) {
+                        if let group = yearGroup {
+                            ForEach(group, id: \.self) { member in
+                                Text(year2Text(member)).tag(member as Int?)
+                            }
+                        }
+                    }
+                    
                     Picker("Format", selection: formatGroupChoiceMask) {
                         if let group = formatGrounp {
                             ForEach(group, id: \.self) { member in
@@ -127,11 +148,6 @@ struct ChooseView: View {
                         }
                     }
                     
-                    Menu("Filter") {
-                        Text("Label")
-                        Text("Country / Region")
-                        Text("Year")
-                    }
                     Divider()
                     Picker("Sort By", selection: $sortMode) {
                         if showMode == .both {
@@ -260,6 +276,7 @@ struct ChooseView: View {
                     chosen = nil
                 }
                 
+                yearGroupChoice = nil
                 formatGroupChoice = nil
                 sortMode = .none
                 
@@ -309,6 +326,16 @@ extension ChooseView {
                 return x < y
             }
         default: break
+        }
+        
+        if let choice = yearGroupChoice {
+            processed = processed.filter {
+                if let year = $0.year {
+                    return Int(year)! / 10 == choice
+                } else {
+                    return choice == Int.max
+                }
+            }
         }
         
         if let choice = formatGroupChoice {
@@ -379,12 +406,17 @@ extension ChooseView {
     
     private func parse() {
         var formatGroupSet = Set<String>()
+        var yearGroupSet = Set<Int>()
         
         results.forEach {
             if let formats = $0.formats,
                let first = formats.first {
                 formatGroupSet.insert(first.name)
             }
+            
+            if let year = $0.year {
+                yearGroupSet.insert(Int(year)! / 10)
+            } else { yearGroupSet.insert(Int.max) }
             
 //            if let year = $0.year {
 //                yearGroup.insert(Int(year)! / 100)
@@ -397,6 +429,13 @@ extension ChooseView {
         }
         
         self.formatGrounp = formatGroupSet.sorted()
+        self.yearGroup = yearGroupSet.sorted()
+    }
+    
+    private func year2Text(_ x: Int) -> String {
+        if x == Int.max { return "Unknown" }
+        
+        return String("\(x * 10)s")
     }
     
     private func pick(from index: Int) {
