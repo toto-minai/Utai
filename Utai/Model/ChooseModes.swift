@@ -12,4 +12,4 @@ enum ShowMode: Int, Identifiable {
     
     var id: Int { rawValue }
 }
-enum SortMode { case none, year }
+enum SortMode { case none, MR, year }

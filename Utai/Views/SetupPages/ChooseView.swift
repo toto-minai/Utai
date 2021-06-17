@@ -109,8 +109,6 @@ struct ChooseView: View {
         }
     }
     
-    @State private var filterMode: FilterMode = .none
-    
     @State private var sortMode: SortMode = .none
     
     var footer: some View {
