@@ -17,6 +17,23 @@ struct ChooseView: View {
     
     @State private var chosen: Int?
     
+    @State private var formatGrounp: [String]?
+    @State private var yearGroup: [Int?]?
+    @State private var labelGroup: [String?]?
+    
+    @State private var formatGroupChoice: String?
+    private var formatGroupChoiceMask: Binding<String?> { Binding {
+        formatGroupChoice
+    } set: {
+        formatGroupChoice = formatGroupChoice == $0 ? nil : $0
+        
+        if let first = resultsProcessed.first {
+            chosen = first.id
+        } else {
+            chosen = nil
+        }
+    }}
+    
     var header: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
@@ -96,6 +113,18 @@ struct ChooseView: View {
                         Text("Releases Only").tag(ShowMode.release)
                         Divider()
                         Text("Both").tag(ShowMode.both)
+                    }
+                    
+                    Divider()
+                    
+                    Button("Clear Filters Below") {}
+                    
+                    Picker("Format", selection: formatGroupChoiceMask) {
+                        if let group = formatGrounp {
+                            ForEach(group, id: \.self) { member in
+                                Text(member).tag(member as String?)
+                            }
+                        }
                     }
                     
                     Menu("Filter") {
@@ -221,6 +250,8 @@ struct ChooseView: View {
                 do { try await search() }
                 catch { print(error) }
                 
+                parse()
+                
                 store.needUpdate = false
                 
                 if let first = resultsProcessed.first {
@@ -228,6 +259,9 @@ struct ChooseView: View {
                 } else {
                     chosen = nil
                 }
+                
+                formatGroupChoice = nil
+                sortMode = .none
                 
                 withAnimation {
                     store.goal = nil
@@ -275,6 +309,17 @@ extension ChooseView {
                 return x < y
             }
         default: break
+        }
+        
+        if let choice = formatGroupChoice {
+            processed = processed.filter {
+                if let formats = $0.formats,
+                    let first = formats.first {
+                    return first.name == choice
+                }
+                
+                return false
+            }
         }
         
         return processed
@@ -330,6 +375,28 @@ extension ChooseView {
             let response = try JSONDecoder().decode(SearchResponse.self, from: data)
             withAnimation { self.response = response }
         } catch { throw error }
+    }
+    
+    private func parse() {
+        var formatGroupSet = Set<String>()
+        
+        results.forEach {
+            if let formats = $0.formats,
+               let first = formats.first {
+                formatGroupSet.insert(first.name)
+            }
+            
+//            if let year = $0.year {
+//                yearGroup.insert(Int(year)! / 100)
+//            } else { yearGroup.insert(nil) }
+//
+//            if let label = $0.label,
+//               let first = label.first {
+//                labelGroup.insert(first)
+//            } else { labelGroup.insert(nil) }
+        }
+        
+        self.formatGrounp = formatGroupSet.sorted()
     }
     
     private func pick(from index: Int) {
