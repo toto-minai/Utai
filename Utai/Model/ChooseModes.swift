@@ -7,6 +7,10 @@
 
 import Foundation
 
-enum ShowMode { case master, release, both }
+enum ShowMode: Int, Identifiable {
+    case master, release, both
+    
+    var id: Int { rawValue }
+}
 enum FilterMode { case none, label, CR, year }
 enum SortMode { case none, MR, CR, year }

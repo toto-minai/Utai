@@ -62,7 +62,7 @@ struct ChooseView: View {
         }
     }
     
-    @State private var showMode: ShowMode = .both
+    @AppStorage(Settings.showMode) var showMode: ShowMode = .both
     private var showModeMask: Binding<ShowMode> {
         Binding { showMode } set: {
             showMode = $0
@@ -105,13 +105,13 @@ struct ChooseView: View {
                     }
                     Divider()
                     Picker("Sort By", selection: $sortMode) {
-                        Text("Discogs").tag(SortMode.none)
-                        Divider()
                         if showMode == .both {
                             Text("Master, Release").tag(SortMode.MR)
                         }
                         Text("Country / Region").tag(SortMode.CR)
                         Text("Year").tag(SortMode.year)
+                        Divider()
+                        Text("Discogs").tag(SortMode.none)
                     }
                 } label: {
                     ButtonMini(alwaysHover: true, systemName: "ellipsis.circle", helpText: "Options")
