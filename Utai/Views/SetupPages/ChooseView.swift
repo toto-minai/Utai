@@ -54,17 +54,17 @@ struct ChooseView: View {
             // Cancel shadow-clipping: 3. Negative padding
             .padding(.vertical, -20)
             .onChange(of: showMode) { newValue in
-                // print(chosenResult)
+                proxy.scrollTo(chosen, anchor: .top)
+            }
+            .onChange(of: sortMode) { newValue in
                 proxy.scrollTo(chosen, anchor: .top)
             }
         }
     }
     
     @State private var showMode: ShowMode = .both
-    private var showModeBinding: Binding<ShowMode> {
-        Binding  {
-            showMode
-        } set: {
+    private var showModeMask: Binding<ShowMode> {
+        Binding { showMode } set: {
             showMode = $0
             
             if let first = resultsProcessed.first {
@@ -87,7 +87,7 @@ struct ChooseView: View {
                 Spacer()
                 
                 Menu {
-                    Picker("Show", selection: showModeBinding) {
+                    Picker("Show", selection: showModeMask) {
                         Text("Masters Only").tag(ShowMode.master)
                         Text("Releases Only").tag(ShowMode.release)
                         Divider()
@@ -103,7 +103,7 @@ struct ChooseView: View {
                     Picker("Sort By", selection: $sortMode) {
                         Text("Discogs").tag(SortMode.none)
                         Divider()
-                        Text("Master, Release").tag(SortMode.MR)
+                        Text("Master, Release").tag(SortMode.MR).disabled(showMode != .both)
                         Text("Country / Region").tag(SortMode.CR)
                         Text("Year").tag(SortMode.year)
                     }
@@ -209,8 +209,6 @@ struct ChooseView: View {
     
     var refreshWhenNeededUpdate: some View {
         void.onAppear {
-            print("")
-            
             async {
                 response = nil
                 
@@ -257,6 +255,22 @@ extension ChooseView {
         default: break
         }
         
+        switch sortMode {
+        case .MR:
+            processed = processed.sorted {
+                $1.type == "release" && $0.type == "master"
+            }
+        // case .CR:
+        case .year:
+            processed = processed.sorted { former, latter in
+                let x = former.year != nil ? Int(former.year!) ?? Int.max : Int.max
+                let y = latter.year != nil ? Int(latter.year!) ?? Int.max : Int.max
+                
+                return x < y
+            }
+        default: break
+        }
+        
         return processed
     }
     
@@ -285,10 +299,6 @@ extension ChooseView {
            let formats = chosenResult.formats,
            let first = formats.first {
             let filtered = first.descriptions ?? []
-            
-//            let filtered = first.descriptions?.filter {
-//                $0 != "LP" && $0 != "Album"
-//            } ?? []
             
             return first.name + (filtered.isEmpty ?
                 " " : " (\(filtered.joined(separator: ", ")))")
