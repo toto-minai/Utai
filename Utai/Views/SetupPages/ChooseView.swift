@@ -17,8 +17,6 @@ struct ChooseView: View {
     
     @State private var chosen: Int?
     
-    @State private var labelGroup: [String?]?
-    
     @State private var yearGroup: [Int]?
     @State private var yearGroupChoice: Int?
     private var yearGroupChoiceMask: Binding<Int?> { Binding {
@@ -26,11 +24,7 @@ struct ChooseView: View {
     } set: {
         yearGroupChoice = yearGroupChoice == $0 ? nil : $0
         
-        if let first = resultsProcessed.first {
-            chosen = first.id
-        } else {
-            chosen = nil
-        }
+        updateDefaultChosen()
     }}
     
     @State private var formatGrounp: [String]?
@@ -40,11 +34,17 @@ struct ChooseView: View {
     } set: {
         formatGroupChoice = formatGroupChoice == $0 ? nil : $0
         
-        if let first = resultsProcessed.first {
-            chosen = first.id
-        } else {
-            chosen = nil
-        }
+        updateDefaultChosen()
+    }}
+    
+    @State private var labelGroup: [String]?
+    @State private var labelGroupChoice: String?
+    private var labelGroupChoiceMask: Binding<String?> { Binding {
+        labelGroupChoice
+    } set: {
+        labelGroupChoice = labelGroupChoice == $0 ? nil : $0
+        
+        updateDefaultChosen()
     }}
     
     var header: some View {
@@ -148,15 +148,22 @@ struct ChooseView: View {
                         }
                     }
                     
+                    Picker("Label", selection: labelGroupChoiceMask) {
+                        if let group = labelGroup {
+                            ForEach(group, id: \.self) { member in
+                                Text(member).tag(member as String?)
+                            }
+                        }
+                    }
+                    
                     Divider()
                     Picker("Sort By", selection: $sortMode) {
                         if showMode == .both {
                             Text("Master, Release").tag(SortMode.MR)
                         }
-                        Text("Country / Region").tag(SortMode.CR)
                         Text("Year").tag(SortMode.year)
                         Divider()
-                        Text("Discogs").tag(SortMode.none)
+                        Text("Default").tag(SortMode.none)
                     }
                 } label: {
                     ButtonMini(alwaysHover: true, systemName: "ellipsis.circle", helpText: "Options")
@@ -278,6 +285,7 @@ struct ChooseView: View {
                 
                 yearGroupChoice = nil
                 formatGroupChoice = nil
+                labelGroupChoice = nil
                 sortMode = .none
                 
                 withAnimation {
@@ -349,6 +357,15 @@ extension ChooseView {
             }
         }
         
+        if let choice = labelGroupChoice {
+            processed = processed.filter {
+                if let label = $0.label,
+                   let first = label.first {
+                    return first == choice
+                } else { return choice == "Unknown" }
+            }
+        }
+        
         return processed
     }
     
@@ -405,8 +422,10 @@ extension ChooseView {
     }
     
     private func parse() {
-        var formatGroupSet = Set<String>()
         var yearGroupSet = Set<Int>()
+        var formatGroupSet = Set<String>()
+        var labelGroupSet = Set<String>()
+        var hasUnknown = false
         
         results.forEach {
             if let formats = $0.formats,
@@ -418,18 +437,26 @@ extension ChooseView {
                 yearGroupSet.insert(Int(year)! / 10)
             } else { yearGroupSet.insert(Int.max) }
             
-//            if let year = $0.year {
-//                yearGroup.insert(Int(year)! / 100)
-//            } else { yearGroup.insert(nil) }
-//
-//            if let label = $0.label,
-//               let first = label.first {
-//                labelGroup.insert(first)
-//            } else { labelGroup.insert(nil) }
+            if let label = $0.label,
+               let first = label.first {
+                   labelGroupSet.insert(first)
+            } else { hasUnknown = true }
         }
         
-        self.formatGrounp = formatGroupSet.sorted()
         self.yearGroup = yearGroupSet.sorted()
+        self.formatGrounp = formatGroupSet.sorted()
+        
+        var processed = labelGroupSet.sorted()
+        if hasUnknown { processed.append("Unknown") }
+        self.labelGroup = processed
+    }
+    
+    private func updateDefaultChosen() {
+        if let first = resultsProcessed.first {
+            chosen = first.id
+        } else {
+            chosen = nil
+        }
     }
     
     private func year2Text(_ x: Int) -> String {
