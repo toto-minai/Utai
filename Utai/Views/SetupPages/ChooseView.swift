@@ -538,10 +538,10 @@ struct Artwork80x80: View {
                             .frame(height: 40, alignment: .bottom)
                             .cornerRadius(36)
                             .overlay(RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.primary
+                                .stroke(Color.accentColor
                                     .opacity(
                                         (chosen != nil && chosen! == result.id) ?
-                                        0.7 : 0.001), lineWidth: 2))
+                                        1 : 0.001), lineWidth: 2))
                             .blur(radius: 3.6)
                             .frame(width: 76, height: 120).clipped()
                             .offset(y: 2.4+20)
@@ -552,10 +552,10 @@ struct Artwork80x80: View {
                             .shadow(color: Color.black.opacity(0.54),
                                     radius: 3.6, x: 0, y: 2.4)
                             .overlay(RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.primary
+                                .stroke(Color.accentColor
                                     .opacity(
                                         (chosen != nil && chosen! == result.id) ?
-                                        0.7 : 0.001), lineWidth: 2))
+                                        1 : 0.001), lineWidth: 2))
                             .onTapGesture {
                                 if chosen == result.id {
                                     pick(from: result.id)
