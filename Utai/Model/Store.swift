@@ -10,11 +10,9 @@ import SwiftUI
 class Store: ObservableObject {
     @Published var page: Int = 1
     
-    @Published var goal: Int?
     @Published var album: Album?
     
     @Published var searchURL: URL?
-    @Published var neededSearch: Bool = false
     
     @Published var matchUrl: URL?
     @Published var needMatch: Bool = false
@@ -44,7 +42,11 @@ class Store: ObservableObject {
         }
         
         searchURL = componets.url
-        
-        neededSearch = true
+    }
+    
+    func didCompleted() {
+        showMatchPanel = true
+        makeSearchUrl()
+        page = 2
     }
 }

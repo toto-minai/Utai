@@ -10,18 +10,19 @@ import SwiftUI
 struct ImportView: View {
     @EnvironmentObject var store: Store
     
-    @State private var dragOver = false
+    // Drag and drop
+    @State private var draggingOver = false
+    @State private var droppedURLs: [URL] = []
+    @State private var droppedGoal: Int?
     
-    @State private var newAlbum: Album?
-    @State private var isConfirmPresented = false
-    @State private var urls: [URL] = []
+    @State private var isConfirmSheetPresented = false
     
     var body: some View {
-        let delegate = MusicDropDelegate(urls: $urls,
-                                         goal: $store.goal,
-                                         dropOver: $dragOver)
+        let delegate = Delegate(draggingOver: $draggingOver,
+                                urls: $droppedURLs,
+                                goal: $droppedGoal)
         
-        return VStack(spacing: 0) {
+        return ZStack {
             VStack(spacing: lilSpacing2x) {
                 WelcomeIcon()
                 
@@ -32,34 +33,26 @@ struct ImportView: View {
                     ButtonCus(action: importFiles,
                               label: "Add Music",
                               systemName: "music.note")
-                        .sheet(isPresented: $isConfirmPresented, onDismiss: {}) {
-                            ConfirmSheet(newAlbum: $newAlbum, systemName: "music.note",
-                                         instruction:
-                                "Might want to confirm the title and artists before searching on Discogs.")
+                        .sheet(isPresented: $isConfirmSheetPresented, onDismiss: {}) {
+                            ConfirmSheet(systemName: "music.note",
+                                         instruction: "Might want to confirm the title and artists before searching on Discogs.",
+                                         titles: Array(store.album!.albumTitleCandidates.sorted()),
+                                         albumArtists: Array(store.album!.albumArtistsCandidates.sorted()))
                         }
                 }
+                
+                Spacer()
             }
-            .offset(y: 59)  // Align with album artworks on search page
+            .padding(.top, 59)  // Align with album artworks on search page
             // TODO: Make it clear how to calc
             
-            Spacer()
-            
-            if let goal = store.goal {
-                if urls.count == goal {
+            if let goal = droppedGoal {
+                if droppedURLs.count == goal {
                     void.onAppear {
-                        let anAlbum = Album(urls: urls)
-                        
-                        urls = []
+                        store.album = Album(urls: droppedURLs)
 
-                        if anAlbum.completed {
-                            store.album = anAlbum
-                            store.showMatchPanel = true
-                            store.makeSearchUrl()
-                            store.page = 2
-                        } else {
-                            newAlbum = anAlbum
-                            isConfirmPresented = true
-                        }
+                        if album.completed { store.didCompleted() }
+                        else { isConfirmSheetPresented = true }
                     }
                 }
             }
@@ -69,37 +62,7 @@ struct ImportView: View {
     }
 }
 
-struct MusicDropDelegate: DropDelegate {
-    @Binding var urls: [URL]
-    @Binding var goal: Int?
-    @Binding var dropOver: Bool
-    
-    let performer = NSHapticFeedbackManager.defaultPerformer
-    
-    func dropEntered(info: DropInfo) {
-        dropOver = true
-        performer.perform(.generic, performanceTime: .now)
-    }
-    
-    func dropExited(info: DropInfo) {
-        dropOver = false
-        performer.perform(.generic, performanceTime: .now)
-    }
 
-    func performDrop(info: DropInfo) -> Bool {
-        let providers = info.itemProviders(for: ["public.file-url"])
-        
-        goal = providers.count
-        for provider in providers {
-            provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
-                guard let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) else { return }
-                urls.append(url)
-            }
-        }
-        
-        return true
-    }
-}
 
 extension ImportView {
     private var album: Album { store.album! }
@@ -111,20 +74,49 @@ extension ImportView {
         panel.canChooseDirectories = false
         
         guard panel.runModal() == .OK else {
-            print("Error on open panel")
+            print("Files not imported")
             return
         }
         
-        let album = Album(urls: panel.urls)
+        store.album = Album(urls: panel.urls)
         
-        if album.completed {
-            store.album = album
-            store.showMatchPanel = true
-            store.makeSearchUrl()
-            store.page = 2
-        } else {
-            newAlbum = album
-            isConfirmPresented = true
+        if album.completed { store.didCompleted() }
+        else { isConfirmSheetPresented = true }
+    }
+    
+    struct Delegate: DropDelegate {
+        @Binding var draggingOver: Bool
+        @Binding var urls: [URL]
+        @Binding var goal: Int?
+        
+        let performer = NSHapticFeedbackManager.defaultPerformer
+        
+        func dropEntered(info: DropInfo) {
+            draggingOver = true
+            performer.perform(.generic, performanceTime: .now)
+        }
+        
+        func dropExited(info: DropInfo) {
+            draggingOver = false
+            performer.perform(.generic, performanceTime: .now)
+        }
+
+        func performDrop(info: DropInfo) -> Bool {
+            let providers = info.itemProviders(for: ["public.file-url"])
+            urls = []
+            
+            goal = providers.count
+            for provider in providers {
+                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
+                    guard let data = item as? Data,
+                          let url = URL(dataRepresentation: data, relativeTo: nil)
+                    else { return }
+                    
+                    urls.append(url)
+                }
+            }
+            
+            return true
         }
     }
 }
@@ -132,12 +124,13 @@ extension ImportView {
 struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
     
-    @Binding var newAlbum: Album?
-    
     let systemName: String
     let instruction: String
     
     @Environment(\.dismiss) var dismiss
+    
+    let titles: [String]
+    let albumArtists: [String]
     
     @State private var titleSelection: Int = 0
     @State var titleCus: String = ""
@@ -158,16 +151,15 @@ struct ConfirmSheet: View {
             Spacer()
             
             Picker("**Album**", selection: $titleSelection) {
-                ForEach(0..<album.albumTitleCandidates.count) { index in
-                    Text("\(Array(album.albumTitleCandidates)[index])")
-                        .tag(index)
+                ForEach(Array(titles.enumerated()), id: \.offset) { index, title in
+                    Text(title).tag(index)
                 }
                 Divider()
                 Text("Other…").tag(-1)
             }
             .foregroundColor(.secondary)
             .onAppear {
-                if album.albumTitleCandidates.count == 0 {
+                if titles.count == 0 {
                     titleSelection = -1
                     titleCusFocused = true
                 }
@@ -181,16 +173,15 @@ struct ConfirmSheet: View {
                 .focused($titleCusFocused)
             
             Picker("**Artist(s)**", selection: $artistsSelection) {
-                ForEach(0..<album.albumArtistsCandidates.count) { index in
-                    Text("\(Array(album.albumArtistsCandidates)[index])")
-                        .tag(index)
+                ForEach(Array(albumArtists.enumerated()), id: \.offset) { index, artists in
+                    Text(artists).tag(index)
                 }
                 Divider()
                 Text("Other…").tag(-1)
             }
             .foregroundColor(.secondary)
             .onAppear {
-                if album.albumArtistsCandidates.count == 0 {
+                if albumArtists.count == 0 {
                     artistsSelection = -1
                     artistsCusFocused = true
                 }
@@ -225,7 +216,7 @@ struct ConfirmSheet: View {
 }
 
 extension ConfirmSheet {
-    private var album: Album { newAlbum! }
+    private var album: Album { store.album! }
     
     private var canSearch: Bool {
         titleSelection != -1 ||
@@ -235,18 +226,15 @@ extension ConfirmSheet {
     }
     
     private func prepare() {
-        store.album = album
         store.album!.title = titleSelection == -1 ?
             (titleCus == "" ? nil : titleCus) :
-            Array(album.albumTitleCandidates)[titleSelection]
+            titles[titleSelection]
         
         store.album!.artists = artistsSelection == -1 ?
             (artistsCus == "" ? nil : artistsCus) :
-            Array(album.albumArtistsCandidates)[artistsSelection]
+            albumArtists[artistsSelection]
         
-        store.showMatchPanel = true
-        store.makeSearchUrl()
-        store.page = 2
+        store.didCompleted()
         
         dismiss()
     }

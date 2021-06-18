@@ -197,13 +197,15 @@ struct TrackLine: View {
                             .textSelection(.enabled)
                             .minimumScaleFactor(0.01)
                         
-                        if artists == nil ||
-                            track.artist != nil && track.artist != artists! {
-                            Text("\(track.artist!)")
-                                .fontWeight(.medium)
-                                .lineSpacing(4)
-                                .foregroundColor(.secondary)
-                                .textSelection(.enabled)
+                        if let albumArtists = artists,
+                           let artists = track.artist {
+                            if albumArtists != artists {
+                                Text("\(artists)")
+                                    .fontWeight(.medium)
+                                    .lineSpacing(4)
+                                    .foregroundColor(.secondary)
+                                    .textSelection(.enabled)
+                            }
                         }
                     }
                     .padding(.vertical, 6.8)

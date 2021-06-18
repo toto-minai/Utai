@@ -213,87 +213,88 @@ struct ChooseView: View {
             }
         }
     }
-        
     
     var body: some View {
-        if store.album != nil {
-            ZStack(alignment: .top) {
-                VStack(spacing: lilSpacing2x) {
+        ZStack(alignment: .top) {
+            VStack(spacing: lilSpacing2x) {
+                if store.album != nil {
                     header
-                    
-                    if response != nil &&  // `response == nil` means pending
-                        store.goal == nil && // Are they required?
-                        !store.neededSearch {
-                        artworks
-                        
-                        if let chosen = chosen {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: lilSpacing) {
-                                    VStack(alignment: .trailing, spacing: 4) {
-                                        Text("Versus")
-                                            .fontWeight(.medium)
-                                        Text("Released")
-                                            .fontWeight(.medium)
-                                            .opacity(chosenYearCR != " " ? 1 : 0.3)
-                                        Text("Format")
-                                            .fontWeight(.medium)
-                                            .opacity(chosenResult.formats != nil ? 1 : 0.3)
-                                        Text("Labal")
-                                            .fontWeight(.medium)
-                                        
-                                        Spacer()  // Keep 2 VStack aligned
-                                    }
-                                    .foregroundColor(.secondary)
-                                    .animation(.default, value: chosen)
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("\(chosenInfoRaw)")
-                                            .fontWeight(.medium)
-                                            .animation(nil)
-                                        Text("\(chosenYearCR)")
-                                            .fontWeight(.medium)
-                                            .animation(nil)
-                                        Text("\(chosenFormatStyled)")
-                                            .fontWeight(.medium)
-                                            .animation(nil)
-                                        Text("\(chosenLabelStyled)")
-                                            .fontWeight(.medium)
-                                            .animation(nil)
-                                        Button("**View on Discogs**") {
-                                            openURL(URL(string: "https://discogs.com\(chosenResult.uri)")!)
+                }
+                
+                if response != nil && store.searchURL == nil {
+                    if !results.isEmpty {
+                        if !resultsProcessed.isEmpty {
+                            artworks
+                            
+                            if let chosen = chosen {
+                                ScrollView(.horizontal, showsIndicators: false) {
+                                    HStack(spacing: lilSpacing) {
+                                        VStack(alignment: .trailing, spacing: 4) {
+                                            Text("Versus")
+                                                .fontWeight(.medium)
+                                            Text("Released")
+                                                .fontWeight(.medium)
+                                                .opacity(chosenYearCR != " " ? 1 : 0.3)
+                                            Text("Format")
+                                                .fontWeight(.medium)
+                                                .opacity(chosenResult.format != nil ? 1 : 0.3)
+                                            Text("Labal")
+                                                .fontWeight(.medium)
+                                            
+                                            Spacer()  // Keep 2 VStack aligned
                                         }
-                                        .buttonStyle(.borderless)
                                         .foregroundColor(.secondary)
-                                        .padding(.top, 2)
-                                        .textSelection(.disabled)
+                                        .animation(.default, value: chosen)
                                         
-                                        Spacer()
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("\(chosenInfoRaw)")
+                                                .fontWeight(.medium)
+                                                .animation(nil)
+                                            Text("\(chosenYearCR)")
+                                                .fontWeight(.medium)
+                                                .animation(nil)
+                                            Text("\(chosenFormatStyled)")
+                                                .fontWeight(.medium)
+                                                .animation(nil)
+                                            Text("\(chosenLabelStyled)")
+                                                .fontWeight(.medium)
+                                                .animation(nil)
+                                            Button("**View on Discogs**") {
+                                                openURL(URL(string: "https://discogs.com\(chosenResult.uri)")!)
+                                            }
+                                            .buttonStyle(.borderless)
+                                            .foregroundColor(.secondary)
+                                            .padding(.top, 2)
+                                            .textSelection(.disabled)
+                                            
+                                            Spacer()
+                                        }
+                                        .textSelection(.enabled)
                                     }
-                                    .textSelection(.enabled)
+                                    .padding(.horizontal, lilSpacing2x+lilIconLength)
                                 }
-                                .padding(.horizontal, lilSpacing2x+lilIconLength)
                             }
-                        }
-                    }
-                    
-                    Spacer()
-                }
-                .padding(.top, lilSpacing2x+lilIconLength)
-                .contextMenu { extraMenu }
+                        } else { Text("No Album Under Such Condition") }
+                    } else { Text("No Album Found") }
+                } else { Text("Searching...") }
                 
-                footer
-                
-                if store.page == 2 {
-                    refreshWhenTurnToThisPage
-                    
-                    if store.neededSearch  { refreshWhenNeededUpdate }
-                }
+                Spacer()
             }
-            .frame(width: unitLength, height: unitLength)
+            .padding(.top, lilSpacing2x+lilIconLength)
+            .contextMenu { extraMenu }
+            
+            footer
+                
+            if store.page == 2 {
+                doWhenTurnToThisPage
+                
+                if store.searchURL != nil { doWhenNeededSearch }
+            }
         }
+        .frame(width: unitLength, height: unitLength)
     }
     
-    var refreshWhenTurnToThisPage: some View {
+    var doWhenTurnToThisPage: some View {
         void.onAppear {
             if chosen == nil && response != nil {
                 if let first = resultsProcessed.first {
@@ -303,26 +304,26 @@ struct ChooseView: View {
         }
     }
     
-    var refreshWhenNeededUpdate: some View {
+    var doWhenNeededSearch: some View {
         void.onAppear {
+            response = nil
+            
+            // TODO: Write a function
+            sortMode = .none
+            
+            yearGroupChoice = nil
+            formatGroupChoice = nil
+            labelGroupChoice = nil
+            
             async {
-                response = nil
-                
                 do { try await search() }
                 catch { print(error) }
                 
                 parse()
                 
-                store.neededSearch = false
-                
                 if let first = resultsProcessed.first {
                     chosen = first.id
-                } else {
-                    chosen = nil
                 }
-                
-                yearGroupChoice = nil
-                formatGroupChoice = nil
                 
                 if preferCD {
                     if let group = formatGroup {
@@ -330,16 +331,17 @@ struct ChooseView: View {
                             formatGroupChoice = "CD"
                             
                             updateDefaultChosen()
+                            
+                            if resultsProcessed.isEmpty {
+                                formatGroupChoice = nil
+                                
+                                updateDefaultChosen()
+                            }
                         }
                     }
                 }
                 
-                labelGroupChoice = nil
-                sortMode = .none
-                
-                withAnimation {
-                    store.goal = nil
-                }
+                store.searchURL = nil
             }
         }
     }
@@ -374,7 +376,6 @@ extension ChooseView {
             processed = processed.sorted {
                 $1.type == "release" && $0.type == "master"
             }
-        // case .CR:
         case .year:
             processed = processed.sorted { former, latter in
                 let x = former.year != nil ? Int(former.year!) ?? Int.max : Int.max
@@ -385,6 +386,7 @@ extension ChooseView {
         default: break
         }
         
+        // Filters
         if let choice = yearGroupChoice {
             processed = processed.filter {
                 if let year = $0.year {
@@ -397,9 +399,16 @@ extension ChooseView {
         
         if let choice = formatGroupChoice {
             processed = processed.filter {
-                if let formats = $0.formats,
-                    let first = formats.first {
-                    return first.name == choice
+                if $0.type == "release" {
+                    if let formats = $0.formats,
+                        let first = formats.first {
+                        return first.name == choice
+                    }
+                } else if $0.type == "master" {
+                    if let format = $0.format,
+                       let first = format.first {
+                        return first == choice
+                    }
                 }
                 
                 return false
@@ -439,13 +448,26 @@ extension ChooseView {
     }
     
     private var chosenFormatStyled: String {
-        if let _ = chosen,
-           let formats = chosenResult.formats,
-           let first = formats.first {
-            let filtered = first.descriptions ?? []
+        if let _ = chosen {
+            if chosenResult.type == "release" {
+                if let formats = chosenResult.formats,
+                   let first = formats.first {
+                    let filtered = first.descriptions ?? []
+                    
+                    return first.name + (filtered.isEmpty ?
+                                    " " : " (\(filtered.joined(separator: ", ")))")
+                }
+            } else if chosenResult.type == "master" {
+                if let format = chosenResult.format,
+                   let first = format.first {
+                    let formatLeft = format.dropFirst()
+                    
+                    return first + (formatLeft.isEmpty ?
+                                    " " : " (\(formatLeft.joined(separator: ", ")))")
+                }
+            }
             
-            return first.name + (filtered.isEmpty ?
-                " " : " (\(filtered.joined(separator: ", ")))")
+            return " "
         } else { return " " }
     }
     
@@ -477,9 +499,16 @@ extension ChooseView {
         var hasUnknown = false
         
         results.forEach {
-            if let formats = $0.formats,
-               let first = formats.first {
-                formatGroupSet.insert(first.name)
+            if $0.type == "release" {
+                if let formats = $0.formats,
+                   let first = formats.first {
+                    formatGroupSet.insert(first.name)
+                }
+            } else if $0.type == "master" {
+                if let format = $0.format,
+                   let first = format.first {
+                    formatGroupSet.insert(first)
+                }
             }
             
             if let year = $0.year {

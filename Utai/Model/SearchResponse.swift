@@ -28,6 +28,7 @@ struct SearchResponse: Codable {
         let uri: String
         let year: String?
         let formats: [Format]?
+        let format: [String]?
 
         private enum CodingKeys: String, CodingKey {
             case country
@@ -43,6 +44,7 @@ struct SearchResponse: Codable {
             case uri
             case year
             case formats
+            case format
         }
     }
 
