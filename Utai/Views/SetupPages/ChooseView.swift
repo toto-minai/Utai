@@ -184,8 +184,6 @@ struct ChooseView: View {
                             Text(member).tag(member as String?)
                         }
                     }
-                    Divider()
-                    
                 }
                 
                 Picker("Label", selection: labelGroupChoiceMask) {
