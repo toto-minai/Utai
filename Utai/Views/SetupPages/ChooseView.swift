@@ -149,22 +149,25 @@ struct ChooseView: View {
         }
     }
     
+    // Bug: Contextual menu sometimes do not show properly
     var extraMenu: some View {
         Group {
-            Picker("Show", selection: showModeMask) {
-                Text("Masters Only").tag(ShowMode.master)
-                Text("Releases Only").tag(ShowMode.release)
-                Divider()
-                Text("Both").tag(ShowMode.both)
-            }
-            
-            Picker("Sort By", selection: $sortMode) {
-                if showMode == .both {
-                    Text("Master, Release").tag(SortMode.MR)
+            Section {
+                Picker("Show", selection: showModeMask) {
+                    Text("Masters Only").tag(ShowMode.master)
+                    Text("Releases Only").tag(ShowMode.release)
+                    Divider()
+                    Text("Both").tag(ShowMode.both)
                 }
-                Text("Year").tag(SortMode.year)
-                Divider()
-                Text("Default").tag(SortMode.none)
+                
+                Picker("Sort By", selection: $sortMode) {
+                    if showMode == .both {
+                        Text("Master, Release").tag(SortMode.MR)
+                    }
+                    Text("Year").tag(SortMode.year)
+                    Divider()
+                    Text("Default").tag(SortMode.none)
+                }
             }
             
             Divider()
@@ -217,9 +220,10 @@ struct ChooseView: View {
             
             Divider()
             
-            
-            Menu("Options") {
-                Toggle("Prefer CD", isOn: preferCDMask)
+            Section {
+                Menu("Options") {
+                    Toggle("Prefer CD", isOn: preferCDMask)
+                }
             }
         }
     }
