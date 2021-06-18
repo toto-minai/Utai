@@ -101,7 +101,7 @@ struct MatchView: View {
                             result = nil
                             do { try await search() }
                             catch {
-                                print(store.matchUrl!.absoluteString)
+                                print(store.referenceURL!.absoluteString)
                                 print(error)
                             }
                             store.needMatch = false
@@ -137,7 +137,7 @@ extension MatchView {
     }
     
     private func search() async throws {
-        let (data, response) = try await URLSession.shared.data(from: store.matchUrl!)
+        let (data, response) = try await URLSession.shared.data(from: store.referenceURL!)
         guard (response as? HTTPURLResponse)?.statusCode == 200
         else { throw SearchError.urlNotSucceed }
 

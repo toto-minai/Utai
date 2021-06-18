@@ -618,20 +618,6 @@ extension ChooseView {
         
         return String("\(x * 10)s")
     }
-    
-    private func pick(from index: Int) {
-        var componets = URLComponents(url: results[index].resourceURL, resolvingAgainstBaseURL: false)!
-        componets.queryItems = [
-            URLQueryItem(name: "key", value: discogs_key),
-            URLQueryItem(name: "secret", value: discogs_secret)
-        ]
-        
-        store.matchUrl = componets.url
-        
-        store.showMatchPanel = true
-        store.page = 3
-        store.needMatch = true
-    }
 }
 
 struct Artwork80x80: View {
@@ -672,9 +658,8 @@ struct Artwork80x80: View {
                                         (chosen != nil && chosen! == result.id) ?
                                         1 : 0.001), lineWidth: 2))
                             .onTapGesture {
-                                if chosen == result.id {
-                                    pick(from: result.id)
-                                } else { withAnimation(.easeOut) { chosen = result.id } }
+                                if chosen == result.id { store.didReferencePicked(using: result.resourceURL) }
+                                else { withAnimation(.easeOut) { chosen = result.id } }
                             }
                     }
                     .id(result.id)
@@ -685,29 +670,12 @@ struct Artwork80x80: View {
         // Cancel shadow-clipping: 1. Positive padding
         .padding(.vertical, 20)
         .contextMenu {
-            Button(action: { pick(from: result.id) }) { Text("Pick Up") }
+            Button(action: { store.didReferencePicked(using: result.resourceURL) }) { Text("Pick Up") }
             Divider()
             Button(action: { openURL(URL(string: "https://discogs.com\(result.uri)")!) })
             { Text("View on Discogs") }
             Button(action: { openURL(URL(string: result.coverImage!)!) })
             { Text("Open Artwork in Broswer") }
         }
-    }
-}
-
-extension Artwork80x80 {
-    private func pick(from index: Int) {
-        var componets = URLComponents(url: result.resourceURL,
-                                      resolvingAgainstBaseURL: false)!
-        componets.queryItems = [
-            URLQueryItem(name: "key", value: discogs_key),
-            URLQueryItem(name: "secret", value: discogs_secret)
-        ]
-        
-        store.matchUrl = componets.url
-        
-        store.showMatchPanel = true
-        store.page = 3
-        store.needMatch = true
     }
 }

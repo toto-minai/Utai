@@ -8,20 +8,16 @@
 import SwiftUI
 
 class Store: ObservableObject {
-    @Published var page: Int = 1
-    
     @Published var album: Album?
     
-    @Published var searchURL: URL?
-    
-    @Published var matchUrl: URL?
-    @Published var needMatch: Bool = false
+    @Published var page: Int = 1
     
     @Published var showMatchPanel: Bool = false
-    
     @Published var artworkMode: Bool = false
 
-    func makeSearchUrl() {
+    
+    @Published var searchURL: URL?
+    private func makeSearchURL() {
         let title = album!.title
         let artists = album!.artists
         
@@ -44,11 +40,33 @@ class Store: ObservableObject {
         searchURL = componets.url
     }
     
-    func didCompleted() {
+    func didAlbumCompleted() {
+        makeSearchURL()
+        
         showMatchPanel = true
-        makeSearchUrl()
         page = 2
-        
-        
     }
+    
+    @Published var referenceURL: URL?
+    private func makeReferenceURL(from url: URL) {
+        var componets = URLComponents(url: url,
+                                      resolvingAgainstBaseURL: false)!
+        componets.queryItems = [
+            URLQueryItem(name: "key", value: discogs_key),
+            URLQueryItem(name: "secret", value: discogs_secret)
+        ]
+        
+        referenceURL = componets.url
+    }
+    
+    func didReferencePicked(using url: URL) {
+        makeReferenceURL(from: url)
+        
+        showMatchPanel = true
+        page = 3
+        
+        needMatch = true
+    }
+    
+    @Published var needMatch: Bool = false
 }

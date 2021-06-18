@@ -51,7 +51,7 @@ struct ImportView: View {
                     void.onAppear {
                         store.album = Album(urls: droppedURLs)
 
-                        if album.completed { store.didCompleted() }
+                        if album.completed { store.didAlbumCompleted() }
                         else { isConfirmSheetPresented = true }
                     }
                 }
@@ -61,8 +61,6 @@ struct ImportView: View {
         .onDrop(of: ["public.file-url"], delegate: delegate)
     }
 }
-
-
 
 extension ImportView {
     private var album: Album { store.album! }
@@ -80,7 +78,7 @@ extension ImportView {
         
         store.album = Album(urls: panel.urls)
         
-        if album.completed { store.didCompleted() }
+        if album.completed { store.didAlbumCompleted() }
         else { isConfirmSheetPresented = true }
     }
     
@@ -234,7 +232,7 @@ extension ConfirmSheet {
             (artistsCus == "" ? nil : artistsCus) :
             albumArtists[artistsSelection]
         
-        store.didCompleted()
+        store.didAlbumCompleted()
         
         dismiss()
     }
