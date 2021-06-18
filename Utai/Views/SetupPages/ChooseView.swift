@@ -173,7 +173,9 @@ struct ChooseView: View {
                 Picker("Year", selection: yearGroupChoiceMask) {
                     if let group = yearGroup {
                         ForEach(group, id: \.self) { member in
-                            Text(year2Text(member)).tag(member as Int?)
+                            if !isResultsEmptyWhenYear(equals: member) {
+                                Text(year2Text(member)).tag(member as Int?)
+                            }
                         }
                     }
                 }
@@ -181,7 +183,9 @@ struct ChooseView: View {
                 Picker("Format", selection: formatGroupChoiceMask) {
                     if let group = formatGroup {
                         ForEach(group, id: \.self) { member in
-                            Text(member).tag(member as String?)
+                            if !isResultsEmptyWhenFormat(equals: member) {
+                                Text(member).tag(member as String?)
+                            }
                         }
                     }
                 }
@@ -189,7 +193,9 @@ struct ChooseView: View {
                 Picker("Label", selection: labelGroupChoiceMask) {
                     if let group = labelGroup {
                         ForEach(group, id: \.self) { member in
-                            Text(member).tag(member as String?)
+                            if !isResultsEmptyWhenLabel(equals: member) {
+                                Text(member).tag(member as String?)
+                            }
                         }
                     }
                 }
@@ -452,6 +458,39 @@ extension ChooseView {
             .filterd(year: yearGroupChoice)
             .filterd(format: formatGroupChoice)
             .filterd(label: labelGroupChoice)
+    }
+    
+    private func isResultsEmptyWhenYear(equals x: Int?) -> Bool {
+        return results
+            .processed(in: showMode)
+            .processed(in: sortMode)
+            // Filters
+            .filterd(year: x)
+            .filterd(format: formatGroupChoice)
+            .filterd(label: labelGroupChoice)
+            .isEmpty
+    }
+    
+    private func isResultsEmptyWhenFormat(equals x: String?) -> Bool {
+        return results
+            .processed(in: showMode)
+            .processed(in: sortMode)
+            // Filters
+            .filterd(year: yearGroupChoice)
+            .filterd(format: x)
+            .filterd(label: labelGroupChoice)
+            .isEmpty
+    }
+    
+    private func isResultsEmptyWhenLabel(equals x: String?) -> Bool {
+        return results
+            .processed(in: showMode)
+            .processed(in: sortMode)
+            // Filters
+            .filterd(year: yearGroupChoice)
+            .filterd(format: formatGroupChoice)
+            .filterd(label: x)
+            .isEmpty
     }
     
     private var chosenResult: SearchResponse.Result { resultsProcessed.first { $0.id == chosen }! }
