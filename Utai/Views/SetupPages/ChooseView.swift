@@ -345,19 +345,11 @@ struct ChooseView: View {
     }
 }
 
-extension ChooseView {
-    private var album: Album { store.album! }
-    private var titleRaw: String { album.title ?? "" }
-    private var artistsRaw: String { album.artists ?? "" }
-    
-    private var results: [SearchResponse.Result] {
-        response!.results
-    }
-    
-    private var resultsProcessed: [SearchResponse.Result] {
-        var processed = results
+extension Array where Element == SearchResponse.Result {
+    func processed(in mode: ShowMode) -> [Element]  {
+        var processed = self
         
-        switch showMode {
+        switch mode {
         case .master:
             processed = processed.filter {
                 $0.type == "master"
@@ -369,7 +361,13 @@ extension ChooseView {
         default: break
         }
         
-        switch sortMode {
+        return processed
+    }
+    
+    func processed(in mode: SortMode) -> [Element]  {
+        var processed = self
+        
+        switch mode {
         case .MR:
             processed = processed.sorted {
                 $1.type == "release" && $0.type == "master"
@@ -384,9 +382,12 @@ extension ChooseView {
         default: break
         }
         
-        // Filters
-        if let choice = yearGroupChoice {
-            processed = processed.filter {
+        return processed
+    }
+    
+    func filterd(year choice: Int?) -> [Element] {
+        if let choice = choice {
+            return self.filter {
                 if let year = $0.year {
                     return Int(year)! / 10 == choice
                 } else {
@@ -395,8 +396,12 @@ extension ChooseView {
             }
         }
         
-        if let choice = formatGroupChoice {
-            processed = processed.filter {
+        return self
+    }
+    
+    func filterd(format choice: String?) -> [Element] {
+        if let choice = choice {
+            return self.filter {
                 if $0.type == "release" {
                     if let formats = $0.formats,
                         let first = formats.first {
@@ -413,8 +418,12 @@ extension ChooseView {
             }
         }
         
-        if let choice = labelGroupChoice {
-            processed = processed.filter {
+        return self
+    }
+    
+    func filterd(label choice: String?) -> [Element] {
+        if let choice = choice {
+            return self.filter {
                 if let label = $0.label,
                    let first = label.first {
                     return first == choice
@@ -422,7 +431,27 @@ extension ChooseView {
             }
         }
         
-        return processed
+        return self
+    }
+}
+
+extension ChooseView {
+    private var album: Album { store.album! }
+    private var titleRaw: String { album.title ?? "" }
+    private var artistsRaw: String { album.artists ?? "" }
+    
+    private var results: [SearchResponse.Result] {
+        response!.results
+    }
+    
+    private var resultsProcessed: [SearchResponse.Result] {
+        return results
+            .processed(in: showMode)
+            .processed(in: sortMode)
+            // Filters
+            .filterd(year: yearGroupChoice)
+            .filterd(format: formatGroupChoice)
+            .filterd(label: labelGroupChoice)
     }
     
     private var chosenResult: SearchResponse.Result { resultsProcessed.first { $0.id == chosen }! }
