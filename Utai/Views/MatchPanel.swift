@@ -37,52 +37,7 @@ struct MatchPanel: View {
                                     
                                 VStack(spacing: 8) {
                                     ForEach(tracksSortedByNo) { track in
-                                        HStack(spacing: 0) {
-                                            GroupBox {
-                                                HStack(spacing: 8) {
-                                                    Text("\(track.trackNoText)")
-                                                        .fontWeight(.medium)
-                                                        .monospacedDigit()
-                                                        .foregroundColor(.secondary)
-                                                        .frame(width: 16)
-                                                    
-                                                    VStack(alignment: .leading, spacing: 4) {
-                                                        Text("\(track.title ?? track.filename.withoutExtension)")
-                                                            .fontWeight(.medium)
-                                                            .lineSpacing(4)
-                                                            .foregroundColor(.primary)
-                                                            .textSelection(.enabled)
-                                                            .minimumScaleFactor(0.01)
-                                                            
-                                                        if album.artists == nil ||
-                                                            track.artist != nil && track.artist != album.artists! {
-                                                            Text("\(track.artist!)")
-                                                                .fontWeight(.medium)
-                                                                .lineSpacing(4)
-                                                                .foregroundColor(.secondary)
-                                                                .textSelection(.enabled)
-                                                        }
-                                                    }
-                                                    .padding(.vertical, 6.8)
-                                                    .padding(.horizontal, 8)
-                                                    .background(EffectsView(
-                                                        material: .sidebar,
-                                                        blendingMode: .behindWindow))
-                                                    .cornerRadius(4)
-                                                    
-                                                    MatchButton(length: Int(track.length),
-                                                                lengthText: track.lengthText)
-                                                    
-                                                    
-                                                }
-                                                .padding(.horizontal, 4)
-                                            }
-                                                
-                                            Spacer()
-                                                .frame(width: lilSpacing2x+lilIconLength)
-                                            
-                                            Spacer()
-                                        }
+                                        TrackLine(track: track, artists: album.artists)
                                     }
                                 }
                                 .frame(maxWidth: .infinity)
@@ -186,7 +141,7 @@ struct MatchButton: View {
     let length: Int
     let lengthText: String
     
-    @State private var hover: Bool = false
+    @Binding var hover: Bool
     
     var body: some View {
         ZStack {
@@ -199,10 +154,8 @@ struct MatchButton: View {
                     Text("Match")
                         .font(.custom("Yanone Kaffeesatz", size: 16))
                         .fontWeight(.medium)
-//                        .foregroundColor(.secondary)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
-                .menuButtonStyle(BorderlessButtonMenuButtonStyle())
                 .menuIndicator(.hidden)
                 .frame(width: 29)
                 .padding(.leading, 2.5)
@@ -218,10 +171,63 @@ struct MatchButton: View {
             }
         }
         .frame(width: length >= 3600 ? 47 : 29)
-        .onHover { hovering in
-            withAnimation {
-                hover = hovering
+    }
+}
+
+struct TrackLine: View {
+    let track: Album.Track
+    let artists: String?
+    @State private var hover: Bool = false
+    
+    var body: some View {
+        HStack(spacing: 0) {
+            GroupBox {
+                HStack(spacing: 8) {
+                    Text("\(track.trackNoText)")
+                        .fontWeight(.medium)
+                        .monospacedDigit()
+                        .foregroundColor(.secondary)
+                        .frame(width: 16)
+                    
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("\(track.title ?? track.filename.withoutExtension)")
+                            .fontWeight(.medium)
+                            .lineSpacing(4)
+                            .foregroundColor(.primary)
+                            .textSelection(.enabled)
+                            .minimumScaleFactor(0.01)
+                        
+                        if artists == nil ||
+                            track.artist != nil && track.artist != artists! {
+                            Text("\(track.artist!)")
+                                .fontWeight(.medium)
+                                .lineSpacing(4)
+                                .foregroundColor(.secondary)
+                                .textSelection(.enabled)
+                        }
+                    }
+                    .padding(.vertical, 6.8)
+                    .padding(.horizontal, 8)
+                    .background(EffectsView(
+                        material: .sidebar,
+                        blendingMode: .behindWindow))
+                    .cornerRadius(4)
+                    
+                    MatchButton(length: Int(track.length),
+                                lengthText: track.lengthText, hover: $hover)
+                }
+                .padding(.horizontal, 4)
             }
+            .onHover { hovering in
+                withAnimation {
+                    hover = hovering
+                }
+            }
+            
+            Spacer()
+                .frame(width: lilSpacing2x+lilIconLength)
+            
+            Spacer()
         }
     }
 }

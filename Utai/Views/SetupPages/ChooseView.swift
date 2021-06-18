@@ -134,67 +134,10 @@ struct ChooseView: View {
             HStack {
                 Spacer()
                 
-                Menu {
-                    Picker("Show", selection: showModeMask) {
-                        Text("Masters Only").tag(ShowMode.master)
-                        Text("Releases Only").tag(ShowMode.release)
-                        Divider()
-                        Text("Both").tag(ShowMode.both)
-                    }
-                    
-                    Divider()
-                    
-                    Button("Clear Filters") {
-                        yearGroupChoice = nil
-                        formatGroupChoice = nil
-                        labelGroupChoice = nil
-                        
-                        updateDefaultChosen()
-                    }
-                    
-                    Picker("Year", selection: yearGroupChoiceMask) {
-                        if let group = yearGroup {
-                            ForEach(group, id: \.self) { member in
-                                Text(year2Text(member)).tag(member as Int?)
-                            }
-                        }
-                    }
-                    
-                    Picker("Format", selection: formatGroupChoiceMask) {
-                        if let group = formatGroup {
-                            ForEach(group, id: \.self) { member in
-                                Text(member).tag(member as String?)
-                            }
-                        }
-                        Divider()
-                        
-                    }
-                    
-                    Picker("Label", selection: labelGroupChoiceMask) {
-                        if let group = labelGroup {
-                            ForEach(group, id: \.self) { member in
-                                Text(member).tag(member as String?)
-                            }
-                        }
-                    }
-                    
-                    Divider()
-                    Picker("Sort By", selection: $sortMode) {
-                        if showMode == .both {
-                            Text("Master, Release").tag(SortMode.MR)
-                        }
-                        Text("Year").tag(SortMode.year)
-                        Divider()
-                        Text("Default").tag(SortMode.none)
-                    }
-                    
-                    Divider()
-                    
-                    Menu("Options") {
-                        Toggle("Prefer CD", isOn: preferCDMask)
-                    }
-                } label: {
-                    ButtonMini(alwaysHover: true, systemName: "ellipsis.circle", helpText: "Options")
+                Menu { extraMenu } label: {
+                    ButtonMini(alwaysHover: true,
+                               systemName: "ellipsis.circle",
+                               helpText: "Options")
                         .padding(lilSpacing)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
@@ -205,6 +148,72 @@ struct ChooseView: View {
             }
         }
     }
+    
+    var extraMenu: some View {
+        Group {
+            Picker("Show", selection: showModeMask) {
+                Text("Masters Only").tag(ShowMode.master)
+                Text("Releases Only").tag(ShowMode.release)
+                Divider()
+                Text("Both").tag(ShowMode.both)
+            }
+            
+            Picker("Sort By", selection: $sortMode) {
+                if showMode == .both {
+                    Text("Master, Release").tag(SortMode.MR)
+                }
+                Text("Year").tag(SortMode.year)
+                Divider()
+                Text("Default").tag(SortMode.none)
+            }
+            
+            Divider()
+            
+            Section("Filters") {
+                Picker("Year", selection: yearGroupChoiceMask) {
+                    if let group = yearGroup {
+                        ForEach(group, id: \.self) { member in
+                            Text(year2Text(member)).tag(member as Int?)
+                        }
+                    }
+                }
+                
+                Picker("Format", selection: formatGroupChoiceMask) {
+                    if let group = formatGroup {
+                        ForEach(group, id: \.self) { member in
+                            Text(member).tag(member as String?)
+                        }
+                    }
+                    Divider()
+                    
+                }
+                
+                Picker("Label", selection: labelGroupChoiceMask) {
+                    if let group = labelGroup {
+                        ForEach(group, id: \.self) { member in
+                            Text(member).tag(member as String?)
+                        }
+                    }
+                }
+                
+                Button("Clear All") {
+                    yearGroupChoice = nil
+                    formatGroupChoice = nil
+                    labelGroupChoice = nil
+                    
+                    updateDefaultChosen()
+                }
+            }
+            
+            Divider()
+            
+            
+            Menu("Options") {
+                Toggle("Prefer CD", isOn: preferCDMask)
+            }
+        }
+    }
+        
     
     var body: some View {
         if store.album != nil {
@@ -270,6 +279,7 @@ struct ChooseView: View {
                     Spacer()
                 }
                 .padding(.top, lilSpacing2x+lilIconLength)
+                .contextMenu { extraMenu }
                 
                 footer
                 
