@@ -173,7 +173,9 @@ struct ChooseView: View {
                 Picker("Year", selection: yearGroupChoiceMask) {
                     if let group = yearGroup {
                         ForEach(group, id: \.self) { member in
-                            if !isResultsEmptyWhenYear(equals: member) {
+                            if let choice = yearGroupChoice, choice == member {
+                                Text(year2Text(member)).tag(member as Int?)
+                            } else if !isResultsEmptyWhenYear(equals: member) {
                                 Text(year2Text(member)).tag(member as Int?)
                             }
                         }
@@ -183,7 +185,9 @@ struct ChooseView: View {
                 Picker("Format", selection: formatGroupChoiceMask) {
                     if let group = formatGroup {
                         ForEach(group, id: \.self) { member in
-                            if !isResultsEmptyWhenFormat(equals: member) {
+                            if let choice = formatGroupChoice, choice == member {
+                                Text(member).tag(member as String?)
+                            } else if !isResultsEmptyWhenFormat(equals: member) {
                                 Text(member).tag(member as String?)
                             }
                         }
@@ -193,7 +197,9 @@ struct ChooseView: View {
                 Picker("Label", selection: labelGroupChoiceMask) {
                     if let group = labelGroup {
                         ForEach(group, id: \.self) { member in
-                            if !isResultsEmptyWhenLabel(equals: member) {
+                            if let choice = labelGroupChoice, choice == member {
+                                Text(member).tag(member as String?)
+                            } else if !isResultsEmptyWhenLabel(equals: member) {
                                 Text(member).tag(member as String?)
                             }
                         }
