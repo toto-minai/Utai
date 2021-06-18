@@ -46,22 +46,21 @@ struct ImportView: View {
             
             if let goal = store.goal {
                 if urls.count == goal {
-                    Spacer().frame(height: 0)
-                        .onAppear {
-                            let anAlbum = Album(urls: urls)
-                            
-                            urls = []
+                    void.onAppear {
+                        let anAlbum = Album(urls: urls)
+                        
+                        urls = []
 
-                            if anAlbum.completed {
-                                store.album = anAlbum
-                                store.showMatchPanel = true
-                                store.makeSearchUrl()
-                                store.page = 2
-                            } else {
-                                newAlbum = anAlbum
-                                isConfirmPresented = true
-                            }
+                        if anAlbum.completed {
+                            store.album = anAlbum
+                            store.showMatchPanel = true
+                            store.makeSearchUrl()
+                            store.page = 2
+                        } else {
+                            newAlbum = anAlbum
+                            isConfirmPresented = true
                         }
+                    }
                 }
             }
         }
@@ -116,15 +115,15 @@ extension ImportView {
             return
         }
         
-        let anAlbum = Album(urls: panel.urls)
+        let album = Album(urls: panel.urls)
         
-        if anAlbum.completed {
-            store.album = anAlbum
+        if album.completed {
+            store.album = album
             store.showMatchPanel = true
             store.makeSearchUrl()
             store.page = 2
         } else {
-            newAlbum = anAlbum
+            newAlbum = album
             isConfirmPresented = true
         }
     }

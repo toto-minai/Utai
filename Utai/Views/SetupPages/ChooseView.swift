@@ -223,7 +223,7 @@ struct ChooseView: View {
                     
                     if response != nil &&  // `response == nil` means pending
                         store.goal == nil && // Are they required?
-                        !store.needUpdate {
+                        !store.neededSearch {
                         artworks
                         
                         if let chosen = chosen {
@@ -286,7 +286,7 @@ struct ChooseView: View {
                 if store.page == 2 {
                     refreshWhenTurnToThisPage
                     
-                    if store.needUpdate  { refreshWhenNeededUpdate }
+                    if store.neededSearch  { refreshWhenNeededUpdate }
                 }
             }
             .frame(width: unitLength, height: unitLength)
@@ -313,7 +313,7 @@ struct ChooseView: View {
                 
                 parse()
                 
-                store.needUpdate = false
+                store.neededSearch = false
                 
                 if let first = resultsProcessed.first {
                     chosen = first.id

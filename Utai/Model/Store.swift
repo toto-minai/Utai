@@ -14,7 +14,7 @@ class Store: ObservableObject {
     @Published var album: Album?
     
     @Published var searchURL: URL?
-    @Published var needUpdate: Bool = false
+    @Published var neededSearch: Bool = false
     
     @Published var matchUrl: URL?
     @Published var needMatch: Bool = false
@@ -45,6 +45,6 @@ class Store: ObservableObject {
         
         searchURL = componets.url
         
-        needUpdate = true
+        neededSearch = true
     }
 }
