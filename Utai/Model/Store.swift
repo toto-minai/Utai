@@ -48,5 +48,7 @@ class Store: ObservableObject {
         showMatchPanel = true
         makeSearchUrl()
         page = 2
+        
+        
     }
 }

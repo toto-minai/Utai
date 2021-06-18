@@ -291,9 +291,9 @@ struct ChooseView: View {
                 Spacer()
             }
             .padding(.top, lilSpacing2x+lilIconLength)
-            .contextMenu { extraMenu }
+            .contextMenu { if response != nil && store.searchURL == nil { extraMenu } }
             
-            footer
+            if response != nil && store.searchURL == nil { footer }
                 
             if store.page == 2 {
                 doWhenTurnToThisPage
