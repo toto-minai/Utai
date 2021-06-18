@@ -7,11 +7,70 @@
 
 import SwiftUI
 
+struct ArtworkView: View {
+    @Binding var response: SearchResponse?
+    
+    @Binding var chosen: Int?
+    @Binding var showMode: ShowMode
+    @Binding var sortMode: SortMode
+    
+    @Binding var yearGroupChoice: Int?
+    @Binding var formatGroupChoice: String?
+    @Binding var labelGroupChoice: String?
+    
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                ZStack {
+                    Color.red.opacity(0.001)
+                        .frame(height: 80)
+                    
+                    LazyHStack(alignment: .top, spacing: lilSpacing) {
+                        ForEach(resultsProcessed, id: \.id) { result in
+                            Artwork80x80(chosen: $chosen, result: result)
+                        }
+                    }
+                    .padding(.horizontal, lilSpacing2x+lilIconLength+20)
+                    // Cancel shadow-clipping: 2. Left spacing to shrink
+                    .frame(height: 120)
+                }
+            }
+            // Cancel shadow-clipping: 3. Negative padding
+//            .padding(.vertical, -20)
+//            .background(Color.red)
+            .onChange(of: showMode) { newValue in
+                proxy.scrollTo(chosen, anchor: .top)
+            }
+            .onChange(of: sortMode) { newValue in
+                proxy.scrollTo(chosen, anchor: .top)
+            }
+        }
+//        .background(Color.red)
+    }
+}
+
+extension ArtworkView {
+    private var results: [SearchResponse.Result] {
+        response!.results
+    }
+    
+    private var resultsProcessed: [SearchResponse.Result] {
+        return results
+            .processed(in: showMode)
+            .processed(in: sortMode)
+            // Filters
+            .filterd(year: yearGroupChoice)
+            .filterd(format: formatGroupChoice)
+            .filterd(label: labelGroupChoice)
+    }
+}
+
 struct ChooseView: View {
     @EnvironmentObject var store: Store
     
     @Environment(\.openURL) var openURL
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.hostingWindow) var hostingWindow
     
     @State private var response: SearchResponse?
     
@@ -86,26 +145,8 @@ struct ChooseView: View {
     }
     
     var artworks: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack(alignment: .top, spacing: lilSpacing) {
-                    ForEach(resultsProcessed, id: \.id) { result in
-                        Artwork80x80(chosen: $chosen, result: result)
-                    }
-                }
-                .padding(.horizontal, lilSpacing2x+lilIconLength)
-                // Cancel shadow-clipping: 2. Left spacing to shrink
-                .frame(height: 120)
-            }
-            // Cancel shadow-clipping: 3. Negative padding
-            .padding(.vertical, -20)
-            .onChange(of: showMode) { newValue in
-                proxy.scrollTo(chosen, anchor: .top)
-            }
-            .onChange(of: sortMode) { newValue in
-                proxy.scrollTo(chosen, anchor: .top)
-            }
-        }
+        Color.clear.frame(height: 80)
+//        ArtworkView(response: $response, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
     }
     
     @AppStorage(Settings.showMode) var showMode: ShowMode = .both
@@ -310,6 +351,8 @@ struct ChooseView: View {
     
     var doWhenTurnToThisPage: some View {
         void.onAppear {
+            
+            
             if chosen == nil && response != nil {
                 if let first = resultsProcessed.first {
                     chosen = first.id
@@ -356,6 +399,22 @@ struct ChooseView: View {
                 }
                 
                 store.searchURL = nil
+                
+                let frame = window.frame
+                
+                
+                
+                let subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+154, width: 352, height: 120), styleMask: [], backing: .buffered, defer: false)
+                subWindow.contentView = NSHostingView(rootView: ArtworkView(response: $response, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice))
+                
+                subWindow.titleVisibility = .hidden
+                subWindow.backgroundColor = NSColor.clear
+                subWindow.hasShadow = false
+                
+                window.addChildWindow(subWindow, ordered: .above)
+                
+//                subWindow.center()
+                subWindow.makeKeyAndOrderFront(nil)
             }
         }
     }
@@ -452,6 +511,8 @@ extension Array where Element == SearchResponse.Result {
 }
 
 extension ChooseView {
+    var window: NSWindow { self.hostingWindow()! }
+    
     private var album: Album { store.album! }
     private var titleRaw: String { album.title ?? "" }
     private var artistsRaw: String { album.artists ?? "" }

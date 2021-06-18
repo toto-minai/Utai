@@ -43,7 +43,6 @@ class Store: ObservableObject {
     func didAlbumCompleted() {
         makeSearchURL()
         
-        showMatchPanel = true
         page = 2
     }
     
@@ -62,7 +61,6 @@ class Store: ObservableObject {
     func didReferencePicked(using url: URL) {
         makeReferenceURL(from: url)
         
-        showMatchPanel = true
         page = 3
         
         needMatch = true

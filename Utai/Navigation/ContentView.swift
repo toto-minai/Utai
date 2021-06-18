@@ -13,6 +13,15 @@ let lilSpacing: CGFloat = 8
 let lilSpacing2x: CGFloat = 16
 let lilIconLength: CGFloat = 12
 
+struct WrappedContentView: View {
+    @StateObject private var store = Store()
+    
+    var body: some View {
+        ContentView()
+            .environmentObject(store)
+    }
+}
+
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     
