@@ -7,74 +7,47 @@
 
 import SwiftUI
 
-let unitLength: CGFloat = 312
-let titlebarHeight: CGFloat = 27
-let lilSpacing: CGFloat = 8
-let lilSpacing2x: CGFloat = 16
-let lilIconLength: CGFloat = 12
-
-struct WrappedContentView: View {
-    @StateObject private var store = Store()
-    
-    var body: some View {
-        ContentView()
-            .environmentObject(store)
-    }
-}
-
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @EnvironmentObject var store: Store
     
     var body: some View {
-        ZStack {
-            HStack(spacing: 0) {
-                ZStack {
-                    SetupPages()
-                    
-                    ReferencesControl(page: $store.page)
-                }
-                .frame(width: unitLength)
-
-                if store.showMatchPanel {
-                    if colorScheme == .light {
-                        Rectangle()
-                            .frame(width: 1, height: unitLength+2)
-                            .foregroundColor(Color.secondary.opacity(0.4))
-                    } else {
-                        Rectangle()
-                            .frame(width: 1, height: unitLength-1)
-                            .foregroundColor(Color.secondary.opacity(0.4))
-                            .offset(y: 0.5)
-                    }
-                    MatchPanel()
-                        .frame(width: store.showMatchPanel ? unitLength : 0, alignment: .leading)
-                        .background(EffectsView(
-                            material: .contentBackground,
-                            blendingMode: .behindWindow).ignoresSafeArea())
-                }
-            }
-            
-            if store.page == 3 { MatchView() }
-            
-            HStack(spacing: 0) {
-                PageTurner()
-                    .frame(width: unitLength)
+        VStack(spacing: 0) {
+            ZStack {
+                SetupPages()
                 
-                Spacer()
+                ReferencesControl(page: $store.page)
+                
+                PageTurner()
             }
-            .frame(width: store.showMatchPanel ? 2*unitLength+1 : unitLength,
-                   height: unitLength, alignment: .leading)
+            .frame(height: Metrics.unitLength)
+            
+            if store.page == 3 {
+                ZStack {
+                    Text("Match Here!")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(EffectsView(material: .contentBackground,
+                                        blendingMode: .behindWindow))
+            }
         }
+        .frame(width: Metrics.unitLength)
         .font(.custom("Yanone Kaffeesatz", size: 16))
         // Translucent background
-        .frame(height: unitLength)
+        .frame(height: store.page == 3 ? 2*Metrics.unitLength : Metrics.unitLength)
         .ignoresSafeArea()
-        .frame(height: unitLength-titlebarHeight)
+        .frame(height: store.page == 3 ? 2*Metrics.unitLength-Metrics.titlebarHeight : Metrics.unitLength-Metrics.titlebarHeight)
         .background(EffectsView(
             material: .sidebar,
             blendingMode: .behindWindow).ignoresSafeArea())
     }
 }
 
+struct WrappedContentView: View {
+    @StateObject private var store = Store()
+    
+    var body: some View {
+        ContentView().environmentObject(store)
+    }
+}

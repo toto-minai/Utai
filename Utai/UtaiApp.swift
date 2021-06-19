@@ -18,29 +18,36 @@ struct UtaiApp: App {
 }
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    var testWindow: NSWindow!
+    var window: NSWindow!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        if let window = NSApp.windows.first {  // TODO: Not working when reopening a window
-            let contentView = WrappedContentView().environment(\.hostingWindow, { [weak window] in
-                return window!
-            })
-            
-            window.contentView = NSHostingView(rootView: contentView)
-            window.setFrameAutosaveName("Main Window")
-            
-//            window.isMovableByWindowBackground = true
-            window.level = .floating
-            
-            window.styleMask.remove(.miniaturizable)
-            window.styleMask.remove(.fullScreen)
-
-            window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-            window.standardWindowButton(.zoomButton)?.isHidden = true
-        }
+        // Close original window
+        if let window = NSApp.windows.first { window.close() }
+        
+        window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 312, height: 312),
+                          styleMask: [.titled, .closable, .fullSizeContentView], backing: .buffered, defer: false)
+        
+        let contentView = WrappedContentView()
+            .environment(\.hostingWindow, { [weak window] in
+            return window!
+        })
+        
+        window.setFrameAutosaveName("Main Window")
+        
+        window.titlebarAppearsTransparent = true
+        window.level = .floating
+        
+        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        window.standardWindowButton(.zoomButton)?.isHidden = true
+        
+        window.contentView = NSHostingView(rootView: contentView)
+        
+        window.center()
+        window.makeKeyAndOrderFront(nil)
     }
 }
 
+// Access window in Views
 struct HostingWindowKey: EnvironmentKey {
     typealias Value = () -> NSWindow?
     

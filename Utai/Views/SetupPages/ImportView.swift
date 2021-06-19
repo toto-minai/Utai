@@ -23,7 +23,7 @@ struct ImportView: View {
                                 goal: $droppedGoal)
         
         return ZStack {
-            VStack(spacing: lilSpacing2x) {
+            VStack(spacing: Metrics.lilSpacing2x) {
                 WelcomeIcon()
                 
                 HStack(spacing: 2) {
@@ -57,7 +57,7 @@ struct ImportView: View {
                 }
             }
         }
-        .frame(width: unitLength, height: unitLength)
+        .frame(width: Metrics.unitLength, height: Metrics.unitLength)
         .onDrop(of: ["public.file-url"], delegate: delegate)
     }
 }
@@ -193,7 +193,7 @@ struct ConfirmSheet: View {
                 .disabled(artistsSelection != -1)
                 .focused($artistsCusFocused)
             
-            Spacer().frame(height: lilSpacing2x)
+            Spacer().frame(height: Metrics.lilSpacing2x)
             
             HStack {
                 Spacer()

@@ -9,14 +9,15 @@
 /* Begin PBXBuildFile section */
 		993C9FA32678C787007E4387 /* MatchSearchResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993C9FA22678C787007E4387 /* MatchSearchResult.swift */; };
 		99747F142672E78100995E85 /* EffectsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F132672E78100995E85 /* EffectsView.swift */; };
-		99747F172672EA0000995E85 /* SetupPages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F162672EA0000995E85 /* SetupPages.swift */; };
-		99747F192672EA3300995E85 /* PageTurner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F182672EA3300995E85 /* PageTurner.swift */; };
+		99747F172672EA0000995E85 /* SetupPages+ReferencesControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F162672EA0000995E85 /* SetupPages+ReferencesControl.swift */; };
+		99747F192672EA3300995E85 /* PageTurner+PageTurnerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F182672EA3300995E85 /* PageTurner+PageTurnerControl.swift */; };
 		99747F1B2672EA7200995E85 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1A2672EA7200995E85 /* ImportView.swift */; };
 		99747F1D2672EAD400995E85 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1C2672EAD400995E85 /* Album.swift */; };
 		9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D62670E1F60000328B /* UtaiApp.swift */; };
 		9987A3D92670E1F60000328B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D82670E1F60000328B /* ContentView.swift */; };
 		9987A3DB2670E1F70000328B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9987A3DA2670E1F70000328B /* Assets.xcassets */; };
 		9987A3DE2670E1F70000328B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9987A3DD2670E1F70000328B /* Preview Assets.xcassets */; };
+		9994F20E267DD61B00CA3726 /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9994F20D267DD61B00CA3726 /* Metrics.swift */; };
 		99CA05F4267A6326007C8B67 /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F3267A6326007C8B67 /* Void.swift */; };
 		99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F5267B1C01007C8B67 /* ChooseModes.swift */; };
 		99CA05F9267B28D5007C8B67 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F8267B28D5007C8B67 /* Settings.swift */; };
@@ -26,7 +27,6 @@
 		99D046FA2674E5B80076D972 /* SearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F92674E5B80076D972 /* SearchResponse.swift */; };
 		99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046FB2674E6AA0076D972 /* Secrets.swift */; };
 		99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE32675F0F900CCA6D7 /* MatchView.swift */; };
-		99DB1BE62675F18400CCA6D7 /* MatchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */; };
 		99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */; };
 		99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */; };
 /* End PBXBuildFile section */
@@ -35,8 +35,8 @@
 		993C9FA22678C787007E4387 /* MatchSearchResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchSearchResult.swift; sourceTree = "<group>"; };
 		996C0E842674FB6B00BA5A6C /* Utai.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Utai.entitlements; sourceTree = "<group>"; };
 		99747F132672E78100995E85 /* EffectsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsView.swift; sourceTree = "<group>"; };
-		99747F162672EA0000995E85 /* SetupPages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupPages.swift; sourceTree = "<group>"; };
-		99747F182672EA3300995E85 /* PageTurner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageTurner.swift; sourceTree = "<group>"; };
+		99747F162672EA0000995E85 /* SetupPages+ReferencesControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetupPages+ReferencesControl.swift"; sourceTree = "<group>"; };
+		99747F182672EA3300995E85 /* PageTurner+PageTurnerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PageTurner+PageTurnerControl.swift"; sourceTree = "<group>"; };
 		99747F1A2672EA7200995E85 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
 		99747F1C2672EAD400995E85 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		9987A3D32670E1F60000328B /* Utai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Utai.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -44,6 +44,7 @@
 		9987A3D82670E1F60000328B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		9987A3DA2670E1F70000328B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9987A3DD2670E1F70000328B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		9994F20D267DD61B00CA3726 /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
 		99CA05F3267A6326007C8B67 /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
 		99CA05F5267B1C01007C8B67 /* ChooseModes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModes.swift; sourceTree = "<group>"; };
 		99CA05F8267B28D5007C8B67 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -52,7 +53,6 @@
 		99D046F92674E5B80076D972 /* SearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResponse.swift; sourceTree = "<group>"; };
 		99D046FB2674E6AA0076D972 /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		99DB1BE32675F0F900CCA6D7 /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
-		99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPanel.swift; sourceTree = "<group>"; };
 		99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
 		99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -72,6 +72,7 @@
 		99747F122672E76100995E85 /* Toolbox */ = {
 			isa = PBXGroup;
 			children = (
+				99CA05F3267A6326007C8B67 /* Void.swift */,
 				99747F132672E78100995E85 /* EffectsView.swift */,
 			);
 			path = Toolbox;
@@ -80,11 +81,11 @@
 		99747F152672E9E500995E85 /* SetupPages */ = {
 			isa = PBXGroup;
 			children = (
-				99747F162672EA0000995E85 /* SetupPages.swift */,
 				99747F1A2672EA7200995E85 /* ImportView.swift */,
 				99D046F72674D07D0076D972 /* ChooseView.swift */,
 				99DB1BE32675F0F900CCA6D7 /* MatchView.swift */,
-				99747F182672EA3300995E85 /* PageTurner.swift */,
+				99747F162672EA0000995E85 /* SetupPages+ReferencesControl.swift */,
+				99747F182672EA3300995E85 /* PageTurner+PageTurnerControl.swift */,
 			);
 			path = SetupPages;
 			sourceTree = "<group>";
@@ -156,10 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				99747F152672E9E500995E85 /* SetupPages */,
-				99DB1BE52675F18400CCA6D7 /* MatchPanel.swift */,
 				99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */,
 				99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */,
-				99CA05F3267A6326007C8B67 /* Void.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -183,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				99D046FB2674E6AA0076D972 /* Secrets.swift */,
+				9994F20D267DD61B00CA3726 /* Metrics.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
@@ -270,14 +270,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				99747F172672EA0000995E85 /* SetupPages.swift in Sources */,
+				99747F172672EA0000995E85 /* SetupPages+ReferencesControl.swift in Sources */,
 				99D046F82674D07D0076D972 /* ChooseView.swift in Sources */,
 				99CA05F4267A6326007C8B67 /* Void.swift in Sources */,
+				9994F20E267DD61B00CA3726 /* Metrics.swift in Sources */,
 				99D046FA2674E5B80076D972 /* SearchResponse.swift in Sources */,
 				9987A3D92670E1F60000328B /* ContentView.swift in Sources */,
 				993C9FA32678C787007E4387 /* MatchSearchResult.swift in Sources */,
-				99747F192672EA3300995E85 /* PageTurner.swift in Sources */,
-				99DB1BE62675F18400CCA6D7 /* MatchPanel.swift in Sources */,
+				99747F192672EA3300995E85 /* PageTurner+PageTurnerControl.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
 				99747F1D2672EAD400995E85 /* Album.swift in Sources */,
@@ -425,6 +425,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleExecutable = Utai;
+				INFOPLIST_KEY_CFBundleName = Utai;
+				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -454,6 +457,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleExecutable = Utai;
+				INFOPLIST_KEY_CFBundleName = Utai;
+				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -15,9 +15,11 @@ struct SetupPages: View {
             ImportView()
             
             ChooseView()
+            
+            MatchView()
         }
-        .offset(x: CGFloat(1 - store.page) * unitLength)
-        .frame(width: unitLength, alignment: .leading)
+        .offset(x: CGFloat(1 - store.page) * Metrics.unitLength)
+        .frame(width: Metrics.unitLength, alignment: .leading)
         .clipped()
     }
 }
@@ -29,15 +31,15 @@ struct ReferencesControl: View {
     
     var body: some View {
         VStack {
-            HStack(spacing: lilSpacing) {
+            HStack(spacing: Metrics.lilSpacing) {
                 Spacer()
                 
                 ButtonMini(systemName: "book", helpText: "Read Cookbook")
-                    .offset(x: 1)
+                    .padding(Metrics.lilSpacing)
             }
-            .padding(lilSpacing)
             
             Spacer()
         }
+        .frame(height: Metrics.unitLength)
     }
 }

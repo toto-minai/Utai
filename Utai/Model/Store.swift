@@ -14,7 +14,6 @@ class Store: ObservableObject {
     
     @Published var showMatchPanel: Bool = false
     @Published var artworkMode: Bool = false
-
     
     @Published var searchURL: URL?
     private func makeSearchURL() {
@@ -42,7 +41,6 @@ class Store: ObservableObject {
     
     func didAlbumCompleted() {
         makeSearchURL()
-        
         page = 2
     }
     
@@ -60,11 +58,6 @@ class Store: ObservableObject {
     
     func didReferencePicked(using url: URL) {
         makeReferenceURL(from: url)
-        
         page = 3
-        
-        needMatch = true
     }
-    
-    @Published var needMatch: Bool = false
 }

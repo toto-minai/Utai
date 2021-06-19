@@ -18,102 +18,97 @@ struct MatchView: View {
     var body: some View {
         ZStack {
             if let _ = result {
-                HStack(spacing: 1) {
+                if let thumb = artworkPrimaryURL.first {
                     ZStack {
-                        if let thumb = artworkPrimaryURL.first {
+                        AsyncImage(url: thumb) { image in
                             ZStack {
-                                AsyncImage(url: thumb) { image in
-                                    ZStack {
-                                        image.resizable().scaledToFill()
-                                            .frame(width: 256, height: 256)
-                                            .frame(height: 128, alignment: .bottom)
-                                            .cornerRadius(72)
-                                            .blur(radius: 7.2)
-                                            .frame(width: 248, height: 312).clipped()
-                                            .offset(y: 2.4+64)
-                                            .scaleEffect(store.artworkMode ? 1.22 : 1)
-                                            .opacity(store.artworkMode ? 0 : 1)
-                                            .animation(.easeOut, value: store.artworkMode)
-                                        
-                                        image.resizable().scaledToFill()
-                                            .frame(width: 256, height: 256)
-                                            .cornerRadius(store.artworkMode ? 0 : 8)
-                                            .shadow(color: Color.black.opacity(0.54),
-                                                    radius: 7.2, x: 0, y: 2.4)
-                                            .onTapGesture {
-                                                store.artworkMode.toggle()
-                                            }
-                                            .scaleEffect(store.artworkMode ? 1.22 : 1)
-                                            .animation(.easeOut, value: store.artworkMode)
-                                    }
-                                } placeholder: {
-                                    ProgressView()
-                                        .frame(width: 256, height: 256)
-                                }
-                                .frame(width: 312, height: 312)
+                                image.resizable().scaledToFill()
+                                    .frame(width: 256, height: 256)
+                                    .frame(height: 128, alignment: .bottom)
+                                    .cornerRadius(72)
+                                    .blur(radius: 7.2)
+                                    .frame(width: 248, height: 312).clipped()
+                                    .offset(y: 2.4+64)
+                                    .scaleEffect(store.artworkMode ? 1.22 : 1)
+                                    .opacity(store.artworkMode ? 0 : 1)
                                 
-                                VStack {
-                                    VStack(spacing: 0) {
-                                        ZStack {
-                                            Rectangle()
-                                                .foregroundColor(.clear)
-                                                .frame(height: lilSpacing2x+lilIconLength-0.5)
-                                        }
-                                        
-                                        if colorScheme == .light {
-                                            Rectangle()
-                                                .frame(width: unitLength, height: 1)
-                                                .foregroundColor(Color.secondary.opacity(0.4))
-                                        } else {
-                                            Rectangle()
-                                                .frame(width: unitLength-1, height: 1)
-                                                .foregroundColor(Color.secondary.opacity(0.4))
-                                                .offset(x: 0.5)
+                                image.resizable().scaledToFill()
+                                    .frame(width: 256, height: 256)
+                                    .cornerRadius(store.artworkMode ? 0 : 8)
+                                    .shadow(color: Color.black.opacity(0.54),
+                                            radius: 7.2, x: 0, y: 2.4)
+                                    .onTapGesture {
+                                        withAnimation(.easeOut) {
+                                            store.artworkMode.toggle()
                                         }
                                     }
-                                    .background(.ultraThinMaterial)
-                                    
-                                    Spacer()
-                                }
-                                .opacity(store.artworkMode ? 1 : 0)
-                                .animation(nil, value: store.artworkMode)
+                                    .scaleEffect(store.artworkMode ? 1.22 : 1)
                             }
-                            .frame(width: unitLength-0.5, height: unitLength)
-                            .clipped()
+                        } placeholder: {
+                            ProgressView()
+                                .frame(width: 256, height: 256)
                         }
+                        .frame(width: 312, height: 312)
+                        
+                        VStack {
+                            VStack(spacing: 0) {
+                                ZStack {
+                                    Rectangle()
+                                        .foregroundColor(.clear)
+                                        .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength-0.5)
+                                }
+                                
+                                if colorScheme == .light {
+                                    Rectangle()
+                                        .frame(width: Metrics.unitLength, height: 1)
+                                        .foregroundColor(Color.secondary.opacity(0.4))
+                                } else {
+                                    Rectangle()
+                                        .frame(width: Metrics.unitLength-1, height: 1)
+                                        .foregroundColor(Color.secondary.opacity(0.4))
+                                        .offset(x: 0.5)
+                                }
+                            }
+                            .background(.ultraThinMaterial)
+                            
+                            Spacer()
+                        }
+                        .opacity(store.artworkMode ? 1 : 0)
+                        .animation(nil, value: store.artworkMode)
                     }
-                    
-//                    ZStack {
-//                        Text("No Credits")
-//                    }
-//                    .frame(width: unitLength-0.5, height: unitLength)
-//                    .background(EffectsView(
-//                        material: .contentBackground,
-//                        blendingMode: .behindWindow).ignoresSafeArea())
-//                    .opacity(store.artworkMode ? 1 : 0)
+                    .frame(width: Metrics.unitLength, height: Metrics.unitLength)
                 }
             }
             
-            if store.page == 3 && store.needMatch {
-                Spacer()
-                    .onAppear {
-                        async {
-                            result = nil
-                            do { try await search() }
-                            catch {
-                                print(store.referenceURL!.absoluteString)
-                                print(error)
-                            }
-                            store.needMatch = false
-                        }
-                    }
+            if store.page == 3 {
+                doWhenTurnToThisPage
+                
+                if store.referenceURL != nil { doWhenNeedToRetrieveData }
             }
-            
-            // For API testing:
-//            Text("\(store.matchUrl!.absoluteString)")
-//                .textSelection(.enabled)
         }
-        .frame(width: unitLength, height: unitLength)
+        .onAppear {  // doWhenBuildThisPage
+            
+        }
+    }
+    
+    var doWhenTurnToThisPage: some View {
+        void.onAppear {
+            
+        }
+    }
+    
+    var doWhenNeedToRetrieveData: some View {
+        void.onAppear {
+            result = nil
+            
+            async {
+                do { try await search() }
+                catch {
+                    print(store.referenceURL!.absoluteString)
+                    print(error)
+                }
+            }
+        }
     }
 }
 
@@ -143,9 +138,7 @@ extension MatchView {
 
         do {
             let result = try JSONDecoder().decode(MatchSearchResult.self, from: data)
-            withAnimation {
-                self.result = result
-            }
+            withAnimation(.easeOut) { self.result = result }
         } catch { throw error }
     }
 }

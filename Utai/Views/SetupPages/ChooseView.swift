@@ -31,17 +31,19 @@ struct ArtworkView: View {
                             Color.red.opacity(0.001)
                                 .frame(height: 80)
                             
-                            LazyHStack(alignment: .top, spacing: lilSpacing) {
+                            LazyHStack(alignment: .top, spacing: Metrics.lilSpacing) {
                                 ForEach(resultsProcessed, id: \.id) { result in
                                     Artwork80x80(store: store, chosen: $chosen, result: result)
                                 }
                             }
-                            .padding(.horizontal, lilSpacing2x+lilIconLength+20)
+                            .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength+20)
                             .frame(height: 120)
                         }
                     }
                     .onChange(of: showMode) { newValue in
-                        proxy.scrollTo(chosen, anchor: .top)
+                        withAnimation {
+                            proxy.scrollTo(chosen, anchor: .top)
+                        }
                     }
                     .onChange(of: sortMode) { newValue in
                         withAnimation {
@@ -172,7 +174,7 @@ struct ChooseView: View {
                     .fontWeight(.medium)
             }
             .textSelection(.enabled)
-            .padding(.horizontal, lilSpacing2x+lilIconLength)
+            .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength)
         }
     }
     
@@ -206,12 +208,12 @@ struct ChooseView: View {
                     ButtonMini(alwaysHover: true,
                                systemName: "ellipsis.circle",
                                helpText: "Options")
-                        .padding(lilSpacing)
+                        .padding(Metrics.lilSpacing)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
                 .menuIndicator(.hidden)
-                .frame(width: lilSpacing2x+lilIconLength,
-                       height: lilSpacing2x+lilIconLength)
+                .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
+                       height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
             }
         }
@@ -300,10 +302,8 @@ struct ChooseView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            VStack(spacing: lilSpacing2x) {
-                if store.album != nil {
-                    header
-                }
+            VStack(spacing: Metrics.lilSpacing2x) {
+                if store.album != nil { header }
                 
                 if response != nil && store.searchURL == nil {
                     if !results.isEmpty {
@@ -312,7 +312,7 @@ struct ChooseView: View {
                             
                             if let chosen = chosen {
                                 ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: lilSpacing) {
+                                    HStack(spacing: Metrics.lilSpacing) {
                                         VStack(alignment: .trailing, spacing: 4) {
                                             Text("Versus")
                                                 .fontWeight(.medium)
@@ -328,21 +328,17 @@ struct ChooseView: View {
                                             Spacer()  // Keep 2 VStack aligned
                                         }
                                         .foregroundColor(.secondary)
-                                        .animation(.default, value: chosen)
+                                        .animation(.easeOut, value: chosen)
                                         
                                         VStack(alignment: .leading, spacing: 4) {
                                             Text("\(chosenInfoRaw)")
                                                 .fontWeight(.medium)
-                                                .animation(nil)
                                             Text("\(chosenYearCR)")
                                                 .fontWeight(.medium)
-                                                .animation(nil)
                                             Text("\(chosenFormatStyled)")
                                                 .fontWeight(.medium)
-                                                .animation(nil)
                                             Text("\(chosenLabelStyled)")
                                                 .fontWeight(.medium)
-                                                .animation(nil)
                                             Button("**View on Discogs**") {
                                                 openURL(URL(string: "https://discogs.com\(chosenResult.uri)")!)
                                             }
@@ -354,8 +350,9 @@ struct ChooseView: View {
                                             Spacer()
                                         }
                                         .textSelection(.enabled)
+                                        .animation(nil, value: chosen)
                                     }
-                                    .padding(.horizontal, lilSpacing2x+lilIconLength)
+                                    .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength)
                                 }
                             }
                         } else { Text("No Album Under Such Condition") }
@@ -364,7 +361,7 @@ struct ChooseView: View {
                 
                 Spacer()
             }
-            .padding(.top, lilSpacing2x+lilIconLength)
+            .padding(.top, Metrics.lilSpacing2x+Metrics.lilIconLength)
             .contextMenu { if response != nil && store.searchURL == nil { extraMenu } }
             
             if response != nil && store.searchURL == nil { footer }
@@ -375,10 +372,10 @@ struct ChooseView: View {
                 if store.searchURL != nil { doWhenNeededSearch }
             }
         }
-        .frame(width: unitLength, height: unitLength)
-        .onAppear {
+        .frame(width: Metrics.unitLength, height: Metrics.unitLength)
+        .onAppear {  // doWhenBuildiThisPage
             let frame = window.frame
-            subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+156, width: 352, height: 120),
+            subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.maxY-157, width: 352, height: 120),
                                  styleMask: [], backing: .buffered, defer: false)
             
             let rootView = ArtworkView(response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice, store: store)
@@ -406,7 +403,7 @@ struct ChooseView: View {
             if store.searchURL == nil && response != nil {
                 let frame = window.frame
                 subWindow.setFrameOrigin(
-                    NSPoint(x: frame.minX-20, y: frame.minY+156))
+                    NSPoint(x: frame.minX-20, y: frame.maxY-157))
                 window.addChildWindow(subWindow, ordered: .above)
             }
         }
@@ -462,7 +459,7 @@ struct ChooseView: View {
                 
                 let frame = window.frame
                 subWindow.setFrameOrigin(
-                    NSPoint(x: frame.minX-20, y: frame.minY+156))
+                    NSPoint(x: frame.minX-20, y: frame.maxY-157))
                 window.addChildWindow(subWindow, ordered: .above)
             }
         }
@@ -674,7 +671,7 @@ extension ChooseView {
         
         do {
             let response = try JSONDecoder().decode(SearchResponse.self, from: data)
-            withAnimation { self.response = response }
+            withAnimation(.easeOut) { self.response = response }
         } catch { throw error }
     }
     
