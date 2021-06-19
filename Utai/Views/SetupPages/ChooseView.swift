@@ -292,7 +292,7 @@ struct ChooseView: View {
                 Menu("Options") {
                     Toggle("Auto Show CD if Available", isOn: preferCDMask)
                     
-                    Toggle("Prefer Release Only", isOn: preferReleaseOnlyMask)
+                    Toggle("Prefer Releases Only", isOn: preferReleaseOnlyMask)
                 }
             }
         }
