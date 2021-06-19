@@ -10,6 +10,8 @@ import SwiftUI
 struct ArtworkView: View {
     @Binding var response: SearchResponse?
     
+    @Binding var searchURL: URL?
+    
     @Binding var chosen: Int?
     @Binding var showMode: ShowMode
     @Binding var sortMode: SortMode
@@ -18,31 +20,49 @@ struct ArtworkView: View {
     @Binding var formatGroupChoice: String?
     @Binding var labelGroupChoice: String?
     
+    @ObservedObject var store: Store
+    
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                ZStack {
-                    Color.red.opacity(0.001)
-                        .frame(height: 80)
-                    
-                    if response != nil {
-                        LazyHStack(alignment: .top, spacing: lilSpacing) {
-                            ForEach(resultsProcessed, id: \.id) { result in
-                                Artwork80x80(chosen: $chosen, result: result)
+        ZStack {
+            if response != nil && searchURL == nil && !results.isEmpty && !resultsProcessed.isEmpty {
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        ZStack {
+                            Color.red.opacity(0.001)
+                                .frame(height: 80)
+                            
+                            LazyHStack(alignment: .top, spacing: lilSpacing) {
+                                ForEach(resultsProcessed, id: \.id) { result in
+                                    Artwork80x80(store: store, chosen: $chosen, result: result)
+                                }
                             }
+                            .padding(.horizontal, lilSpacing2x+lilIconLength+20)
+                            .frame(height: 120)
                         }
-                        .padding(.horizontal, lilSpacing2x+lilIconLength+20)
-                        .frame(height: 120)
+                    }
+                    .onChange(of: showMode) { newValue in
+                        proxy.scrollTo(chosen, anchor: .top)
+                    }
+                    .onChange(of: sortMode) { newValue in
+                        withAnimation {
+                            proxy.scrollTo(chosen, anchor: .top)
+                        }
+                    }
+                }
+                .mask {
+                    HStack(spacing: 0) {
+                        LinearGradient(colors: [Color.yellow.opacity(0), Color.yellow], startPoint: .leading, endPoint: .trailing)
+                            .frame(width: 12)
+                        
+                        Rectangle()
+                        
+                        LinearGradient(colors: [Color.yellow.opacity(0), Color.yellow], startPoint: .trailing, endPoint: .leading)
+                            .frame(width: 12)
                     }
                 }
             }
-            .onChange(of: showMode) { newValue in
-                proxy.scrollTo(chosen, anchor: .top)
-            }
-            .onChange(of: sortMode) { newValue in
-                proxy.scrollTo(chosen, anchor: .top)
-            }
         }
+        .frame(width: 352, height: 120)
     }
 }
 
@@ -141,10 +161,6 @@ struct ChooseView: View {
             .textSelection(.enabled)
             .padding(.horizontal, lilSpacing2x+lilIconLength)
         }
-    }
-    
-    var artworks: some View {
-        Color.clear.frame(height: 80)
     }
     
     @AppStorage(Settings.showMode) var showMode: ShowMode = .both
@@ -277,7 +293,7 @@ struct ChooseView: View {
                 if response != nil && store.searchURL == nil {
                     if !results.isEmpty {
                         if !resultsProcessed.isEmpty {
-                            artworks
+                            Color.clear.frame(height: 80)
                             
                             if let chosen = chosen {
                                 ScrollView(.horizontal, showsIndicators: false) {
@@ -345,6 +361,22 @@ struct ChooseView: View {
             }
         }
         .frame(width: unitLength, height: unitLength)
+        .onAppear {
+            let frame = window.frame
+            subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+154, width: 352, height: 120),
+                                 styleMask: [], backing: .buffered, defer: false)
+            
+            let rootView = ArtworkView(response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice, store: store)
+            subWindow.setFrameAutosaveName("Sub Window")
+            
+            subWindow.titleVisibility = .hidden
+            subWindow.backgroundColor = NSColor.clear
+            subWindow.hasShadow = false
+            
+            subWindow.contentView = NSHostingView(rootView: rootView)
+            
+            window.addChildWindow(subWindow, ordered: .above)
+        }
     }
     
     var doWhenTurnToThisPage: some View {
@@ -356,12 +388,12 @@ struct ChooseView: View {
             }
             
             // SearchResponse do not need an update
-            if store.searchURL == nil && response != nil {
+//            if store.searchURL == nil && response != nil {
                 let frame = window.frame
                 subWindow.setFrameOrigin(
                     NSPoint(x: frame.minX-20, y: frame.minY+154))
                 window.addChildWindow(subWindow, ordered: .above)
-            }
+//            }
         }
         .onDisappear {
             subWindow.orderOut(nil)
@@ -372,12 +404,6 @@ struct ChooseView: View {
     var doWhenNeededSearch: some View {
         void.onAppear {
             response = nil
-            
-            if subWindow != nil {
-                subWindow.orderOut(nil)
-                window.removeChildWindow(subWindow)
-                subWindow = nil
-            }
             
             sortMode = .none
             
@@ -412,20 +438,6 @@ struct ChooseView: View {
                 }
                 
                 store.searchURL = nil
-                
-                let frame = window.frame
-                subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+154, width: 352, height: 120),
-                                     styleMask: [], backing: .buffered, defer: false)
-                
-                let rootView = ArtworkView(response: $response, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
-                subWindow.setFrameAutosaveName("Sub Window")
-                subWindow.contentView = NSHostingView(rootView: rootView)
-                
-                subWindow.titleVisibility = .hidden
-                subWindow.backgroundColor = NSColor.clear
-                subWindow.hasShadow = false
-                
-                window.addChildWindow(subWindow, ordered: .above)
             }
         }
     }
@@ -693,7 +705,7 @@ extension ChooseView {
 }
 
 struct Artwork80x80: View {
-    @EnvironmentObject var store: Store
+    @ObservedObject var store: Store
     
     @Environment(\.openURL) var openURL
     
