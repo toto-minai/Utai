@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct MatchView: View {
+    @AppStorage(Settings.lengthMaxDelta) var lengthMaxDelta: Int = 15
+    
     @Environment(\.colorScheme) var colorScheme
     
     @EnvironmentObject var store: Store
     
-    @State private var result: MatchSearchResult?
+    @State private var result: ReferenceResult?
     @State private var hoverArtworkPrimary: Bool = false
     
     var body: some View {
@@ -101,14 +103,15 @@ struct MatchView: View {
     var doWhenNeedToRetrieveData: some View {
         void.onAppear {
             result = nil
-            
+            print(store.referenceURL!.absoluteString)
+
             async {
                 do { try await search() }
                 catch {
-                    print(store.referenceURL!.absoluteString)
                     print(error)
                 }
                 
+                match()
             }
         }
     }
@@ -129,18 +132,116 @@ extension MatchView {
         return []
     }
     
-    enum SearchError: Error {
-        case urlNotSucceed
-    }
+    var tracks: [Album.Track] { store.album!.tracks }
     
+    var remoteTracks: [ReferenceResult.Track] { result!.tracks }
+    
+    enum SearchError: Error { case badURL }
     private func search() async throws {
         let (data, response) = try await URLSession.shared.data(from: store.referenceURL!)
         guard (response as? HTTPURLResponse)?.statusCode == 200
-        else { throw SearchError.urlNotSucceed }
+        else { throw SearchError.badURL }
 
         do {
-            let result = try JSONDecoder().decode(MatchSearchResult.self, from: data)
+            let result = try JSONDecoder().decode(ReferenceResult.self, from: data)
             withAnimation(.easeOut) { self.result = result }
         } catch { throw error }
+    }
+    
+    private func match() {
+        store.album!.resetMatched()
+        
+        for track in tracks {
+            let filename = track.filename
+            let title = track.title ?? (filename as NSString).deletingPathExtension
+            let localTitle = title.standardised()
+            // Save standardised title
+            track.standardised = localTitle
+            
+            print(localTitle)
+            
+            for remoteTrack in remoteTracks {
+                // Select out info, combined title, etc.
+                if remoteTrack.type == "track" {
+                    let remoteTitle = remoteTrack.title.standardised()
+                    
+                    print("\tvs.\(remoteTitle)")
+                    
+                    if remoteTitle == title ||
+                        localTitle.contains(remoteTitle) {
+                        track.matched.append(remoteTrack)
+                        
+                        if let length = remoteTrack.length {
+                            print("\t\(Int(track.length))")
+                            print("\t\(length)")
+                            
+                            if abs(Int(track.length) - length) <= lengthMaxDelta {
+                                track.isExactlyMatched = true
+                                break
+                            }
+                        }
+                    }
+                } else if remoteTrack.type == "index" {
+                    if let subTracks = remoteTrack.subTracks {
+                        var isMatched = false
+                        for remoteSubTrack in subTracks {
+                            if remoteSubTrack.type == "track" {
+                                let remoteSubTrackTitle = remoteSubTrack.title.standardised()
+                                
+                                if remoteSubTrackTitle == title ||
+                                    localTitle.contains(remoteSubTrackTitle) {
+                                    let newTrack = ReferenceResult.Track(position: remoteSubTrack.position,
+                                                                         type: remoteSubTrack.type,
+                                                                         title: remoteSubTrack.title,
+                                                                         extraArtists: nil,
+                                                                         duration: remoteSubTrack.duration,
+                                                                         subTracks: nil)
+                                    
+                                    track.matched.append(newTrack)
+                                    
+                                    if let length = remoteSubTrack.length {
+                                        if abs(Int(track.length) - length) <= lengthMaxDelta {
+                                            track.isExactlyMatched = true
+                                            isMatched = true
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        
+                        if isMatched { break }
+                    }
+                }
+            }
+        }
+        
+        printMatchResult()
+    }
+    
+    private func printMatchResult() {
+        for track in tracks {
+            print("\(track.title ?? track.filename)" + " = " + "\(String(describing: track.standardised))")
+            print("matched: \(track.matched)")
+            let A = track.matched.map { $0.title }
+            print("i.e.: \(A)")
+            print("\(track.isExactlyMatched)")
+            print("--------------")
+        }
+    }
+}
+
+extension String {
+    func symbolsRemoved() -> String {
+        return String(self.map { ($0.isLetter || $0.isNumber) ? $0 : " " })
+    }
+    
+    func whitespaceCondensed() -> String {
+        let components = self.components(separatedBy: .whitespaces)
+        return components.filter { !$0.isEmpty }.joined(separator: " ")
+    }
+    
+    func standardised() -> String {
+        self.lowercased().symbolsRemoved().whitespaceCondensed()
     }
 }

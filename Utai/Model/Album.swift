@@ -9,11 +9,11 @@ import Foundation
 import ID3TagEditor
 import AVKit
 
-struct Album: Identifiable {
+class Album: Identifiable {
     let id = UUID()
     
-    var albumTitleCandidates = Set<String>()
-    var albumArtistsCandidates = Set<String>()
+    var titleCandidates = Set<String>()
+    var artistsCandidates = Set<String>()
     var yearCandidates = Set<Int>()
     var trackToCandidates = Set<Int>()
     var diskToCandidates = Set<Int>()
@@ -21,62 +21,41 @@ struct Album: Identifiable {
     var title: String?
     var artists: String?
     var year: Int?
+    var trackTo: Int?
+    var diskTo: Int?
     
-    struct Track: Identifiable {
+    class Track: Identifiable {
         let id = UUID()
         
         var title: String?
         var artist: String?
         var length: Double
-        
         var trackNo: Int?
         var diskNo: Int?
         
         let url: URL
         var filename: String
         
-        var trackNoText: String {
-            if let trackNo = trackNo {
-                if trackNo == 0 { return "?" }
-                return "\(trackNo)"
-            } else { return "?" }
-        }
+        var standardised: String!
         
-        var lengthText: String {
-            var second = Int(length)
-            let hour = second / 3600
-            second -= hour * 3600
-            let minute = second / 60
-            second -= minute * 60
+        var matched: [ReferenceResult.Track] = []
+        var isExactlyMatched: Bool = false
+        
+        init(title: String?, artist: String?,
+             length: Double, trackNo: Int?, diskNo: Int?,
+             url: URL) {
+            self.title = title
+            self.artist = artist
+            self.length = length
+            self.trackNo = trackNo
+            self.diskNo = diskNo
+            self.url = url
             
-            return (hour > 0 ? "\(String(format: "%02d", hour)):" : "") +
-                "\(String(format: "%02d", minute)):" +
-                String(format: "%02d", second)
+            self.filename = url.lastPathComponent
         }
-        
-        struct Matched: Identifiable {
-            let id = UUID()
-            
-            var title: String?
-            var artists: String?
-            
-            var trackNo: Int?
-            var diskNo: Int?
-        }
-        
-        var matched: Matched?
-        
-        var matchedTitle: String?
-        var matchedArtists: String?
-        var matchedYear: String?
     }
     
     var tracks = [Track]()
-    
-    var completed: Bool {
-        albumTitleCandidates.count   == 1 &&
-        albumArtistsCandidates.count == 1
-    }
     
     init(urls: [URL]) {
         let editor = ID3TagEditor()
@@ -87,10 +66,10 @@ struct Album: Identifiable {
                     // Retrieve info for whole album
                     if let albumTitle =
                         (tags.frames[.album] as? ID3FrameWithStringContent)?.content
-                        { albumTitleCandidates.insert(albumTitle) }
+                        { titleCandidates.insert(albumTitle) }
                     if let albumArtists =
                         (tags.frames[.albumArtist] as? ID3FrameWithStringContent)?.content
-                        { albumArtistsCandidates.insert(albumArtists) }
+                        { artistsCandidates.insert(albumArtists) }
                     if let year =
                         (tags.frames[.recordingDateTime] as? ID3FrameRecordingDateTime)?.recordingDateTime.date?.year
                         { yearCandidates.insert(year) }
@@ -107,22 +86,55 @@ struct Album: Identifiable {
                     
                     let title = (tags.frames[.title] as? ID3FrameWithStringContent)?.content
                     let artist = (tags.frames[.artist] as? ID3FrameWithStringContent)?.content
-                    if let artist = artist { albumArtistsCandidates.insert(artist) }
+                    if let artist = artist { artistsCandidates.insert(artist) }
                     
                     let trackNo = (tags.frames[.trackPosition] as? ID3FramePartOfTotal)?.part
                     let diskNo = (tags.frames[.discPosition] as? ID3FramePartOfTotal)?.part
                     
                     let track = Track(title: title, artist: artist,
                                       length: length, trackNo: trackNo, diskNo: diskNo,
-                                      url: url, filename: url.lastPathComponent)
+                                      url: url)
                     
                     tracks.append(track)
                 }
             } catch { print(error) }
         }
         
-        if albumTitleCandidates.count == 1 { title = albumTitleCandidates.first }
-        if albumArtistsCandidates.count == 1 { artists = albumArtistsCandidates.first }
+        if titleCandidates.count == 1 { title = titleCandidates.first }
+        if artistsCandidates.count == 1 { artists = artistsCandidates.first }
         if yearCandidates.count == 1 { year = yearCandidates.first }
+        if trackToCandidates.count == 1 { trackTo = trackToCandidates.first }
+        if diskToCandidates.count == 1 { diskTo = diskToCandidates.first }
+    }
+}
+
+extension Album {
+    var isMainInfoComplete: Bool {
+        titleCandidates.count   == 1 &&
+        artistsCandidates.count == 1
+    }
+    
+    var matchedCount: Int { tracks.filter { $0.isExactlyMatched }.count }
+    
+    func resetMatched() {
+        tracks.forEach {
+            $0.matched = []
+            $0.isExactlyMatched = false
+        }
+    }
+}
+
+extension Album.Track {
+    // Display in form of hh:mm:ss
+    var lengthDisplay: String {
+        var second = Int(length)
+        let hour = second / 3600
+        second -= hour * 3600
+        let minute = second / 60
+        second -= minute * 60
+        
+        return (hour > 0 ? "\(String(format: "%02d", hour)):" : "") +
+            "\(String(format: "%02d", minute)):" +
+            String(format: "%02d", second)
     }
 }

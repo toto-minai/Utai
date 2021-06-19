@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MatchSearchResult: Codable {
+struct ReferenceResult: Codable {
     struct Artist: Codable {
         let name: String
         let anv: String?
@@ -49,11 +49,27 @@ struct MatchSearchResult: Codable {
     }
 
     struct Track: Codable {
+        struct SubTrack: Codable {
+            let position: String
+            let type: String
+            let title: String
+            let duration: String?
+
+            private enum CodingKeys: String, CodingKey {
+                case position
+                case type = "type_"
+                case title
+                case duration
+            }
+        }
+        
+        
         let position: String
         let type: String
         let title: String
         let extraArtists: [Artist]?
         let duration: String?
+        let subTracks: [SubTrack]?
 
         private enum CodingKeys: String, CodingKey {
             case position
@@ -61,6 +77,7 @@ struct MatchSearchResult: Codable {
             case title
             case extraArtists = "extraartists"
             case duration
+            case subTracks = "sub_tracks"
         }
     }
 
@@ -108,5 +125,45 @@ struct MatchSearchResult: Codable {
         case tracks = "tracklist"
         case extraArtists = "extraartists"
         case artworks = "images"
+    }
+}
+
+extension ReferenceResult.Track {
+    var length: Int? {
+        if let duration = duration {
+            if duration == "" { return nil }
+            
+            let multiply = [1, 60, 3600]
+            var numbers = duration.components(separatedBy: ":").map { Int($0)! }
+            
+            let cnt = numbers.count
+            for i in 0..<min(multiply.count, cnt) {
+                numbers[cnt-i-1] *= multiply[i]
+            }
+            
+            return numbers.reduce(0, +)
+        }
+        
+        return nil
+    }
+}
+
+extension ReferenceResult.Track.SubTrack {
+    var length: Int? {
+        if let duration = duration {
+            if duration == "" { return nil }
+            
+            let multiply = [1, 60, 3600]
+            var numbers = duration.components(separatedBy: ":").map { Int($0)! }
+            
+            let cnt = numbers.count
+            for i in 0..<min(multiply.count, cnt) {
+                numbers[cnt-i-1] *= multiply[i]
+            }
+            
+            return numbers.reduce(0, +)
+        }
+        
+        return nil
     }
 }

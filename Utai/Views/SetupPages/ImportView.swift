@@ -36,8 +36,8 @@ struct ImportView: View {
                         .sheet(isPresented: $isConfirmSheetPresented, onDismiss: {}) {
                             ConfirmSheet(systemName: "music.note",
                                          instruction: "Might want to confirm the title and artists before searching on Discogs.",
-                                         titles: Array(store.album!.albumTitleCandidates.sorted()),
-                                         albumArtists: Array(store.album!.albumArtistsCandidates.sorted()))
+                                         titles: Array(store.album!.titleCandidates.sorted()),
+                                         albumArtists: Array(store.album!.artistsCandidates.sorted()))
                         }
                 }
                 
@@ -51,7 +51,7 @@ struct ImportView: View {
                     void.onAppear {
                         store.album = Album(urls: droppedURLs)
 
-                        if album.completed { store.didAlbumCompleted() }
+                        if album.isMainInfoComplete { store.didAlbumCompleted() }
                         else { isConfirmSheetPresented = true }
                     }
                 }
@@ -78,7 +78,7 @@ extension ImportView {
         
         store.album = Album(urls: panel.urls)
         
-        if album.completed { store.didAlbumCompleted() }
+        if album.isMainInfoComplete { store.didAlbumCompleted() }
         else { isConfirmSheetPresented = true }
     }
     
