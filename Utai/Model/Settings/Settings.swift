@@ -8,6 +8,6 @@
 import Foundation
 
 enum Settings {
-    static let showMode = "showMode"
     static let preferCD = "preferCD"
+    static let preferReleaseOnly = "preferReleaseOnly"
 }

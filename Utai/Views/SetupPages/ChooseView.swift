@@ -131,6 +131,19 @@ struct ChooseView: View {
         }
     }}
     
+    @AppStorage(Settings.preferReleaseOnly) var preferReleaseOnly: Bool = false
+    private var preferReleaseOnlyMask: Binding<Bool> { Binding {
+        preferReleaseOnly
+    } set: {
+        preferReleaseOnly = $0
+        
+        if preferReleaseOnly {
+            showMode = .release
+            
+            updateDefaultChosen()
+        }
+    }}
+    
     @State private var labelGroup: [String]?
     @State private var labelGroupChoice: String?
     private var labelGroupChoiceMask: Binding<String?> { Binding {
@@ -163,7 +176,7 @@ struct ChooseView: View {
         }
     }
     
-    @AppStorage(Settings.showMode) var showMode: ShowMode = .both
+    @State var showMode: ShowMode = .both
     private var showModeMask: Binding<ShowMode> {
         Binding { showMode } set: {
             showMode = $0
@@ -277,7 +290,9 @@ struct ChooseView: View {
             
             Section {
                 Menu("Options") {
-                    Toggle("Prefer CD", isOn: preferCDMask)
+                    Toggle("Auto Show CD if Available", isOn: preferCDMask)
+                    
+                    Toggle("Prefer Release Only", isOn: preferReleaseOnlyMask)
                 }
             }
         }
@@ -435,6 +450,12 @@ struct ChooseView: View {
                             }
                         }
                     }
+                }
+                
+                if preferReleaseOnly {
+                    showMode = .release
+                    
+                    updateDefaultChosen()
                 }
                 
                 store.searchURL = nil
