@@ -83,14 +83,14 @@ struct MatchView: View {
                         }
                     }
                     
-                    ZStack {
-                        Text("No Credits")
-                    }
-                    .frame(width: unitLength-0.5, height: unitLength)
-                    .background(EffectsView(
-                        material: .contentBackground,
-                        blendingMode: .behindWindow).ignoresSafeArea())
-                    .opacity(store.artworkMode ? 1 : 0)
+//                    ZStack {
+//                        Text("No Credits")
+//                    }
+//                    .frame(width: unitLength-0.5, height: unitLength)
+//                    .background(EffectsView(
+//                        material: .contentBackground,
+//                        blendingMode: .behindWindow).ignoresSafeArea())
+//                    .opacity(store.artworkMode ? 1 : 0)
                 }
             }
             
@@ -113,7 +113,7 @@ struct MatchView: View {
 //            Text("\(store.matchUrl!.absoluteString)")
 //                .textSelection(.enabled)
         }
-        .frame(width: 2*unitLength, height: unitLength)
+        .frame(width: unitLength, height: unitLength)
     }
 }
 

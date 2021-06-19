@@ -438,6 +438,11 @@ struct ChooseView: View {
                 }
                 
                 store.searchURL = nil
+                
+                let frame = window.frame
+                subWindow.setFrameOrigin(
+                    NSPoint(x: frame.minX-20, y: frame.minY+158))
+                window.addChildWindow(subWindow, ordered: .above)
             }
         }
     }
