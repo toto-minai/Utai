@@ -322,7 +322,7 @@ struct ChooseView: View {
                                             Text("Format")
                                                 .fontWeight(.medium)
                                                 .opacity(chosenResult.format != nil ? 1 : 0.3)
-                                            Text("Labal")
+                                            Text("Label")
                                                 .fontWeight(.medium)
                                             
                                             Spacer()  // Keep 2 VStack aligned
