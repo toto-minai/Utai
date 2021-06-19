@@ -91,6 +91,7 @@ extension ImportView {
         
         func dropEntered(info: DropInfo) {
             draggingOver = true
+            NSApp.unhide(nil)
             performer.perform(.generic, performanceTime: .now)
         }
         
