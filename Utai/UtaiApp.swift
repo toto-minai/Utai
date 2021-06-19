@@ -27,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             })
             
             window.contentView = NSHostingView(rootView: contentView)
+            window.setFrameAutosaveName("Main Window")
             
 //            window.isMovableByWindowBackground = true
             window.level = .floating

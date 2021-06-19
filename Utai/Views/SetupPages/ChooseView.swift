@@ -25,19 +25,17 @@ struct ArtworkView: View {
                     Color.red.opacity(0.001)
                         .frame(height: 80)
                     
-                    LazyHStack(alignment: .top, spacing: lilSpacing) {
-                        ForEach(resultsProcessed, id: \.id) { result in
-                            Artwork80x80(chosen: $chosen, result: result)
+                    if response != nil {
+                        LazyHStack(alignment: .top, spacing: lilSpacing) {
+                            ForEach(resultsProcessed, id: \.id) { result in
+                                Artwork80x80(chosen: $chosen, result: result)
+                            }
                         }
+                        .padding(.horizontal, lilSpacing2x+lilIconLength+20)
+                        .frame(height: 120)
                     }
-                    .padding(.horizontal, lilSpacing2x+lilIconLength+20)
-                    // Cancel shadow-clipping: 2. Left spacing to shrink
-                    .frame(height: 120)
                 }
             }
-            // Cancel shadow-clipping: 3. Negative padding
-//            .padding(.vertical, -20)
-//            .background(Color.red)
             .onChange(of: showMode) { newValue in
                 proxy.scrollTo(chosen, anchor: .top)
             }
@@ -45,7 +43,6 @@ struct ArtworkView: View {
                 proxy.scrollTo(chosen, anchor: .top)
             }
         }
-//        .background(Color.red)
     }
 }
 
@@ -71,6 +68,8 @@ struct ChooseView: View {
     @Environment(\.openURL) var openURL
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.hostingWindow) var hostingWindow
+    
+    @State private var subWindow: NSWindow!
     
     @State private var response: SearchResponse?
     
@@ -146,7 +145,6 @@ struct ChooseView: View {
     
     var artworks: some View {
         Color.clear.frame(height: 80)
-//        ArtworkView(response: $response, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
     }
     
     @AppStorage(Settings.showMode) var showMode: ShowMode = .both
@@ -351,13 +349,23 @@ struct ChooseView: View {
     
     var doWhenTurnToThisPage: some View {
         void.onAppear {
-            
-            
             if chosen == nil && response != nil {
                 if let first = resultsProcessed.first {
                     chosen = first.id
                 }
             }
+            
+            // SearchResponse do not need an update
+            if store.searchURL == nil && response != nil {
+                let frame = window.frame
+                subWindow.setFrameOrigin(
+                    NSPoint(x: frame.minX-20, y: frame.minY+154))
+                window.addChildWindow(subWindow, ordered: .above)
+            }
+        }
+        .onDisappear {
+            subWindow.orderOut(nil)
+            window.removeChildWindow(subWindow)
         }
     }
     
@@ -365,7 +373,12 @@ struct ChooseView: View {
         void.onAppear {
             response = nil
             
-            // TODO: Write a function
+            if subWindow != nil {
+                subWindow.orderOut(nil)
+                window.removeChildWindow(subWindow)
+                subWindow = nil
+            }
+            
             sortMode = .none
             
             yearGroupChoice = nil
@@ -401,20 +414,18 @@ struct ChooseView: View {
                 store.searchURL = nil
                 
                 let frame = window.frame
+                subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+154, width: 352, height: 120),
+                                     styleMask: [], backing: .buffered, defer: false)
                 
-                
-                
-                let subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+154, width: 352, height: 120), styleMask: [], backing: .buffered, defer: false)
-                subWindow.contentView = NSHostingView(rootView: ArtworkView(response: $response, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice))
+                let rootView = ArtworkView(response: $response, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
+                subWindow.setFrameAutosaveName("Sub Window")
+                subWindow.contentView = NSHostingView(rootView: rootView)
                 
                 subWindow.titleVisibility = .hidden
                 subWindow.backgroundColor = NSColor.clear
                 subWindow.hasShadow = false
                 
                 window.addChildWindow(subWindow, ordered: .above)
-                
-//                subWindow.center()
-                subWindow.makeKeyAndOrderFront(nil)
             }
         }
     }
