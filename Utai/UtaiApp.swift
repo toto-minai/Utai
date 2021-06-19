@@ -13,6 +13,9 @@ struct UtaiApp: App {
     
     var body: some Scene {
         WindowGroup { }
+            .windowStyle(.hiddenTitleBar)
+            // Disable Command-N to create a new window
+            .commands { CommandGroup(replacing: .newItem, addition: {}) }
     }
 }
 
@@ -24,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window = NSApp.windows.first!
         window.orderOut(nil)
         
+        // TODO: Should only set frame for the first time
         window.setFrame(NSRect(x: 0, y: 0, width: 312, height: 312), display: true)
         window.styleMask.remove([.miniaturizable])
         
@@ -32,6 +36,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         window.titlebarAppearsTransparent = true
         window.level = .floating
+        window.tabbingMode = .disallowed
         
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
@@ -49,6 +54,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationWillTerminate(_ notification: Notification) {
         // Save frame, in case it didn't
+        let frame = window.frame
+        window.setFrame(NSRect(x: frame.minX, y: frame.maxY-312, width: 312, height: 312), display: false)
         window.saveFrame(usingName: "Utai Main Window")
     }
     

@@ -43,6 +43,7 @@ struct MatchView: View {
                                         }
                                     }
                                     .scaleEffect(store.artworkMode ? 1.22 : 1)
+                                    .onAppear { store.referenceURL = nil }
                             }
                         } placeholder: {
                             ProgressView()
@@ -107,6 +108,7 @@ struct MatchView: View {
                     print(store.referenceURL!.absoluteString)
                     print(error)
                 }
+                
             }
         }
     }
