@@ -363,7 +363,7 @@ struct ChooseView: View {
         .frame(width: unitLength, height: unitLength)
         .onAppear {
             let frame = window.frame
-            subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+154, width: 352, height: 120),
+            subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.minY+158, width: 352, height: 120),
                                  styleMask: [], backing: .buffered, defer: false)
             
             let rootView = ArtworkView(response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice, store: store)
@@ -388,12 +388,12 @@ struct ChooseView: View {
             }
             
             // SearchResponse do not need an update
-//            if store.searchURL == nil && response != nil {
+            if store.searchURL == nil && response != nil {
                 let frame = window.frame
                 subWindow.setFrameOrigin(
-                    NSPoint(x: frame.minX-20, y: frame.minY+154))
+                    NSPoint(x: frame.minX-20, y: frame.minY+158))
                 window.addChildWindow(subWindow, ordered: .above)
-//            }
+            }
         }
         .onDisappear {
             subWindow.orderOut(nil)

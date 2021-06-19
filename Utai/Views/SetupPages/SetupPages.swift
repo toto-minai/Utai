@@ -34,14 +34,6 @@ struct ReferencesControl: View {
                 
                 ButtonMini(systemName: "book", helpText: "Read Cookbook")
                     .offset(x: 1)
-                
-                if store.album != nil && !store.showMatchPanel {
-                    ButtonMini(systemName: "sidebar.squares.right", helpText: "Show Match")
-                        .onTapGesture {
-                            store.showMatchPanel = true
-                        }
-                        .offset(x: 0.5)
-                }
             }
             .padding(lilSpacing)
             
