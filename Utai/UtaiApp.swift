@@ -12,8 +12,7 @@ struct UtaiApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
-        WindowGroup {}
-            .windowStyle(.hiddenTitleBar)
+        WindowGroup { }
     }
 }
 
@@ -21,18 +20,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var window: NSWindow!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Close original window
-        if let window = NSApp.windows.first { window.close() }
+        // Hijack main window created by Scene
+        window = NSApp.windows.first!
+        window.orderOut(nil)
         
-        window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 312, height: 312),
-                          styleMask: [.titled, .closable, .fullSizeContentView], backing: .buffered, defer: false)
+        window.setFrame(NSRect(x: 0, y: 0, width: 312, height: 312), display: true)
+        window.styleMask.remove([.miniaturizable])
         
-        let contentView = WrappedContentView()
-            .environment(\.hostingWindow, { [weak window] in
-            return window!
-        })
-        
-        window.setFrameAutosaveName("Main Window")
+        window.titleVisibility = .hidden
+        window.setFrameAutosaveName("Utai Main Window")
         
         window.titlebarAppearsTransparent = true
         window.level = .floating
@@ -40,11 +36,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
         
+        let contentView = WrappedContentView()
+            .environment(\.hostingWindow, { [weak window] in
+            return window!
+        })
         window.contentView = NSHostingView(rootView: contentView)
         
-        window.center()
+        // TODO: Should only centering window for the first time
+        // window.center()
         window.makeKeyAndOrderFront(nil)
     }
+    
+    func applicationWillTerminate(_ notification: Notification) {
+        // Save frame, in case it didn't
+        window.saveFrame(usingName: "Utai Main Window")
+    }
+    
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { false }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 }
 
 // Access window in Views
@@ -60,4 +70,3 @@ extension EnvironmentValues {
         set { self[HostingWindowKey.self] = newValue }
     }
 }
-
