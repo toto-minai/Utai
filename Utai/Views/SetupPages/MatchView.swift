@@ -11,6 +11,9 @@ struct MatchView: View {
     @AppStorage(Settings.lengthMaxDelta) var lengthMaxDelta: Int = 15
     
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.openURL) var openURL
+    
+    let pasteboard = NSPasteboard.general
     
     @EnvironmentObject var store: Store
     
@@ -52,6 +55,10 @@ struct MatchView: View {
                                 .frame(width: 256, height: 256)
                         }
                         .frame(width: 312, height: 312)
+                        .contextMenu {
+                            Button(action: { openURL(URL(string: "\(result!.uri)")!) })
+                            { Text("View on Discogs") }
+                        }
                         
                         VStack {
                             VStack(spacing: 0) {
