@@ -633,12 +633,22 @@ extension ChooseView {
     private var chosenFormatStyled: String {
         if let _ = chosen {
             if chosenResult.type == "release" {
-                if let formats = chosenResult.formats,
-                   let first = formats.first {
-                    let filtered = first.descriptions ?? []
+                if let formats = chosenResult.formats {
+                    var styled = [String]()
                     
-                    return first.name + (filtered.isEmpty ?
-                                    " " : " (\(filtered.joined(separator: ", ")))")
+                    for format in formats {
+                        let qty = Int(format.qty)!
+                        
+                        let filtered = format.descriptions ?? []
+                        
+                        let part = (qty > 1 ? "\(qty) × " : "") +
+                        format.name +
+                            (filtered.isEmpty ? "" : " (\(filtered.joined(separator: ", ")))")
+                        
+                        styled.append(part)
+                    }
+                    
+                    return styled.joined(separator: " / ")
                 }
             } else if chosenResult.type == "master" {
                 if let format = chosenResult.format,
