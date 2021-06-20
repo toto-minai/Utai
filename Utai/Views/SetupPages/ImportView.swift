@@ -50,7 +50,9 @@ struct ImportView: View {
                 if droppedURLs.count == goal {
                     void.onAppear {
                         store.album = Album(urls: droppedURLs)
-
+                        
+                        droppedURLs = []
+                            
                         if album.isMainInfoComplete { store.didAlbumCompleted() }
                         else { isConfirmSheetPresented = true }
                     }
@@ -104,7 +106,6 @@ extension ImportView {
         func performDrop(info: DropInfo) -> Bool {
             print("performDrop")
             let providers = info.itemProviders(for: ["public.file-url"])
-            urls = []
             
             goal = providers.count
             for provider in providers {
@@ -112,8 +113,6 @@ extension ImportView {
                     guard let data = item as? Data,
                           let url = URL(dataRepresentation: data, relativeTo: nil)
                     else { return }
-                    
-                    print("Load \(url)")
                     
                     urls.append(url)
                 }
