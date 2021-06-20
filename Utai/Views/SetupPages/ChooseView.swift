@@ -784,7 +784,7 @@ struct Artwork80x80: View {
                     .id(result.id)
                 } placeholder: {
                     ZStack {
-                        EffectsView(material: .sidebar, blendingMode: .behindWindow)
+                        Color.black.opacity(0.2)
                         
                         ProgressView()
                     }.cornerRadius(8)
