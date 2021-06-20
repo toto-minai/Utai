@@ -732,6 +732,8 @@ struct Artwork80x80: View {
     
     @Environment(\.openURL) var openURL
     
+    let pasteboard = NSPasteboard.general
+    
     @Binding var chosen: Int?
     
     let result: SearchResponse.Result
@@ -783,6 +785,11 @@ struct Artwork80x80: View {
             { Text("View on Discogs") }
             Button(action: { openURL(URL(string: result.coverImage!)!) })
             { Text("Open Artwork in Broswer") }
+            Divider()
+            Button("Copy Discogs ID") {
+                pasteboard.declareTypes([.string], owner: nil)
+                pasteboard.setString("\(result.id)", forType: .string)
+            }
         }
     }
 }
