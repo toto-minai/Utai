@@ -782,7 +782,13 @@ struct Artwork80x80: View {
                             }
                     }
                     .id(result.id)
-                } placeholder: { ProgressView() }
+                } placeholder: {
+                    ZStack {
+                        EffectsView(material: .sidebar, blendingMode: .behindWindow)
+                        
+                        ProgressView()
+                    }.cornerRadius(8)
+                }
                 .frame(width: 80, height: 80)
             } else { Color.red.frame(width: 80, height: 80) }
         }

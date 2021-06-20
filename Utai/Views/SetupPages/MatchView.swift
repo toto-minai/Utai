@@ -50,10 +50,7 @@ struct MatchView: View {
                                     .scaleEffect(store.artworkMode ? 1.22 : 1)
                                     .onAppear { store.referenceURL = nil }
                             }
-                        } placeholder: {
-                            ProgressView()
-                                .frame(width: 256, height: 256)
-                        }
+                        } placeholder: { ProgressView() }
                         .frame(width: 312, height: 312)
                         .contextMenu {
                             Button(action: { openURL(URL(string: "\(result!.uri)")!) })
