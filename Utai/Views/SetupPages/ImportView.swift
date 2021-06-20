@@ -249,7 +249,7 @@ struct WelcomeIcon: View {
             Image("SimpleIcon")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 54)
+                .frame(width: 55)
                 .foregroundColor(Color.secondary)
         }
     }

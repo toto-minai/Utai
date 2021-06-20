@@ -79,8 +79,8 @@ struct MatchPanel: View {
                     Spacer()
                         .frame(height: Metrics.lilIconLength)
                 }
-                .listStyle(.inset)
-//                .padding()
+                // Not working in Xcode Beta 1
+                // .listStyle(.inset(alternatesRowBackgrounds: true))
             } else { Text("Matching…") }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
