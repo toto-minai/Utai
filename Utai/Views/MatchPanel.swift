@@ -17,7 +17,7 @@ struct MatchPanel: View {
                     if !notYetMatched.isEmpty {
                         Section("Mismatched") {
                             ForEach(notYetMatched) { track in
-                                HStack(spacing: Metrics.lilSpacing) {
+                                HStack(alignment: .top, spacing: Metrics.lilSpacing) {
                                     Text(track.trackNo == nil ? "?" : "\(track.trackNo!)")
                                         .font(.custom("Yanone Kaffeesatz", size: 16))
                                         .monospacedDigit()
@@ -29,6 +29,7 @@ struct MatchPanel: View {
                                     Text(track.title ?? track.filename)
                                         .font(.custom("Yanone Kaffeesatz", size: 16))
                                         .fontWeight(.bold)
+                                        .lineSpacing(4)
                                     
                                     Spacer()
                                     
@@ -47,7 +48,7 @@ struct MatchPanel: View {
                     if !exactlyMatched.isEmpty {
                         Section("Matched") {
                             ForEach(exactlyMatched) { track in
-                                HStack(spacing: Metrics.lilSpacing) {
+                                HStack(alignment: .top, spacing: Metrics.lilSpacing) {
                                     Text(track.matched.last!.position)
                                         .font(.custom("Yanone Kaffeesatz", size: 16))
                                         .monospacedDigit()
@@ -58,6 +59,7 @@ struct MatchPanel: View {
                                     Text(track.matched.last!.title)
                                         .font(.custom("Yanone Kaffeesatz", size: 16))
                                         .fontWeight(.bold)
+                                        .lineSpacing(4)
                                     
                                     Spacer()
                                     
