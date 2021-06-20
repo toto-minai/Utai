@@ -60,4 +60,7 @@ class Store: ObservableObject {
         makeReferenceURL(from: url)
         page = 3
     }
+    
+    @Published var result: ReferenceResult?
+    @Published var isMatched: Bool = false
 }

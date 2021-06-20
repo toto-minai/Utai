@@ -17,12 +17,11 @@ struct MatchView: View {
     
     @EnvironmentObject var store: Store
     
-    @State private var result: ReferenceResult?
-    @State private var hoverArtworkPrimary: Bool = false
+    @State private var resultRetried: ReferenceResult?
     
     var body: some View {
         ZStack {
-            if result != nil && store.referenceURL == nil {
+            if store.result != nil && store.referenceURL == nil {
                 if let thumb = artworkPrimaryURL.first {
                     ZStack {
                         AsyncImage(url: thumb) { image in
@@ -53,7 +52,7 @@ struct MatchView: View {
                         } placeholder: { ProgressView() }
                         .frame(width: 312, height: 312)
                         .contextMenu {
-                            Button(action: { openURL(URL(string: "\(result!.uri)")!) })
+                            Button(action: { openURL(URL(string: "\(store.result!.uri)")!) })
                             { Text("View on Discogs") }
                         }
                         
@@ -107,7 +106,7 @@ struct MatchView: View {
     
     var doWhenNeedToRetrieveData: some View {
         void.onAppear {
-            result = nil
+            store.result = nil
             print(store.referenceURL!.absoluteString)
 
             async {
@@ -117,6 +116,7 @@ struct MatchView: View {
                 }
                 
                 store.referenceURL = nil
+                store.result = resultRetried
                 
                 match()
             }
@@ -126,7 +126,7 @@ struct MatchView: View {
 
 extension MatchView {
     var artworkPrimaryURL: [URL] {
-        if let artworks = result!.artworks {
+        if let artworks = store.result!.artworks {
             if artworks.filter({ $0.type == "primary" }).isEmpty {
                 return [artworks.first!.resourceURL]
             }
@@ -141,7 +141,7 @@ extension MatchView {
     
     var tracks: [Album.Track] { store.album!.tracks }
     
-    var remoteTracks: [ReferenceResult.Track] { result!.tracks }
+    var remoteTracks: [ReferenceResult.Track] { store.result!.tracks }
     
     enum SearchError: Error { case badURL }
     private func search() async throws {
@@ -151,7 +151,7 @@ extension MatchView {
 
         do {
             let result = try JSONDecoder().decode(ReferenceResult.self, from: data)
-            withAnimation(.easeOut) { self.result = result }
+            withAnimation(.easeOut) { resultRetried = result }
         } catch { throw error }
     }
     
@@ -222,6 +222,8 @@ extension MatchView {
                         if isMatched { break }
                     }
                 }
+                
+                store.isMatched = true
             }
         }
         

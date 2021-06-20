@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    public static let windowWillResize = Notification.Name("windowWillResize")
-    
     @Environment(\.colorScheme) var colorScheme
     
     @EnvironmentObject var store: Store
@@ -26,15 +24,7 @@ struct ContentView: View {
             .frame(height: Metrics.unitLength)
             
             if store.page == 3 && store.referenceURL == nil {
-                ZStack {
-                    Text("Match Here!")
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(EffectsView(material: .contentBackground,
-                                        blendingMode: .behindWindow))
-                .onAppear {
-                    NotificationCenter.default.post(name: Self.windowWillResize, object: CGSize(width: 312, height: 624))
-                }
+                MatchPanel()
             }
         }
         .frame(width: Metrics.unitLength)
