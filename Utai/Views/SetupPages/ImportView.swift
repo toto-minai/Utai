@@ -23,7 +23,7 @@ struct ImportView: View {
                                 goal: $droppedGoal)
         
         return ZStack {
-            VStack(spacing: Metrics.lilSpacing2x) {
+            VStack(spacing: Metrics.lilSpacing) {
                 WelcomeIcon()
                 
                 HStack(spacing: 2) {
@@ -43,7 +43,7 @@ struct ImportView: View {
                 
                 Spacer()
             }
-            .padding(.top, 59)  // Align with album artworks on search page
+            .padding(.top, 57)  // Align with album artworks on search page
             // TODO: Make it clear how to calc
             
             if let goal = droppedGoal {
@@ -244,7 +244,7 @@ struct WelcomeIcon: View {
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .foregroundColor(Color.black.opacity(0.2))
-                .frame(width: 110, height: 110)
+                .frame(width: 109, height: 109)
             
             Image("SimpleIcon")
                 .resizable()
