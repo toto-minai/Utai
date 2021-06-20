@@ -19,7 +19,7 @@ struct MatchView: View {
     
     var body: some View {
         ZStack {
-            if let _ = result {
+            if result != nil && store.referenceURL == nil {
                 if let thumb = artworkPrimaryURL.first {
                     ZStack {
                         AsyncImage(url: thumb) { image in
@@ -79,9 +79,9 @@ struct MatchView: View {
                         .opacity(store.artworkMode ? 1 : 0)
                         .animation(nil, value: store.artworkMode)
                     }
-                    .frame(width: Metrics.unitLength, height: Metrics.unitLength)
+                    
                 }
-            }
+            } else { Text("Retrieving Data…").fontWeight(.bold) }
             
             if store.page == 3 {
                 doWhenTurnToThisPage
@@ -89,6 +89,7 @@ struct MatchView: View {
                 if store.referenceURL != nil { doWhenNeedToRetrieveData }
             }
         }
+        .frame(width: Metrics.unitLength, height: Metrics.unitLength)
         .onAppear {  // doWhenBuildThisPage
             
         }
@@ -110,6 +111,8 @@ struct MatchView: View {
                 catch {
                     print(error)
                 }
+                
+                store.referenceURL = nil
                 
                 match()
             }
@@ -168,7 +171,8 @@ extension MatchView {
                     print("\tvs.\(remoteTitle)")
                     
                     if remoteTitle == title ||
-                        localTitle.contains(remoteTitle) {
+                        localTitle.contains(remoteTitle) ||
+                        remoteTitle.contains(localTitle) {
                         track.matched.append(remoteTrack)
                         
                         if let length = remoteTrack.length {
@@ -189,7 +193,8 @@ extension MatchView {
                                 let remoteSubTrackTitle = remoteSubTrack.title.standardised()
                                 
                                 if remoteSubTrackTitle == title ||
-                                    localTitle.contains(remoteSubTrackTitle) {
+                                    localTitle.contains(remoteSubTrackTitle) ||
+                                    remoteSubTrackTitle.contains(localTitle) {
                                     let newTrack = ReferenceResult.Track(position: remoteSubTrack.position,
                                                                          type: remoteSubTrack.type,
                                                                          title: remoteSubTrack.title,

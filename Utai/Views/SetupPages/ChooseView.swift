@@ -355,9 +355,9 @@ struct ChooseView: View {
                                     .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength)
                                 }
                             }
-                        } else { Text("No Album Under Such Condition") }
-                    } else { Text("No Album Found") }
-                } else { Text("Searching...") }
+                        } else { Text("No Album Under Such Condition").fontWeight(.bold) }
+                    } else { Text("No Album Found").fontWeight(.bold) }
+                } else { Text("Searching…").fontWeight(.bold) }
                 
                 Spacer()
             }

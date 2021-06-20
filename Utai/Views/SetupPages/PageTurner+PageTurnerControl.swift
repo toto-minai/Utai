@@ -42,6 +42,7 @@ struct PageTurner: View {
                         .onTapGesture {
                             store.page = 3
                         }
+                        .disabled(store.album == nil)
                 }
                 .padding(8)
                 .background(blurredBackground)
