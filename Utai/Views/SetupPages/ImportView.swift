@@ -92,19 +92,16 @@ extension ImportView {
         let performer = NSHapticFeedbackManager.defaultPerformer
         
         func dropEntered(info: DropInfo) {
-            print("dropEntered")
             draggingOver = true
             performer.perform(.generic, performanceTime: .now)
         }
         
         func dropExited(info: DropInfo) {
-            print("dropExited")
             draggingOver = false
             performer.perform(.generic, performanceTime: .now)
         }
 
         func performDrop(info: DropInfo) -> Bool {
-            print("performDrop")
             let providers = info.itemProviders(for: ["public.file-url"])
             
             goal = providers.count
