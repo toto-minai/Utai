@@ -57,11 +57,7 @@ struct MatchPanel: View {
                                     .textSelection(.enabled)
                                 }
                                 
-                                // So it can make three
-                                Text("Utai").foregroundColor(.clear)
-                                
-                                Text("Utai").foregroundColor(.clear)
-                                
+                                ForEach(0..<6) { _ in Text("Utai").foregroundColor(.clear) }
                             }
                         }
                         

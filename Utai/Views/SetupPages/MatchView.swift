@@ -108,16 +108,18 @@ struct MatchView: View {
             subWindow.hasShadow = false
             
             subWindow.contentView = NSHostingView(rootView: rootView)
-            
-//            window.addChildWindow(subWindow, ordered: .below)
         }
     }
     
     var doWhenTurnToThisPage: some View {
         void.onAppear {
             let frame = window.frame
-            subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-352))
+            subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-339))
             window.addChildWindow(subWindow, ordered: .below)
+        }
+        .onDisappear {
+            subWindow.orderOut(nil)
+            window.removeChildWindow(subWindow)
         }
     }
     
@@ -134,6 +136,10 @@ struct MatchView: View {
                 
                 store.referenceURL = nil
                 store.result = resultRetried
+                
+                let frame = window.frame
+                subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-339))
+                window.addChildWindow(subWindow, ordered: .below)
                 
                 match()
             }
