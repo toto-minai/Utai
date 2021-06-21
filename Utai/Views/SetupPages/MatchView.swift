@@ -84,7 +84,7 @@ struct MatchView: View {
                     }
                     
                 }
-            } else { Text("Retrieving Data…").fontWeight(.bold) }
+            } else { ProgressView() }
             
             if store.page == 3 {
                 doWhenTurnToThisPage

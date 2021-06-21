@@ -21,21 +21,21 @@ struct ContentView: View {
                 
                 PageTurner()
             }
+            // Translucent background
             .frame(height: Metrics.unitLength)
+            .ignoresSafeArea()
+            .frame(height: Metrics.unitLength-Metrics.titlebarHeight)
+            .background(EffectsView(
+                material: .sidebar,
+                blendingMode: .behindWindow).ignoresSafeArea())
             
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
+                    .frame(minHeight: 220, idealHeight: 220, maxHeight: Metrics.unitLength*2)
             }
         }
         .frame(width: Metrics.unitLength)
         .font(.custom("Yanone Kaffeesatz", size: 16))
-        // Translucent background
-        .frame(height: (store.page == 3 && store.referenceURL == nil) ? 2*Metrics.unitLength : Metrics.unitLength)
-        .ignoresSafeArea()
-        .frame(height: (store.page == 3 && store.referenceURL == nil) ? 2*Metrics.unitLength-Metrics.titlebarHeight : Metrics.unitLength-Metrics.titlebarHeight)
-        .background(EffectsView(
-            material: .sidebar,
-            blendingMode: .behindWindow).ignoresSafeArea())
     }
 }
 
