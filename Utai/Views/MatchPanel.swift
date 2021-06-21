@@ -94,7 +94,18 @@ struct MatchPanel: View {
 
 extension MatchPanel {
     var tracks: [Album.Track] {
-        store.album!.tracks
+        store.album!.tracks.sorted {
+            if $0.trackNo != nil && $1.trackNo == nil { return true }
+            else if $0.trackNo == nil && $1.trackNo == nil {
+                let former = $0.title ?? $0.filename
+                let latter = $1.title ?? $1.filename
+                
+                return former < latter
+            } else if $0.trackNo != nil && $1.trackNo != nil
+                { return $0.trackNo! < $1.trackNo! }
+                
+            return false
+        }
     }
     
     var exactlyMatched: [Album.Track] {
