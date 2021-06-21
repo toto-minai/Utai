@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MatchPanel: View {
     @EnvironmentObject var store: Store
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         ZStack {
@@ -52,16 +53,25 @@ struct MatchPanel: View {
                                     }
                                     
                                     .padding(.vertical, 2)
-                                    .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing)
+                                    .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+1)
                                     .textSelection(.enabled)
                                 }
+                                
+                                // So it can make three
+                                Text(""); Text("")
                             }
                         }
                         
                         Spacer()
                             .frame(height: Metrics.lilIconLength)
                     }
+                    .frame(width: 314)
+                    .clipped()
+                    .frame(width: colorScheme == .light ? 312 : 310)
+                    .clipped()
                     .listStyle(BorderedListStyle(alternatesRowBackgrounds: true))
+                    .environment(\.defaultMinListRowHeight, Metrics.lilIconLength+Metrics.lilSpacing2x)
+                    .environment(\.defaultMinListHeaderHeight, Metrics.lilIconLength+Metrics.lilSpacing2x)
                     // Not working in Xcode Beta 1
                     // .listStyle(.inset(alternatesRowBackgrounds: true))
                 } else { Text("Matching…") }
@@ -72,7 +82,7 @@ struct MatchPanel: View {
                     ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
                         .padding(Metrics.lilSpacing)
                 }
-                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength)
+                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength-1)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -138,7 +148,7 @@ struct MismatchedTrackLine: View {
             }
         }
         .padding(.vertical, 2)
-        .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing)
+        .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+1)
         .textSelection(.enabled)
     }
 }
