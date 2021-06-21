@@ -58,7 +58,10 @@ struct MatchPanel: View {
                                 }
                                 
                                 // So it can make three
-                                Text(""); Text("")
+                                Text("Utai").foregroundColor(.clear)
+                                
+                                Text("Utai").foregroundColor(.clear)
+                                
                             }
                         }
                         
