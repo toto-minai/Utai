@@ -800,7 +800,7 @@ struct Artwork80x80: View {
             Button(action: { openURL(URL(string: "https://discogs.com\(result.uri)")!) })
             { Text("View on Discogs") }
             Button(action: { openURL(URL(string: result.coverImage!)!) })
-            { Text("Open Artwork in Broswer") }
+            { Text("Open Artwork in Browser") }
             Divider()
             Button("Copy Discogs ID") {
                 pasteboard.declareTypes([.string], owner: nil)

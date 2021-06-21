@@ -12,6 +12,9 @@ struct MatchView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
+    @Environment(\.hostingWindow) var hostingWindow
+    
+    @State private var subWindow: NSWindow!
     
     let pasteboard = NSPasteboard.general
     
@@ -94,13 +97,27 @@ struct MatchView: View {
         }
         .frame(width: Metrics.unitLength, height: Metrics.unitLength)
         .onAppear {  // doWhenBuildThisPage
+            subWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 168, height: 352),
+                                 styleMask: [], backing: .buffered, defer: false)
             
+            let rootView = ArtworkSidebar(store: store)
+            subWindow.setFrameAutosaveName("Artwork Sidebar")
+            
+            subWindow.titleVisibility = .hidden
+            subWindow.backgroundColor = NSColor.clear
+            subWindow.hasShadow = false
+            
+            subWindow.contentView = NSHostingView(rootView: rootView)
+            
+//            window.addChildWindow(subWindow, ordered: .below)
         }
     }
     
     var doWhenTurnToThisPage: some View {
         void.onAppear {
-            
+            let frame = window.frame
+            subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-352))
+            window.addChildWindow(subWindow, ordered: .below)
         }
     }
     
@@ -125,6 +142,8 @@ struct MatchView: View {
 }
 
 extension MatchView {
+    var window: NSWindow { self.hostingWindow()! }
+    
     var artworkPrimaryURL: [URL] {
         if let artworks = store.result!.artworks {
             if artworks.filter({ $0.type == "primary" }).isEmpty {
