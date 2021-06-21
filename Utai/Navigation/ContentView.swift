@@ -31,7 +31,7 @@ struct ContentView: View {
             
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
-                    .frame(minHeight: 226, idealHeight: 226, maxHeight: Metrics.unitLength+209)
+                    .frame(minHeight: 226, idealHeight: Metrics.unitLength-3, maxHeight: Metrics.unitLength+249)
             }
         }
         .frame(width: Metrics.unitLength)
