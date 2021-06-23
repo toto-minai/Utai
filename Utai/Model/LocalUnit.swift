@@ -22,6 +22,8 @@ class LocalUnit {
     var trackTo: Int?
     var diskTo: Int?
     
+    var diskMax: Int = 1
+    
     class Track: Identifiable {
         let id = UUID()
         
@@ -126,6 +128,7 @@ class LocalUnit {
                     if let artist = artist { albumArtistCandidates.insert(artist) }
                     let trackNo = (tags.frames[.trackPosition] as? ID3FramePartOfTotal)?.part
                     let diskNo = (tags.frames[.discPosition] as? ID3FramePartOfTotal)?.part
+                    if let diskNo = diskNo { self.diskMax = max(self.diskMax, diskNo) }
                     
                     // Read extra info, might not be processed during matching
                     let composer = (tags.frames[.composer] as? ID3FrameWithStringContent)?.content

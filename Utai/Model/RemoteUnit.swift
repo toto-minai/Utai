@@ -14,6 +14,7 @@ class RemoteUnit {
     let format: String?
     let diskTo: Int
     let trackTos: [Int]
+    let diskMax: Int
     
     class Track: Identifiable {
         let id = UUID()
@@ -21,12 +22,12 @@ class RemoteUnit {
         // Basic
         let title: String
         let duration: String?
-        let trackNo: Int?
-        let diskNo: Int?
+        let trackNo: Int
+        let diskNo: Int
         
         var isPerfectMatched: Bool = false
         
-        init(title: String, duration: String?, trackNo: Int?, diskNo: Int?) {
+        init(title: String, duration: String?, trackNo: Int, diskNo: Int) {
             self.title = title
             self.duration = duration
             self.trackNo = trackNo
@@ -100,6 +101,8 @@ class RemoteUnit {
                 }
             }
         }
+        
+        self.diskMax = disk == 0 ? 1 : disk
         
         if self.diskTo > 1 {
             self.trackTos = trackTos

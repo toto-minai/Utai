@@ -252,64 +252,6 @@ extension MatchView {
         
         store.isMatched = true
     }
-                
-                
-//                if remoteTrack.type == "track" {
-//                    let remoteTitle = remoteTrack.title.standardised()
-//
-//                    // Perfectly matched
-//
-//                    if remoteTitle == title ||
-//                        localTitle.contains(remoteTitle) ||
-//                        remoteTitle.contains(localTitle) {
-//                        localTrack.matched.append(remoteTrack)
-//
-//                        if let length = remoteTrack.length {
-//                            print("\t\(Int(localTrack.length))")
-//                            print("\t\(length)")
-//
-//                            if abs(Int(localTrack.length) - length) <= lengthMaxDelta {
-//                                localTrack.isExactlyMatched = true
-//                                break
-//                            }
-//                        }
-//                    }
-//                } else if remoteTrack.type == "index" {
-//                    if let subTracks = remoteTrack.subTracks {
-//                        var isMatched = false
-//                        for remoteSubTrack in subTracks {
-//                            if remoteSubTrack.type == "track" {
-//                                let remoteSubTrackTitle = remoteSubTrack.title.standardised()
-//
-//                                if remoteSubTrackTitle == title ||
-//                                    localTitle.contains(remoteSubTrackTitle) ||
-//                                    remoteSubTrackTitle.contains(localTitle) {
-//                                    let newTrack = ReferenceResult.Track(position: remoteSubTrack.position,
-//                                                                         type: remoteSubTrack.type,
-//                                                                         title: remoteSubTrack.title,
-//                                                                         extraArtists: nil,
-//                                                                         duration: remoteSubTrack.duration,
-//                                                                         subTracks: nil)
-//
-//                                    localTrack.matched.append(newTrack)
-//
-//                                    if let length = remoteSubTrack.length {
-//                                        if abs(Int(localTrack.length) - length) <= lengthMaxDelta {
-//                                            localTrack.isExactlyMatched = true
-//                                            isMatched = true
-//                                            break
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//
-//                        if isMatched { break }
-//                    }
-//                }
-//
-//                store.isMatched = true
-//            }
 }
 
 extension String {
