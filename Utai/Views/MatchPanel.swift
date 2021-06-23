@@ -201,7 +201,7 @@ struct MismatchedTrackLine: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: Metrics.lilSpacing) {
-            Text(track.trackNo == nil ? " " : "\(track.trackNo!)")
+            Text(track.trackNo == nil ? "_" : "\(track.trackNo!)")
                 .font(.custom("Yanone Kaffeesatz", size: 16))
                 .monospacedDigit()
                 .fontWeight(.bold)
