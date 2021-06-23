@@ -12,8 +12,8 @@ struct ArtworkSidebar: View {
     
     var body: some View {
         ZStack {
-            if store.result != nil && store.referenceURL == nil {
-                if let artworks = store.result!.artworks {
+            if store.referenceResult != nil && store.referenceURL == nil {
+                if let artworks = store.referenceResult!.artworks {
                     ScrollView(.vertical, showsIndicators: false) {
                         HStack(spacing: 0) {
                             ZStack {
@@ -72,7 +72,7 @@ struct SingleArtwork: View {
                         .frame(width: widthCalculated, height: heightCalculated)
                         .cornerRadius(4)
                         .shadow(color: Color.black.opacity(0.54),
-                                radius: 3.6, x: 2, y: 3)
+                                radius: 3.6, x: 0, y: 2.4)
             } placeholder: {
                 ZStack {
                     EffectsView(material: .sidebar, blendingMode: .behindWindow)
@@ -122,6 +122,6 @@ extension SingleArtwork {
     }
     
     var protrude: CGFloat {
-        hover ? widthCalculated - 28 : 0
+        hover ? (widthCalculated < 28 ? 0 : widthCalculated - 28 ) : 0
     }
 }

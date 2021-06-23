@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ID3TagEditor
 
 struct MatchPanel: View {
     @EnvironmentObject var store: Store
@@ -17,9 +18,26 @@ struct MatchPanel: View {
                 if store.isMatched {
                     List {
                         if !notYetMatched.isEmpty {
-                            Section("Mismatched") {
+                            Section("Mismatched (\(notYetMatched.count) Track\(notYetMatched.count == 1 ? "" : "s"))") {
                                 ForEach(notYetMatched) { track in
                                     MismatchedTrackLine(track: track)
+                                        .contextMenu {
+                                            Section("Suggestions") {
+                                                ForEach(track.matched) { matched in
+                                                    Button(matched.title) {
+                                                        link(track, to: matched)
+                                                    }
+                                                }
+                                            }
+                                            Divider()
+                                            Section("Unmatched") {
+                                                ForEach(unmatched) { unmatched in
+                                                    Button(unmatched.title) {
+                                                        link(track, to: unmatched)
+                                                    }
+                                                }
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -28,24 +46,22 @@ struct MatchPanel: View {
                             Section("Matched") {
                                 ForEach(exactlyMatched) { track in
                                     HStack(alignment: .top, spacing: Metrics.lilSpacing) {
-                                        Text(track.matched.last!.position)
+                                        Text("\(track.perfectMatchedTrack!.trackNo!)")
                                             .font(.custom("Yanone Kaffeesatz", size: 16))
                                             .monospacedDigit()
                                             .fontWeight(.bold)
                                             .foregroundColor(.secondary)
                                             .frame(width: 15, alignment: .leading)
                                         
-                                        Text(track.matched.last!.title)
+                                        Text(track.perfectMatchedTrack!.title)
                                             .font(.custom("Yanone Kaffeesatz", size: 16))
                                             .fontWeight(.bold)
                                             .lineSpacing(4)
+                                            .textSelection(.enabled)
                                         
                                         Spacer()
                                         
-                                        Text(track.matched.last!.duration?
-                                                .split(separator: ":")
-                                                .map { String(format: "%02d", Int($0)!) }
-                                                .joined(separator: ":") ?? "")
+                                        Text(track.perfectMatchedTrack!.duration ?? "")
                                             .font(.custom("Yanone Kaffeesatz", size: 16))
                                             .monospacedDigit()
                                             .fontWeight(.bold)
@@ -54,15 +70,23 @@ struct MatchPanel: View {
                                     
                                     .padding(.vertical, 2)
                                     .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+1)
-                                    .textSelection(.enabled)
+                                    
                                 }
                                 
-                                ForEach(0..<6) { _ in Text("Utai").foregroundColor(.clear) }
                             }
                         }
                         
-                        Spacer()
-                            .frame(height: Metrics.lilIconLength)
+                        Text(" ")
+                        
+                        HStack {
+                            Spacer()
+                            
+                            ButtonCus(action: tag, label: "Tag Matched Music", systemName: "laptopcomputer.and.arrow.down")
+                                .font(.custom("Yanone Kaffeesatz", size: 16))
+                            
+                            Spacer()
+                        }
+                            
                     }
                     .frame(width: 314)
                     .clipped()
@@ -89,8 +113,8 @@ struct MatchPanel: View {
 }
 
 extension MatchPanel {
-    var tracks: [Album.Track] {
-        store.album!.tracks.sorted {
+    var tracks: [LocalUnit.Track] {
+        store.localUnit!.tracks.sorted {
             if $0.trackNo != nil && $1.trackNo == nil { return true }
             else if $0.trackNo == nil && $1.trackNo == nil {
                 let former = $0.title ?? $0.filename
@@ -104,37 +128,63 @@ extension MatchPanel {
         }
     }
     
-    var exactlyMatched: [Album.Track] {
-        tracks.filter { $0.isExactlyMatched }.sorted {
-            let former = $0.matched.last!
-            let latter = $1.matched.last!
+    var exactlyMatched: [LocalUnit.Track] {
+        tracks.filter { $0.perfectMatchedTrack != nil }.sorted {
+            let former = $0.perfectMatchedTrack!
+            let latter = $1.perfectMatchedTrack!
             
-            if former.position.contains("-") {
-                let formers = former.position.split(separator: "-")
-                let latters = latter.position.split(separator: "-")
-                
-                if Int(formers.first!)! < Int(latters.first!)! { return true }
-                
-                return Int(formers.last!)! < Int(latters.last!)!
-            } else if former.position.first!.isNumber {
-                return Int(former.position)! < Int(latter.position)!
+            let formerDiskNo = former.diskNo!
+            let formerTrackNo = former.trackNo!
+            let latterDiskNo = latter.diskNo!
+            let latterTrackNo = latter.trackNo!
+            
+            if formerDiskNo == latterDiskNo {
+                return formerTrackNo < latterTrackNo
             } else {
-                return former.position < latter.position
+                return formerDiskNo < latterDiskNo
             }
         }
     }
     
-    var notYetMatched: [Album.Track] {
-        tracks.filter { !$0.isExactlyMatched }
+    var notYetMatched: [LocalUnit.Track] {
+        tracks.filter { $0.perfectMatchedTrack == nil }
+    }
+    
+    var unmatched: [RemoteUnit.Track] {
+        store.remoteUnit!.tracks.filter { !$0.isPerfectMatched }
+    }
+    
+    private func tag() {
+        let id3TagEditor = ID3TagEditor()
+        let id3TagAlbum = ID32v3TagBuilder()
+            .album(frame: ID3FrameWithStringContent(content: store.referenceResult!.title))
+            .recordingYear(frame: ID3FrameWithIntegerContent(value: store.referenceResult!.year))
+        
+        for track in exactlyMatched {
+            
+            do {
+                let id3Tag = id3TagAlbum
+                    .title(frame: ID3FrameWithStringContent(content: track.matched.last!.title))
+                    .build()
+            
+                try id3TagEditor.write(tag: id3Tag, to: track.url.path)
+            
+            } catch { print(error) }
+        }
+    }
+    
+    private func link(_ localTrack: LocalUnit.Track, to remoteTrack: RemoteUnit.Track) {
+        remoteTrack.isPerfectMatched = true
+        localTrack.perfectMatchedTrack = remoteTrack
     }
 }
 
 struct MismatchedTrackLine: View {
-    var track: Album.Track
+    var track: LocalUnit.Track
     
     var body: some View {
         HStack(alignment: .top, spacing: Metrics.lilSpacing) {
-            Text(track.trackNo == nil ? "?" : "\(track.trackNo!)")
+            Text(track.trackNo == nil ? " " : "\(track.trackNo!)")
                 .font(.custom("Yanone Kaffeesatz", size: 16))
                 .monospacedDigit()
                 .fontWeight(.bold)
@@ -150,7 +200,7 @@ struct MismatchedTrackLine: View {
             Spacer()
             
             ZStack(alignment: .trailing) {
-                Text(track.lengthDisplay)
+                Text(track.duration)
                     .font(.custom("Yanone Kaffeesatz", size: 16))
                     .monospacedDigit()
                     .fontWeight(.bold)
@@ -159,6 +209,6 @@ struct MismatchedTrackLine: View {
         }
         .padding(.vertical, 2)
         .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+1)
-        .textSelection(.enabled)
+        
     }
 }

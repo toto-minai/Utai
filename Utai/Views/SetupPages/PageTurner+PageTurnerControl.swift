@@ -35,14 +35,14 @@ struct PageTurner: View {
                             store.page = 2
                             store.artworkMode = false
                         }
-                        .disabled(store.album == nil)
+                        .disabled(store.localUnit == nil)
                     
                     PageTurnerControl(page: $store.page, target: 3,
                                       systemName: "square.fill", helpText: "Match")
                         .onTapGesture {
                             store.page = 3
                         }
-                        .disabled(store.album == nil)
+                        .disabled(store.localUnit == nil)
                 }
                 .padding(8)
                 .background(blurredBackground)

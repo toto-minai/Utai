@@ -44,7 +44,7 @@ struct ReferenceResult: Codable {
 
     struct Format: Codable {
         let name: String
-        let qty: String?
+        let qty: String
         let descriptions: [String]?
     }
 
@@ -125,45 +125,5 @@ struct ReferenceResult: Codable {
         case tracks = "tracklist"
         case extraArtists = "extraartists"
         case artworks = "images"
-    }
-}
-
-extension ReferenceResult.Track {
-    var length: Int? {
-        if let duration = duration {
-            if duration == "" { return nil }
-            
-            let multiply = [1, 60, 3600]
-            var numbers = duration.components(separatedBy: ":").map { Int($0)! }
-            
-            let cnt = numbers.count
-            for i in 0..<min(multiply.count, cnt) {
-                numbers[cnt-i-1] *= multiply[i]
-            }
-            
-            return numbers.reduce(0, +)
-        }
-        
-        return nil
-    }
-}
-
-extension ReferenceResult.Track.SubTrack {
-    var length: Int? {
-        if let duration = duration {
-            if duration == "" { return nil }
-            
-            let multiply = [1, 60, 3600]
-            var numbers = duration.components(separatedBy: ":").map { Int($0)! }
-            
-            let cnt = numbers.count
-            for i in 0..<min(multiply.count, cnt) {
-                numbers[cnt-i-1] *= multiply[i]
-            }
-            
-            return numbers.reduce(0, +)
-        }
-        
-        return nil
     }
 }

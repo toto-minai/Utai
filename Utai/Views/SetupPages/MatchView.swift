@@ -10,21 +10,19 @@ import SwiftUI
 struct MatchView: View {
     @AppStorage(Settings.lengthMaxDelta) var lengthMaxDelta: Int = 15
     
+    let pasteboard = NSPasteboard.general
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
     @Environment(\.hostingWindow) var hostingWindow
-    
     @State private var subWindow: NSWindow!
-    
-    let pasteboard = NSPasteboard.general
     
     @EnvironmentObject var store: Store
     
-    @State private var resultRetried: ReferenceResult?
+    @State private var resultSaved: ReferenceResult?
     
     var body: some View {
         ZStack {
-            if store.result != nil && store.referenceURL == nil {
+            if store.referenceResult != nil && store.referenceURL == nil {
                 if let thumb = artworkPrimaryURL.first {
                     ZStack {
                         AsyncImage(url: thumb) { image in
@@ -55,7 +53,7 @@ struct MatchView: View {
                         } placeholder: { ProgressView() }
                         .frame(width: 312, height: 312)
                         .contextMenu {
-                            Button(action: { openURL(URL(string: "\(store.result!.uri)")!) })
+                            Button(action: { openURL(URL(string: "\(store.referenceResult!.uri)")!) })
                             { Text("View on Discogs") }
                         }
                         
@@ -125,7 +123,7 @@ struct MatchView: View {
     
     var doWhenNeedToRetrieveData: some View {
         void.onAppear {
-            store.result = nil
+            store.referenceResult = nil
             print(store.referenceURL!.absoluteString)
 
             async {
@@ -135,7 +133,7 @@ struct MatchView: View {
                 }
                 
                 store.referenceURL = nil
-                store.result = resultRetried
+                store.referenceResult = resultSaved
                 
                 let frame = window.frame
                 subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-339))
@@ -148,10 +146,10 @@ struct MatchView: View {
 }
 
 extension MatchView {
-    var window: NSWindow { self.hostingWindow()! }
+    private var window: NSWindow { self.hostingWindow()! }
     
-    var artworkPrimaryURL: [URL] {
-        if let artworks = store.result!.artworks {
+    private var artworkPrimaryURL: [URL] {
+        if let artworks = store.referenceResult!.artworks {
             if artworks.filter({ $0.type == "primary" }).isEmpty {
                 return [artworks.first!.resourceURL]
             }
@@ -164,9 +162,8 @@ extension MatchView {
         return []
     }
     
-    var tracks: [Album.Track] { store.album!.tracks }
-    
-    var remoteTracks: [ReferenceResult.Track] { store.result!.tracks }
+    private var localTracks: [LocalUnit.Track] { store.localUnit!.tracks }
+    private var remoteTracks: [RemoteUnit.Track] { store.remoteUnit!.tracks }
     
     enum SearchError: Error { case badURL }
     private func search() async throws {
@@ -176,95 +173,143 @@ extension MatchView {
 
         do {
             let result = try JSONDecoder().decode(ReferenceResult.self, from: data)
-            withAnimation(.easeOut) { resultRetried = result }
+            withAnimation(.easeOut) { resultSaved = result }
         } catch { throw error }
     }
     
     private func match() {
-        store.album!.resetMatched()
+        store.localUnit!.resetMatched()
+        store.remoteUnit = RemoteUnit(result: resultSaved!)
         
-        for track in tracks {
-            let filename = track.filename
-            let title = track.title ?? (filename as NSString).deletingPathExtension
+        for localTrack in localTracks {
+            let filename = localTrack.filename
+            let title = localTrack.title ?? (filename as NSString).deletingPathExtension
             let localTitle = title.standardised()
-            // Save standardised title
-            track.standardised = localTitle
-            
-            print(localTitle)
-            
+
             for remoteTrack in remoteTracks {
-                // Select out info, combined title, etc.
-                if remoteTrack.type == "track" {
-                    let remoteTitle = remoteTrack.title.standardised()
-                    
-                    print("\tvs.\(remoteTitle)")
-                    
-                    if remoteTitle == title ||
-                        localTitle.contains(remoteTitle) ||
-                        remoteTitle.contains(localTitle) {
-                        track.matched.append(remoteTrack)
-                        
-                        if let length = remoteTrack.length {
-                            print("\t\(Int(track.length))")
-                            print("\t\(length)")
-                            
-                            if abs(Int(track.length) - length) <= lengthMaxDelta {
-                                track.isExactlyMatched = true
-                                break
-                            }
-                        }
-                    }
-                } else if remoteTrack.type == "index" {
-                    if let subTracks = remoteTrack.subTracks {
-                        var isMatched = false
-                        for remoteSubTrack in subTracks {
-                            if remoteSubTrack.type == "track" {
-                                let remoteSubTrackTitle = remoteSubTrack.title.standardised()
-                                
-                                if remoteSubTrackTitle == title ||
-                                    localTitle.contains(remoteSubTrackTitle) ||
-                                    remoteSubTrackTitle.contains(localTitle) {
-                                    let newTrack = ReferenceResult.Track(position: remoteSubTrack.position,
-                                                                         type: remoteSubTrack.type,
-                                                                         title: remoteSubTrack.title,
-                                                                         extraArtists: nil,
-                                                                         duration: remoteSubTrack.duration,
-                                                                         subTracks: nil)
-                                    
-                                    track.matched.append(newTrack)
-                                    
-                                    if let length = remoteSubTrack.length {
-                                        if abs(Int(track.length) - length) <= lengthMaxDelta {
-                                            track.isExactlyMatched = true
-                                            isMatched = true
-                                            break
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        
-                        if isMatched { break }
-                    }
-                }
+                let remoteTitle = remoteTrack.title.standardised()
                 
-                store.isMatched = true
+                if remoteTitle == localTitle {
+                    if remoteTrack.length != nil &&
+                        abs(Int(localTrack.length) - remoteTrack.length!) <= lengthMaxDelta {
+                        remoteTrack.isPerfectMatched = true
+                        localTrack.perfectMatchedTrack = remoteTrack
+                        break
+                    }
+                } else if !remoteTrack.isPerfectMatched {
+                    let remoteTitleWords = remoteTitle.split(separator: " ")
+                    var remoteTitleAppearedWords = Set<Substring>()
+                    var hasWildcard = false
+                    var remoteTitleWord2Token = [Substring:Character]()
+                    var remoteTitleTokens = [Character]()
+                    var delta: UInt8 = 0
+                    
+                    for word in remoteTitleWords {
+                        if Int(word) != nil || word == "the" { hasWildcard = true }
+                        
+                        if !remoteTitleAppearedWords.contains(word) {
+                            remoteTitleAppearedWords.insert(word)
+                            let character = Character(UnicodeScalar(Character("0").asciiValue! + delta))
+                            remoteTitleWord2Token[word] = character
+                            remoteTitleTokens.append(character)
+                            delta += 1
+                        } else {
+                            remoteTitleTokens.append(remoteTitleWord2Token[word]!)
+                        }
+                    }
+                    
+                    let localTitleWords = localTitle.split(separator: " ")
+                    var localTitleTokens = [Character]()
+                    
+                    for word in localTitleWords {
+                        if remoteTitleWord2Token[word] != nil {
+                            localTitleTokens.append(remoteTitleWord2Token[word]!)
+                        } else {
+                            localTitleTokens.append(Character(" "))
+                        }
+                    }
+                    
+                    let remoteTitleTokenString = remoteTitleTokens.map { String($0) }.reduce("", +)
+                    let localTitleTokenString = localTitleTokens.map { String($0) }.reduce("", +).trimmingCharacters(in: .whitespaces)
+                    
+                    if localTitleTokenString.count > (hasWildcard ? 1 : 0) && remoteTitleTokenString.contains(localTitleTokenString) {
+                        if abs(Int(localTrack.length) - remoteTrack.length!) <= lengthMaxDelta {
+                            localTrack.matched.append(remoteTrack)
+                        }
+                        
+                        print("-----------------")
+                        print(localTitleTokenString)
+                        print(remoteTitleTokenString)
+                        print(localTitle)
+                        print(remoteTitle)
+                        print(localTitleTokenString.count > (hasWildcard ? 1 : 0) && remoteTitleTokenString.contains(localTitleTokenString))
+                        print("~~~~~~~~~~~~~~~")
+                    }
+                    
+                }
             }
         }
         
-        printMatchResult()
+        store.isMatched = true
     }
-    
-    private func printMatchResult() {
-        for track in tracks {
-            print("\(track.title ?? track.filename)" + " = " + "\(String(describing: track.standardised))")
-            print("matched: \(track.matched)")
-            let A = track.matched.map { $0.title }
-            print("i.e.: \(A)")
-            print("\(track.isExactlyMatched)")
-            print("--------------")
-        }
-    }
+                
+                
+//                if remoteTrack.type == "track" {
+//                    let remoteTitle = remoteTrack.title.standardised()
+//
+//                    // Perfectly matched
+//
+//                    if remoteTitle == title ||
+//                        localTitle.contains(remoteTitle) ||
+//                        remoteTitle.contains(localTitle) {
+//                        localTrack.matched.append(remoteTrack)
+//
+//                        if let length = remoteTrack.length {
+//                            print("\t\(Int(localTrack.length))")
+//                            print("\t\(length)")
+//
+//                            if abs(Int(localTrack.length) - length) <= lengthMaxDelta {
+//                                localTrack.isExactlyMatched = true
+//                                break
+//                            }
+//                        }
+//                    }
+//                } else if remoteTrack.type == "index" {
+//                    if let subTracks = remoteTrack.subTracks {
+//                        var isMatched = false
+//                        for remoteSubTrack in subTracks {
+//                            if remoteSubTrack.type == "track" {
+//                                let remoteSubTrackTitle = remoteSubTrack.title.standardised()
+//
+//                                if remoteSubTrackTitle == title ||
+//                                    localTitle.contains(remoteSubTrackTitle) ||
+//                                    remoteSubTrackTitle.contains(localTitle) {
+//                                    let newTrack = ReferenceResult.Track(position: remoteSubTrack.position,
+//                                                                         type: remoteSubTrack.type,
+//                                                                         title: remoteSubTrack.title,
+//                                                                         extraArtists: nil,
+//                                                                         duration: remoteSubTrack.duration,
+//                                                                         subTracks: nil)
+//
+//                                    localTrack.matched.append(newTrack)
+//
+//                                    if let length = remoteSubTrack.length {
+//                                        if abs(Int(localTrack.length) - length) <= lengthMaxDelta {
+//                                            localTrack.isExactlyMatched = true
+//                                            isMatched = true
+//                                            break
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//
+//                        if isMatched { break }
+//                    }
+//                }
+//
+//                store.isMatched = true
+//            }
 }
 
 extension String {

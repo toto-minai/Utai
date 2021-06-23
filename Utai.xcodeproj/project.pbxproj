@@ -12,7 +12,7 @@
 		99747F172672EA0000995E85 /* SetupPages+ReferencesControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F162672EA0000995E85 /* SetupPages+ReferencesControl.swift */; };
 		99747F192672EA3300995E85 /* PageTurner+PageTurnerControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F182672EA3300995E85 /* PageTurner+PageTurnerControl.swift */; };
 		99747F1B2672EA7200995E85 /* ImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1A2672EA7200995E85 /* ImportView.swift */; };
-		99747F1D2672EAD400995E85 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1C2672EAD400995E85 /* Album.swift */; };
+		99747F1D2672EAD400995E85 /* LocalUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F1C2672EAD400995E85 /* LocalUnit.swift */; };
 		9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D62670E1F60000328B /* UtaiApp.swift */; };
 		9987A3D92670E1F60000328B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9987A3D82670E1F60000328B /* ContentView.swift */; };
 		9987A3DB2670E1F70000328B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9987A3DA2670E1F70000328B /* Assets.xcassets */; };
@@ -20,6 +20,7 @@
 		9994F20E267DD61B00CA3726 /* Metrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9994F20D267DD61B00CA3726 /* Metrics.swift */; };
 		9994F210267F81DB00CA3726 /* MatchPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9994F20F267F81DB00CA3726 /* MatchPanel.swift */; };
 		9994F21226806CAD00CA3726 /* ArtworkSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9994F21126806CAD00CA3726 /* ArtworkSidebar.swift */; };
+		9994F2142682377F00CA3726 /* RemoteUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9994F2132682377F00CA3726 /* RemoteUnit.swift */; };
 		99CA05F4267A6326007C8B67 /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F3267A6326007C8B67 /* Void.swift */; };
 		99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F5267B1C01007C8B67 /* ChooseModes.swift */; };
 		99CA05F9267B28D5007C8B67 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F8267B28D5007C8B67 /* Settings.swift */; };
@@ -40,7 +41,7 @@
 		99747F162672EA0000995E85 /* SetupPages+ReferencesControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetupPages+ReferencesControl.swift"; sourceTree = "<group>"; };
 		99747F182672EA3300995E85 /* PageTurner+PageTurnerControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PageTurner+PageTurnerControl.swift"; sourceTree = "<group>"; };
 		99747F1A2672EA7200995E85 /* ImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportView.swift; sourceTree = "<group>"; };
-		99747F1C2672EAD400995E85 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		99747F1C2672EAD400995E85 /* LocalUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalUnit.swift; sourceTree = "<group>"; };
 		9987A3D32670E1F60000328B /* Utai.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Utai.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9987A3D62670E1F60000328B /* UtaiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtaiApp.swift; sourceTree = "<group>"; };
 		9987A3D82670E1F60000328B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 		9994F20D267DD61B00CA3726 /* Metrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Metrics.swift; sourceTree = "<group>"; };
 		9994F20F267F81DB00CA3726 /* MatchPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchPanel.swift; sourceTree = "<group>"; };
 		9994F21126806CAD00CA3726 /* ArtworkSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtworkSidebar.swift; sourceTree = "<group>"; };
+		9994F2132682377F00CA3726 /* RemoteUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteUnit.swift; sourceTree = "<group>"; };
 		99CA05F3267A6326007C8B67 /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
 		99CA05F5267B1C01007C8B67 /* ChooseModes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModes.swift; sourceTree = "<group>"; };
 		99CA05F8267B28D5007C8B67 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -148,11 +150,12 @@
 			isa = PBXGroup;
 			children = (
 				99CA05F7267B28C6007C8B67 /* Settings */,
-				99747F1C2672EAD400995E85 /* Album.swift */,
+				99747F1C2672EAD400995E85 /* LocalUnit.swift */,
 				99D046F22674730A0076D972 /* Store.swift */,
 				99CA05F5267B1C01007C8B67 /* ChooseModes.swift */,
 				99D046F92674E5B80076D972 /* SearchResponse.swift */,
 				993C9FA22678C787007E4387 /* ReferenceResult.swift */,
+				9994F2132682377F00CA3726 /* RemoteUnit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -286,13 +289,14 @@
 				99747F192672EA3300995E85 /* PageTurner+PageTurnerControl.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
-				99747F1D2672EAD400995E85 /* Album.swift in Sources */,
+				99747F1D2672EAD400995E85 /* LocalUnit.swift in Sources */,
 				9994F21226806CAD00CA3726 /* ArtworkSidebar.swift in Sources */,
 				99747F1B2672EA7200995E85 /* ImportView.swift in Sources */,
 				9994F210267F81DB00CA3726 /* MatchPanel.swift in Sources */,
 				99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */,
 				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
 				99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */,
+				9994F2142682377F00CA3726 /* RemoteUnit.swift in Sources */,
 				99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */,
 				99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */,
 				99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */,

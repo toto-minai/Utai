@@ -7,93 +7,15 @@
 
 import SwiftUI
 
-struct ArtworkView: View {
-    @Binding var response: SearchResponse?
-    
-    @Binding var searchURL: URL?
-    
-    @Binding var chosen: Int?
-    @Binding var showMode: ShowMode
-    @Binding var sortMode: SortMode
-    
-    @Binding var yearGroupChoice: Int?
-    @Binding var formatGroupChoice: String?
-    @Binding var labelGroupChoice: String?
-    
-    @ObservedObject var store: Store
-    
-    var body: some View {
-        ZStack {
-            if response != nil && searchURL == nil && !results.isEmpty && !resultsProcessed.isEmpty {
-                ScrollViewReader { proxy in
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        ZStack {
-                            Color.red.opacity(0.001)
-                                .frame(height: 80)
-                            
-                            LazyHStack(alignment: .top, spacing: Metrics.lilSpacing) {
-                                ForEach(resultsProcessed, id: \.id) { result in
-                                    Artwork80x80(store: store, chosen: $chosen, result: result)
-                                }
-                            }
-                            .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength+20)
-                            .frame(height: 120)
-                        }
-                    }
-                    .onChange(of: showMode) { newValue in
-                        withAnimation {
-                            proxy.scrollTo(chosen, anchor: .top)
-                        }
-                    }
-                    .onChange(of: sortMode) { newValue in
-                        withAnimation {
-                            proxy.scrollTo(chosen, anchor: .top)
-                        }
-                    }
-                }
-                .mask {
-                    HStack(spacing: 0) {
-                        LinearGradient(colors: [Color.yellow.opacity(0), Color.yellow], startPoint: .leading, endPoint: .trailing)
-                            .frame(width: 12)
-                        
-                        Rectangle()
-                        
-                        LinearGradient(colors: [Color.yellow.opacity(0), Color.yellow], startPoint: .trailing, endPoint: .leading)
-                            .frame(width: 12)
-                    }
-                }
-            }
-        }
-        .frame(width: 352, height: 120)
-    }
-}
-
-extension ArtworkView {
-    private var results: [SearchResponse.Result] {
-        response!.results
-    }
-    
-    private var resultsProcessed: [SearchResponse.Result] {
-        return results
-            .processed(in: showMode)
-            .processed(in: sortMode)
-            // Filters
-            .filterd(year: yearGroupChoice)
-            .filterd(format: formatGroupChoice)
-            .filterd(label: labelGroupChoice)
-    }
-}
-
 struct ChooseView: View {
     @EnvironmentObject var store: Store
     
     @Environment(\.openURL) var openURL
-    @Environment(\.colorScheme) var colorScheme
     @Environment(\.hostingWindow) var hostingWindow
     
     @State private var subWindow: NSWindow!
     
-    @State private var response: SearchResponse?
+    @State private var response: SearchResponse!
     
     @State private var chosen: Int?
     
@@ -159,18 +81,18 @@ struct ChooseView: View {
     var header: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
-                if album.title == nil {
+                if unit.album == nil {
                     Text("Music by ")
                         .foregroundColor(.secondary)
                         .fontWeight(.medium)
                         .textSelection(.disabled)
                 }
-                Text("\(artistsRaw)")
+                Text("\(artistRaw)")
                     .fontWeight(.medium) +
-                Text(album.artists != nil &&
-                     album.title != nil ? " – " : "")
+                Text(unit.artist != nil &&
+                     unit.album != nil ? " – " : "")
                     .fontWeight(.medium) +
-                Text("\(titleRaw)")
+                Text("\(albumRaw)")
                     .fontWeight(.medium)
             }
             .textSelection(.enabled)
@@ -248,7 +170,7 @@ struct ChooseView: View {
                         ForEach(group, id: \.self) { member in
                             if let choice = yearGroupChoice, choice == member {
                                 Text(year2Text(member)).tag(member as Int?)
-                            } else if !isResultsEmptyWhenYear(equals: member) {
+                            } else if !isResultsEmptyWhenYear(is: member) {
                                 Text(year2Text(member)).tag(member as Int?)
                             }
                         }
@@ -260,7 +182,7 @@ struct ChooseView: View {
                         ForEach(group, id: \.self) { member in
                             if let choice = formatGroupChoice, choice == member {
                                 Text(member).tag(member as String?)
-                            } else if !isResultsEmptyWhenFormat(equals: member) {
+                            } else if !isResultsEmptyWhenFormat(is: member) {
                                 Text(member).tag(member as String?)
                             }
                         }
@@ -272,7 +194,7 @@ struct ChooseView: View {
                         ForEach(group, id: \.self) { member in
                             if let choice = labelGroupChoice, choice == member {
                                 Text(member).tag(member as String?)
-                            } else if !isResultsEmptyWhenLabel(equals: member) {
+                            } else if !isResultsEmptyWhenLabel(is: member) {
                                 Text(member).tag(member as String?)
                             }
                         }
@@ -303,7 +225,7 @@ struct ChooseView: View {
     var body: some View {
         ZStack(alignment: .top) {
             VStack(spacing: Metrics.lilSpacing2x) {
-                if store.album != nil { header }
+                if store.localUnit != nil { header }
                 
                 if response != nil && store.searchURL == nil {
                     if !results.isEmpty {
@@ -318,7 +240,7 @@ struct ChooseView: View {
                                                 .fontWeight(.medium)
                                             Text("Released")
                                                 .fontWeight(.medium)
-                                                .opacity(chosenYearCR != " " ? 1 : 0.3)
+                                                .opacity(chosenYearInCR != " " ? 1 : 0.3)
                                             Text("Format")
                                                 .fontWeight(.medium)
                                                 .opacity(chosenResult.format != nil ? 1 : 0.3)
@@ -331,9 +253,9 @@ struct ChooseView: View {
                                         .animation(.easeOut, value: chosen)
                                         
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text("\(chosenInfoRaw)")
+                                            Text("\(chosenTitleStyled)")
                                                 .fontWeight(.medium)
-                                            Text("\(chosenYearCR)")
+                                            Text("\(chosenYearInCR)")
                                                 .fontWeight(.medium)
                                             Text("\(chosenFormatStyled)")
                                                 .fontWeight(.medium)
@@ -378,7 +300,7 @@ struct ChooseView: View {
             subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.maxY-157, width: 352, height: 120),
                                  styleMask: [], backing: .buffered, defer: false)
             
-            let rootView = ArtworkView(response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice, store: store)
+            let rootView = ArtworkView(store: store, subWindow: $subWindow, response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
             subWindow.setFrameAutosaveName("Sub Window")
             
             subWindow.titleVisibility = .hidden
@@ -427,7 +349,7 @@ struct ChooseView: View {
                 do { try await search() }
                 catch { print(error) }
                 
-                parse()
+                parseForConditions()
                 
                 if let first = resultsProcessed.first {
                     chosen = first.id
@@ -557,62 +479,58 @@ extension Array where Element == SearchResponse.Result {
 }
 
 extension ChooseView {
-    var window: NSWindow { self.hostingWindow()! }
+    private var window: NSWindow { self.hostingWindow()! }
     
-    private var album: Album { store.album! }
-    private var titleRaw: String { album.title ?? "" }
-    private var artistsRaw: String { album.artists ?? "" }
+    private var unit: LocalUnit { store.localUnit! }
+    private var albumRaw: String { unit.album ?? "" }
+    private var artistRaw: String { unit.artist ?? "" }
     
     private var results: [SearchResponse.Result] {
-        response!.results
+        response.results
+    }
+    
+    private var resultsInModes: [SearchResponse.Result] {
+        results
+            .processed(in: showMode)
+            .processed(in: sortMode)
     }
     
     private var resultsProcessed: [SearchResponse.Result] {
-        return results
-            .processed(in: showMode)
-            .processed(in: sortMode)
-            // Filters
+        resultsInModes
             .filterd(year: yearGroupChoice)
             .filterd(format: formatGroupChoice)
             .filterd(label: labelGroupChoice)
     }
     
-    private func isResultsEmptyWhenYear(equals x: Int?) -> Bool {
-        return results
-            .processed(in: showMode)
-            .processed(in: sortMode)
-            // Filters
+    private func isResultsEmptyWhenYear(is x: Int?) -> Bool {
+        resultsInModes
             .filterd(year: x)
             .filterd(format: formatGroupChoice)
             .filterd(label: labelGroupChoice)
             .isEmpty
     }
     
-    private func isResultsEmptyWhenFormat(equals x: String?) -> Bool {
-        return results
-            .processed(in: showMode)
-            .processed(in: sortMode)
-            // Filters
+    private func isResultsEmptyWhenFormat(is x: String?) -> Bool {
+        resultsInModes
             .filterd(year: yearGroupChoice)
             .filterd(format: x)
             .filterd(label: labelGroupChoice)
             .isEmpty
     }
     
-    private func isResultsEmptyWhenLabel(equals x: String?) -> Bool {
-        return results
-            .processed(in: showMode)
-            .processed(in: sortMode)
-            // Filters
+    private func isResultsEmptyWhenLabel(is x: String?) -> Bool {
+        resultsInModes
             .filterd(year: yearGroupChoice)
             .filterd(format: formatGroupChoice)
             .filterd(label: x)
             .isEmpty
     }
     
-    private var chosenResult: SearchResponse.Result { resultsProcessed.first { $0.id == chosen }! }
+    private var chosenResult: SearchResponse.Result {
+        resultsProcessed.first { $0.id == chosen }!
+    }
     
-    private var chosenInfoRaw: String {
+    private var chosenTitleStyled: String {
         if chosen != nil {
             return chosenResult.title
                 .replacingOccurrences(of: " - ", with: " – ")
@@ -620,13 +538,14 @@ extension ChooseView {
         } else { return "" }
     }
     
-    private var chosenYearCR: String {
+    private var chosenYearInCR: String {
         if chosen != nil {
             var processed = [chosenResult.year,
                              chosenResult.country]
             processed.removeAll { $0 == nil }
             
-            return processed.map { $0!.replacingOccurrences(of: " & ", with: ", ") }.joined(separator: ", ")
+            return processed.map { $0!.replacingOccurrences(of: " & ", with: ", ") }
+                            .joined(separator: ", ")
         } else { return " " }
     }
     
@@ -685,7 +604,7 @@ extension ChooseView {
         } catch { throw error }
     }
     
-    private func parse() {
+    private func parseForConditions() {
         var yearGroupSet = Set<Int>()
         var formatGroupSet = Set<String>()
         var labelGroupSet = Set<String>()
@@ -734,6 +653,86 @@ extension ChooseView {
         if x == Int.max { return "Unknown" }
         
         return String("\(x * 10)s")
+    }
+}
+
+struct ArtworkView: View {
+    @ObservedObject var store: Store
+    
+    @Binding var subWindow: NSWindow?
+    
+    @Binding var response: SearchResponse?
+    
+    @Binding var searchURL: URL?
+    
+    @Binding var chosen: Int?
+    @Binding var showMode: ShowMode
+    @Binding var sortMode: SortMode
+    
+    @Binding var yearGroupChoice: Int?
+    @Binding var formatGroupChoice: String?
+    @Binding var labelGroupChoice: String?
+    
+    
+    var body: some View {
+        ZStack {
+            if response != nil && searchURL == nil && !results.isEmpty && !resultsProcessed.isEmpty {
+                ScrollViewReader { proxy in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        ZStack {
+                            Color.red.opacity(0.001)
+                                .frame(height: 80)
+                            
+                            LazyHStack(alignment: .top, spacing: Metrics.lilSpacing) {
+                                ForEach(resultsProcessed, id: \.id) { result in
+                                    Artwork80x80(store: store, chosen: $chosen, result: result)
+                                }
+                            }
+                            .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength+20)
+                            .frame(height: 120)
+                        }
+                    }
+                    .onChange(of: showMode) { newValue in
+                        withAnimation {
+                            proxy.scrollTo(chosen, anchor: .top)
+                        }
+                    }
+                    .onChange(of: sortMode) { newValue in
+                        withAnimation {
+                            proxy.scrollTo(chosen, anchor: .top)
+                        }
+                    }
+                }
+                .mask {
+                    HStack(spacing: 0) {
+                        LinearGradient(colors: [Color.yellow.opacity(0), Color.yellow], startPoint: .leading, endPoint: .trailing)
+                            .frame(width: 12)
+                        
+                        Rectangle()
+                        
+                        LinearGradient(colors: [Color.yellow.opacity(0), Color.yellow], startPoint: .trailing, endPoint: .leading)
+                            .frame(width: 12)
+                    }
+                }
+            }
+        }
+        .frame(width: 352, height: 120)
+    }
+}
+
+extension ArtworkView {
+    private var results: [SearchResponse.Result] {
+        response!.results
+    }
+    
+    private var resultsProcessed: [SearchResponse.Result] {
+        return results
+            .processed(in: showMode)
+            .processed(in: sortMode)
+            // Filters
+            .filterd(year: yearGroupChoice)
+            .filterd(format: formatGroupChoice)
+            .filterd(label: labelGroupChoice)
     }
 }
 

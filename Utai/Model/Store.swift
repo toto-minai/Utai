@@ -8,17 +8,20 @@
 import SwiftUI
 
 class Store: ObservableObject {
-    @Published var album: Album?
-    
     @Published var page: Int = 1
-    
     @Published var showMatchPanel: Bool = false
     @Published var artworkMode: Bool = false
-    
+
+    // Page 1, 2, 3
+    @Published var localUnit: LocalUnit?
+    @Published var referenceResult: ReferenceResult?
+    @Published var remoteUnit: RemoteUnit?
+
+    // Page 1 -> 2
     @Published var searchURL: URL?
     private func makeSearchURL() {
-        let title = album!.title
-        let artists = album!.artists
+        let album = localUnit!.album
+        let artist = localUnit!.artist
         
         var componets = URLComponents()
         componets.scheme = "https"
@@ -29,21 +32,22 @@ class Store: ObservableObject {
             URLQueryItem(name: "secret", value: discogs_secret)
         ]
         
-        if let title = title {
-            componets.queryItems!.append(URLQueryItem(name: "q", value: title))
+        if let album = album {
+            componets.queryItems!.append(URLQueryItem(name: "q", value: album))
         }
-        if let artists = artists {
-            componets.queryItems!.append(URLQueryItem(name: "artist", value: artists))
+        if let artist = artist {
+            componets.queryItems!.append(URLQueryItem(name: "artist", value: artist))
         }
         
         searchURL = componets.url
     }
     
-    func didAlbumCompleted() {
+    func willSearch() {
         makeSearchURL()
         page = 2
     }
     
+    // Page 2 -> 3
     @Published var referenceURL: URL?
     private func makeReferenceURL(from url: URL) {
         var componets = URLComponents(url: url,
@@ -61,6 +65,5 @@ class Store: ObservableObject {
         page = 3
     }
     
-    @Published var result: ReferenceResult?
     @Published var isMatched: Bool = false
 }

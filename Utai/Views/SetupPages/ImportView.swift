@@ -12,48 +12,67 @@ struct ImportView: View {
     
     // Drag and drop
     @State private var draggingOver = false
-    @State private var droppedURLs: [URL] = []
-    @State private var droppedGoal: Int?
+    @State private var importedURLs: [URL] = []
+    @State private var importGoal: Int?
     
     @State private var isConfirmSheetPresented = false
     
+    private var welcomeIcon: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .foregroundColor(Color.black.opacity(0.2))
+                .frame(width: 109, height: 109)
+            
+            Image("SimpleIcon")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 55)
+                .foregroundColor(Color.secondary)
+        }
+    }
+    
+    private var main: some View {
+        HStack(spacing: 2) {
+            Text("Drag or")
+                .fontWeight(.medium)
+            
+            ButtonCus(action: add,
+                      label: "Add Music",
+                      systemName: "music.note")
+                .sheet(isPresented: $isConfirmSheetPresented) {
+                    ConfirmSheet(systemName: "music.note",
+                                 instruction: "Might want to confirm the title and artists before searching on Discogs.",
+                                 albums: unit.albumCandidatesSorted,
+                                 artists: unit.artistCandidatesSorted)
+                }
+        }
+    }
+    
     var body: some View {
         let delegate = Delegate(draggingOver: $draggingOver,
-                                urls: $droppedURLs,
-                                goal: $droppedGoal)
+                                urls: $importedURLs,
+                                goal: $importGoal)
         
         return ZStack {
             VStack(spacing: Metrics.lilSpacing) {
-                WelcomeIcon()
+                welcomeIcon
                 
-                HStack(spacing: 2) {
-                    Text("Drag or")
-                        .fontWeight(.medium)
-                    
-                    ButtonCus(action: importFiles,
-                              label: "Add Music",
-                              systemName: "music.note")
-                        .sheet(isPresented: $isConfirmSheetPresented, onDismiss: {}) {
-                            ConfirmSheet(systemName: "music.note",
-                                         instruction: "Might want to confirm the title and artists before searching on Discogs.",
-                                         titles: Array(store.album!.titleCandidates.sorted()),
-                                         albumArtists: Array(store.album!.artistsCandidates.sorted()))
-                        }
-                }
+                main
                 
                 Spacer()
             }
             .padding(.top, 57)  // Align with album artworks on search page
             // TODO: Make it clear how to calc
             
-            if let goal = droppedGoal {
-                if droppedURLs.count == goal {
+            // Do when collected all dropped URLs
+            if let goal = importGoal {
+                if importedURLs.count == goal {
                     void.onAppear {
-                        store.album = Album(urls: droppedURLs)
+                        store.localUnit = LocalUnit(urls: importedURLs)
                         
-                        droppedURLs = []
+                        importedURLs = []  // Reset for another drop
                             
-                        if album.isMainInfoComplete { store.didAlbumCompleted() }
+                        if unit.isQueryComplete { store.willSearch() }
                         else { isConfirmSheetPresented = true }
                     }
                 }
@@ -65,22 +84,23 @@ struct ImportView: View {
 }
 
 extension ImportView {
-    private var album: Album { store.album! }
+    private var unit: LocalUnit { store.localUnit! }
     
-    private func importFiles() {
+    // TODO: Might want to use a SwiftUI version to open files
+    private func add() {
         let panel = NSOpenPanel()
-        panel.title = "􀑪 Add Music"
         panel.allowsMultipleSelection = true
         panel.canChooseDirectories = false
+        panel.allowedContentTypes = [.audio]  // TODO: Should show alert if not .mp3
         
         guard panel.runModal() == .OK else {
             print("Files not imported")
             return
         }
         
-        store.album = Album(urls: panel.urls)
+        store.localUnit = LocalUnit(urls: panel.urls)
         
-        if album.isMainInfoComplete { store.didAlbumCompleted() }
+        if unit.isQueryComplete { store.willSearch() }
         else { isConfirmSheetPresented = true }
     }
     
@@ -102,11 +122,12 @@ extension ImportView {
         }
 
         func performDrop(info: DropInfo) -> Bool {
+            // TODO: Should show alert if not .mp3
             let providers = info.itemProviders(for: ["public.file-url"])
             
             goal = providers.count
             for provider in providers {
-                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
+                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, _ in
                     guard let data = item as? Data,
                           let url = URL(dataRepresentation: data, relativeTo: nil)
                     else { return }
@@ -123,34 +144,33 @@ extension ImportView {
 struct ConfirmSheet: View {
     @EnvironmentObject var store: Store
     
-    let systemName: String
-    let instruction: String
-    
     @Environment(\.dismiss) var dismiss
     
-    let titles: [String]
-    let albumArtists: [String]
+    let systemName: String
+    let instruction: String
+    let albums: [String]
+    let artists: [String]
     
-    @State private var titleSelection: Int = 0
-    @State var titleCus: String = ""
-    @FocusState private var titleCusFocused: Bool
+    @State private var albumSelection: Int = 0
+    @State var albumCustom: String = ""
+    @FocusState private var isAlbumCustomFocused: Bool
     
-    @State private var artistsSelection: Int = 0
-    @State var artistsCus: String = ""
-    @FocusState private var artistsCusFocused: Bool
+    @State private var artistSelection: Int = 0
+    @State var artistsCustom: String = ""
+    @FocusState private var isArtistsCustomFocused: Bool
     
-    var body: some View {
-        Form {
-            Group {
-                Text(instruction)
-                    .lineSpacing(4)
-                Divider()
-            }.offset(y: 1.2)
-            
-            Spacer()
-            
-            Picker("**Album**", selection: $titleSelection) {
-                ForEach(Array(titles.enumerated()), id: \.offset) { index, title in
+    private var header: some View {
+        Group {
+            Text(instruction)
+                .lineSpacing(4)
+            Divider()
+        }.offset(y: 1.2)
+    }
+    
+    private var main: some View {
+        Section {
+            Picker("**Album**", selection: $albumSelection) {
+                ForEach(Array(albums.enumerated()), id: \.offset) { index, title in
                     Text(title).tag(index)
                 }
                 Divider()
@@ -158,21 +178,21 @@ struct ConfirmSheet: View {
             }
             .foregroundColor(.secondary)
             .onAppear {
-                if titles.count == 0 {
-                    titleSelection = -1
-                    titleCusFocused = true
+                if albums.isEmpty {
+                    albumSelection = -1
+                    isAlbumCustomFocused = true
                 }
             }
-            .onChange(of: titleSelection) { value in
-                if value == -1 { titleCusFocused = true }
+            .onChange(of: albumSelection) { value in
+                if value == -1 { isAlbumCustomFocused = true }
             }
             
-            TextField("", text: $titleCus)
-                .disabled(titleSelection != -1)
-                .focused($titleCusFocused)
+            TextField("", text: $albumCustom)
+                .disabled(albumSelection != -1)
+                .focused($isAlbumCustomFocused)
             
-            Picker("**Artist(s)**", selection: $artistsSelection) {
-                ForEach(Array(albumArtists.enumerated()), id: \.offset) { index, artists in
+            Picker("**Artist(s)**", selection: $artistSelection) {
+                ForEach(Array(artists.enumerated()), id: \.offset) { index, artists in
                     Text(artists).tag(index)
                 }
                 Divider()
@@ -180,77 +200,66 @@ struct ConfirmSheet: View {
             }
             .foregroundColor(.secondary)
             .onAppear {
-                if albumArtists.count == 0 {
-                    artistsSelection = -1
-                    artistsCusFocused = true
+                if artists.count == 0 {
+                    artistSelection = -1
+                    isArtistsCustomFocused = true
                 }
             }
-            .onChange(of: artistsSelection) { value in
-                if value == -1 { artistsCusFocused = true }
+            .onChange(of: artistSelection) { value in
+                if value == -1 { isArtistsCustomFocused = true }
             }
             
-            TextField("", text: $artistsCus)
-                .disabled(artistsSelection != -1)
-                .focused($artistsCusFocused)
+            TextField("", text: $artistsCustom)
+                .disabled(artistSelection != -1)
+                .focused($isArtistsCustomFocused)
             
             Spacer().frame(height: Metrics.lilSpacing2x)
             
             HStack {
                 Spacer()
                 
-                Button(action: { dismiss() }) {
-                    Text("Cancel")
-                }
-                .buttonStyle(.borderless)
+                Button("Cancel") { dismiss() }
+                    .buttonStyle(.borderless)
                 
-                Button(action: prepare) {
-                    Text("**Search**")
-                }
-                .controlProminence(.increased)
-                .disabled(!canSearch)
+                Button(action: willDismiss) { Text("**Search**") }
+                    .disabled(!isValid)
             }
+        }
+    }
+    
+    var body: some View {
+        Form {
+            header
+            
+            Spacer()
+            
+            main
         }
         .modifier(ConfigureSheet(systemName: systemName))
     }
 }
 
 extension ConfirmSheet {
-    private var album: Album { store.album! }
+    private var unit: LocalUnit { store.localUnit! }
     
-    private var canSearch: Bool {
-        titleSelection != -1 ||
-        artistsSelection != -1 ||
-        titleSelection == -1 && titleCus != "" ||
-        artistsSelection == -1 && artistsCus != ""
+    private var isValid: Bool {
+        albumSelection  != -1 ||
+        artistSelection != -1 ||
+        albumSelection  == -1 && albumCustom   != "" ||
+        artistSelection == -1 && artistsCustom != ""
     }
     
-    private func prepare() {
-        store.album!.title = titleSelection == -1 ?
-            (titleCus == "" ? nil : titleCus) :
-            titles[titleSelection]
+    private func willDismiss() {
+        store.localUnit!.album = albumSelection == -1 ?
+            (albumCustom == "" ? nil : albumCustom) :
+            albums[albumSelection]
         
-        store.album!.artists = artistsSelection == -1 ?
-            (artistsCus == "" ? nil : artistsCus) :
-            albumArtists[artistsSelection]
+        store.localUnit!.artist = artistSelection == -1 ?
+            (artistsCustom == "" ? nil : artistsCustom) :
+            artists[artistSelection]
         
-        store.didAlbumCompleted()
+        store.willSearch()
         
         dismiss()
-    }
-}
-
-struct WelcomeIcon: View {
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .foregroundColor(Color.black.opacity(0.2))
-                .frame(width: 109, height: 109)
-            
-            Image("SimpleIcon")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 55)
-                .foregroundColor(Color.secondary)
-        }
     }
 }
