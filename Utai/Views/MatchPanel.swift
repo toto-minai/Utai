@@ -15,6 +15,37 @@ struct MatchPanel: View {
     @State private var mismatchedTracks: [LocalUnit.Track] = []
     @State private var matchedTracks: [LocalUnit.Track] = []
     
+    private func extraInfo(diskNo: Int, trackNo: Int, length: Int?, originalLength: Double) -> String {
+        var extraInfo = "№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +
+            "\(trackNo)"
+        if let length = length {
+            let delta = length - Int(originalLength)
+            extraInfo += ", Δ = \(delta > 0 ? "+" : "")\(delta)"
+        }
+        
+        return extraInfo
+    }
+    
+    private func unmatchedMenu(track: LocalUnit.Track) -> some View {
+        Menu("Unmatched") {
+            ForEach(unmatchedTracks) { unmatchedTrack in
+                Button(unmatchedTrack.title + "\n\(extraInfo(diskNo: unmatchedTrack.diskNo, trackNo: unmatchedTrack.trackNo, length: unmatchedTrack.length, originalLength: track.length))") {
+                    link(track, to: unmatchedTrack)
+                }
+            }
+        }
+    }
+    
+    private func suggestMenu(track: LocalUnit.Track) -> some View {
+        Section("Suggestions") {
+            ForEach(track.matched) { matched in
+                Button(matched.title + "\n\(extraInfo(diskNo: matched.diskNo, trackNo: matched.trackNo, length: matched.length, originalLength: track.length))") {
+                    link(track, to: matched)
+                }
+            }
+        }
+    }
+    
     private var mismatched: some View {
         Section("Mismatched (\(mismatchedTracks.count) Track\(mismatchedTracks.count == 1 ? "" : "s"))") {
             ForEach(1..<store.localUnit!.diskMax+1) { diskNo in
@@ -30,9 +61,14 @@ struct MatchPanel: View {
                         return $0.trackNo! < $1.trackNo!
                     }) { track in
                         MismatchedTrackLine(track: track)
+                            .contextMenu {
+                                if !track.matched.isEmpty { suggestMenu(track: track) }
+                                Divider()
+                                unmatchedMenu(track: track)
+                            }
                     }
                 } header: {
-                    if showDiskNoForMismatched {
+                    if showDiskNoForMismatched && mismatchedTracks.contains { $0.diskNo == diskNo } {
                         Text("DISC \(diskNo)")
                             .font(.custom("Yanone Kaffeesatz", size: 16))
                             .fontWeight(.bold)
@@ -51,6 +87,11 @@ struct MatchPanel: View {
                     return $0.trackNo! < $1.trackNo!
                 } ) { track in
                     MismatchedTrackLine(track: track)
+                        .contextMenu {
+                            if !track.matched.isEmpty { suggestMenu(track: track) }
+                            Divider()
+                            unmatchedMenu(track: track)
+                        }
                 }
             } header: {
                 if !mismatchedTracks.filter { $0.diskNo == nil }.isEmpty {
@@ -76,7 +117,7 @@ struct MatchPanel: View {
                         MatchedTrackLine(track: track)
                     }
                 } header: {
-                    if showDiskNoForMatched {
+                    if showDiskNoForMatched && matchedTracks.contains { $0.perfectMatchedTrack!.diskNo == diskNo } {
                         Text("DISC \(diskNo)")
                             .font(.custom("Yanone Kaffeesatz", size: 16))
                             .fontWeight(.bold)
@@ -103,7 +144,7 @@ struct MatchPanel: View {
                             HStack {
                                 Spacer()
                                 
-                                ButtonCus(action: tag, label: "Tag Matched Music", systemName: "laptopcomputer.and.arrow.down")
+                                ButtonCus(action: tag, label: "Save Matched", systemName: "laptopcomputer.and.arrow.down")
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
                                 
                                 Spacer()
@@ -169,28 +210,86 @@ extension MatchPanel {
         remoteTrack.isPerfectMatched = true
         localTrack.perfectMatchedTrack = remoteTrack
         withAnimation(.spring()) {
-            mismatchedTracks.removeAll { $0.id == localTrack.id }
-            matchedTracks.append(localTrack)
+            DispatchQueue.main.async {
+                mismatchedTracks.removeAll { $0.id == localTrack.id }
+                // Can only use a copy or it will generate extra spaces in Xcode 13 Beta 1
+                matchedTracks.append(localTrack.copy())
+            }
         }
     }
     
     private func tag() {
         let id3TagEditor = ID3TagEditor()
         let id3TagAlbum = ID32v3TagBuilder()
-            .album(frame: ID3FrameWithStringContent(content: store.referenceResult!.title))
-            .recordingYear(frame: ID3FrameWithIntegerContent(value: store.referenceResult!.year))
+            .album(frame: ID3FrameWithStringContent(content: store.remoteUnit!.album))
+            .recordingYear(frame: ID3FrameWithIntegerContent(value: store.remoteUnit!.year))
         
-//        for track in exactlyMatched {
-//
-//            do {
-//                let id3Tag = id3TagAlbum
-//                    .title(frame: ID3FrameWithStringContent(content: track.matched.last!.title))
-//                    .build()
-//
-//                try id3TagEditor.write(tag: id3Tag, to: track.url.path)
-//
-//            } catch { print(error) }
-//        }
+        for track in matchedTracks {
+            do {
+                var id3Tag = id3TagAlbum
+                    .title(frame: ID3FrameWithStringContent(content: track.perfectMatchedTrack!.title))
+                    .discPosition(frame: ID3FramePartOfTotal(part: track.perfectMatchedTrack!.diskNo, total: store.remoteUnit!.diskMax))
+                    .trackPosition(frame: ID3FramePartOfTotal(part: track.perfectMatchedTrack!.trackNo,
+                                                              total: store.remoteUnit!.trackTos[track.perfectMatchedTrack!.diskNo]))
+                
+                if let artist = track.artist {
+                    id3Tag = id3Tag.artist(frame: ID3FrameWithStringContent(content: artist))
+                }
+                if let composer = track.composer {
+                    id3Tag = id3Tag.composer(frame: ID3FrameWithStringContent(content: composer))
+                }
+                if let conductor = track.conductor {
+                    id3Tag = id3Tag.conductor(frame: ID3FrameWithStringContent(content: conductor))
+                }
+                if let contentGrouping = track.contentGrouping {
+                    id3Tag = id3Tag.contentGrouping(frame: ID3FrameWithStringContent(content: contentGrouping))
+                }
+                if let copyright = track.copyright {
+                    id3Tag = id3Tag.copyright(frame: ID3FrameWithStringContent(content: copyright))
+                }
+                if let encodedBy = track.encodedBy {
+                    id3Tag = id3Tag.encodedBy(frame: ID3FrameWithStringContent(content: encodedBy))
+                }
+                if let encoderSettings = track.encoderSettings {
+                    id3Tag = id3Tag.encoderSettings(frame: ID3FrameWithStringContent(content: encoderSettings))
+                }
+                if let fileOwner = track.fileOwner {
+                    id3Tag = id3Tag.fileOwner(frame: ID3FrameWithStringContent(content: fileOwner))
+                }
+                if let lyricist = track.lyricist {
+                    id3Tag = id3Tag.lyricist(frame: ID3FrameWithStringContent(content: lyricist))
+                }
+                if let mixArtist = track.mixArtist {
+                    id3Tag = id3Tag.mixArtist(frame: ID3FrameWithStringContent(content: mixArtist))
+                }
+                if let publisher = track.publisher {
+                    id3Tag = id3Tag.publisher(frame: ID3FrameWithStringContent(content: publisher))
+                }
+                if let subtitle = track.subtitle {
+                    id3Tag = id3Tag.subtitle(frame: ID3FrameWithStringContent(content: subtitle))
+                }
+                if let genre = track.genre {
+                    id3Tag = id3Tag.genre(frame: genre)
+                }
+                if let recordingDayMonth = track.recordingDayMonth {
+                    id3Tag = id3Tag.recordingDayMonth(frame: recordingDayMonth)
+                }
+                if let recordingHourMinute = track.recordingHourMinute {
+                    id3Tag = id3Tag.recordingHourMinute(frame: recordingHourMinute)
+                }
+                
+                // Not working
+                if let attachedPictureFrontCover = track.attachedPictureFrontCover {
+                    id3Tag = id3Tag.attachedPicture(pictureType: .frontCover, frame: attachedPictureFrontCover)
+                }
+                if let attachedPictureBackCover = track.attachedPictureBackCover {
+                    id3Tag = id3Tag.attachedPicture(pictureType: .backCover, frame: attachedPictureBackCover)
+                }
+
+                let builded = id3Tag.build()
+                try id3TagEditor.write(tag: builded, to: track.url.path)
+            } catch { print(error) }
+        }
     }
 }
 
@@ -226,8 +325,6 @@ struct MismatchedTrackLine: View {
         }
         .padding(.vertical, 2)
         .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+(colorScheme == .light ? 1 : 2))
-        
-        
     }
 }
 

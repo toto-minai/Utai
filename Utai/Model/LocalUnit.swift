@@ -24,7 +24,7 @@ class LocalUnit {
     
     var diskMax: Int = 1
     
-    class Track: Identifiable {
+    class Track: Identifiable, Copyable {
         let id = UUID()
         
         // Basic
@@ -96,6 +96,35 @@ class LocalUnit {
             self.recordingHourMinute = recordingHourMinute
             self.attachedPictureFrontCover = attachedPictureFrontCover
             self.attachedPictureBackCover = attachedPictureBackCover
+        }
+        
+        required init(instance: LocalUnit.Track) {
+            self.title = instance.title
+            self.artist = instance.artist
+            self.length = instance.length
+            self.trackNo = instance.trackNo
+            self.diskNo = instance.diskNo
+            self.url = instance.url
+            self.composer = instance.composer
+            self.conductor = instance.conductor
+            self.contentGrouping = instance.contentGrouping
+            self.copyright = instance.copyright
+            self.encodedBy = instance.encodedBy
+            self.encoderSettings = instance.encoderSettings
+            self.fileOwner = instance.fileOwner
+            self.lyricist = instance.lyricist
+            self.mixArtist = instance.mixArtist
+            self.publisher = instance.publisher
+            self.subtitle = instance.subtitle
+            self.beatsPerMinute = instance.beatsPerMinute
+            self.originalFilename = instance.originalFilename
+            self.genre = instance.genre
+            self.recordingDayMonth = instance.recordingDayMonth
+            self.recordingHourMinute = instance.recordingHourMinute
+            self.attachedPictureFrontCover = instance.attachedPictureFrontCover
+            self.attachedPictureBackCover = instance.attachedPictureBackCover
+            self.perfectMatchedTrack = instance.perfectMatchedTrack
+            self.matched = instance.matched
         }
     }
     
@@ -208,5 +237,15 @@ extension LocalUnit.Track {
             String(format: "%02d", second)
         
         return styled.first! == "0" ? String(styled.dropFirst()) : styled
+    }
+}
+
+protocol Copyable {
+    init(instance: Self)
+}
+
+extension Copyable {
+    func copy() -> Self {
+        return Self.init(instance: self)
     }
 }

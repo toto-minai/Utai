@@ -103,11 +103,14 @@ class RemoteUnit {
         }
         
         self.diskMax = disk == 0 ? 1 : disk
+        if disk != 0 {
+            trackTos.append(count)
+        }
         
         if self.diskTo > 1 {
             self.trackTos = trackTos
         } else {
-            self.trackTos = [count]
+            self.trackTos = [0, count]
         }
     }
 }
