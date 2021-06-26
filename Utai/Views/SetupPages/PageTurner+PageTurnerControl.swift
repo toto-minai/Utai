@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PageTurner: View {
     @EnvironmentObject var store: Store
+    @AppStorage(Settings.pageTurner) var turner: Int = 1
     
     var blurredBackground: some View {
         Rectangle()
@@ -30,7 +31,7 @@ struct PageTurner: View {
                         }
                     
                     PageTurnerControl(page: $store.page, target: 2,
-                                      systemName: "triangle.fill", helpText: "Choose")
+                                      systemName: turner == 1 ? "triangle.fill" : "circle.fill", helpText: "Choose")
                         .onTapGesture {
                             store.page = 2
                             store.artworkMode = false
@@ -38,7 +39,7 @@ struct PageTurner: View {
                         .disabled(store.localUnit == nil)
                     
                     PageTurnerControl(page: $store.page, target: 3,
-                                      systemName: "square.fill", helpText: "Match")
+                                      systemName: turner == 1 ? "square.fill" : "circle.fill", helpText: "Match")
                         .onTapGesture {
                             store.page = 3
                         }

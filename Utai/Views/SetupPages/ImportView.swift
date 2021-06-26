@@ -10,6 +10,9 @@ import SwiftUI
 struct ImportView: View {
     @EnvironmentObject var store: Store
     
+    @AppStorage(Settings.alwaysConfirm) var alwaysConfirm: Bool = false
+    @AppStorage(Settings.pageTurner) var pageTurner: Int = 1
+    
     // Drag and drop
     @State private var draggingOver = false
     @State private var importedURLs: [URL] = []
@@ -48,6 +51,41 @@ struct ImportView: View {
         }
     }
     
+    private var extraMenu: some View {
+        Group {
+            Section("Preferences") {
+                Toggle("Always Confirm Album", isOn: $alwaysConfirm)
+                
+                Picker("Page-Turner", selection: $pageTurner) {
+                    Text("􀀁􀛤􀂓").tag(1)
+                    Text("􀀁􀁑􀀿").tag(2)
+                }
+            }
+        }
+    }
+    
+    private var footer: some View {
+        VStack {
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                Menu { extraMenu } label: {
+                    ButtonMini(alwaysHover: true,
+                               systemName: "ellipsis.circle",
+                               helpText: "Options")
+                        .padding(Metrics.lilSpacing)
+                }
+                .menuStyle(BorderlessButtonMenuStyle())
+                .menuIndicator(.hidden)
+                .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
+                       height: Metrics.lilSpacing2x+Metrics.lilIconLength)
+                .offset(x: 2, y: -0.5)
+            }
+        }
+    }
+    
     var body: some View {
         let delegate = Delegate(draggingOver: $draggingOver,
                                 urls: $importedURLs,
@@ -64,6 +102,8 @@ struct ImportView: View {
             .padding(.top, 57)  // Align with album artworks on search page
             // TODO: Make it clear how to calc
             
+            footer
+            
             // Do when collected all dropped URLs
             if let goal = importGoal {
                 if importedURLs.count == goal {
@@ -72,7 +112,7 @@ struct ImportView: View {
                         
                         importedURLs = []  // Reset for another drop
                             
-                        if unit.isQueryComplete { store.willSearch() }
+                        if unit.isQueryComplete && !alwaysConfirm { store.willSearch() }
                         else { isConfirmSheetPresented = true }
                     }
                 }
@@ -100,7 +140,7 @@ extension ImportView {
         
         store.localUnit = LocalUnit(urls: panel.urls)
         
-        if unit.isQueryComplete { store.willSearch() }
+        if unit.isQueryComplete && !alwaysConfirm { store.willSearch() }
         else { isConfirmSheetPresented = true }
     }
     

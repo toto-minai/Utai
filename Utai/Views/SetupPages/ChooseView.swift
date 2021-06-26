@@ -38,7 +38,7 @@ struct ChooseView: View {
         
         updateDefaultChosen()
     }}
-    @AppStorage(Settings.preferCD) var preferCD: Bool = false
+    @AppStorage(Settings.preferCD) var preferCD: Bool = true
     private var preferCDMask: Binding<Bool> { Binding {
         preferCD
     } set: {
@@ -55,7 +55,7 @@ struct ChooseView: View {
         }
     }}
     
-    @AppStorage(Settings.preferReleaseOnly) var preferReleaseOnly: Bool = false
+    @AppStorage(Settings.preferReleaseOnly) var preferReleaseOnly: Bool = true
     private var preferReleaseOnlyMask: Binding<Bool> { Binding {
         preferReleaseOnly
     } set: {
@@ -141,7 +141,6 @@ struct ChooseView: View {
         }
     }
     
-    // Bug: Contextual menu sometimes do not show properly
     var extraMenu: some View {
         Group {
             Section {
@@ -208,16 +207,17 @@ struct ChooseView: View {
                     
                     updateDefaultChosen()
                 }
+                .disabled(yearGroupChoice == nil &&
+                          formatGroupChoice == nil &&
+                          labelGroupChoice == nil)
             }
             
             Divider()
             
-            Section {
-                Menu("Options") {
-                    Toggle("Auto Show CD if Available", isOn: preferCDMask)
+            Section("Preferences") {
+                Toggle("Show CDs if Available", isOn: preferCDMask)
                     
-                    Toggle("Prefer Releases Only", isOn: preferReleaseOnlyMask)
-                }
+                Toggle("Prefer Releases", isOn: preferReleaseOnlyMask)
             }
         }
     }
