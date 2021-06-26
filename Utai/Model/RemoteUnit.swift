@@ -6,11 +6,13 @@
 //
 
 import Foundation
+import ID3TagEditor
 
 class RemoteUnit {
     let album: String
     let year: Int?
     let artist: String?
+    let genre: ID3Genre?
     let format: String?
     let diskTo: Int
     let trackTos: [Int]
@@ -37,10 +39,26 @@ class RemoteUnit {
     
     var tracks = [Track]()
     
+    let genreConverted: [String:ID3Genre] = [
+        "Blues": .blues,
+        "Classical": .classical,
+        "Electronic": .electronic,
+        "Hip-Hop": .hipHop,
+        "Jazz": .jazz,
+        "Pop": .pop,
+        "Reggae": .reggae,
+        "Rock": .rock,
+    ]
+    
     init(result: ReferenceResult) {
         self.album = result.title
         self.year = result.year
         self.artist = result.artistsSort  // TODO: Get it right
+        
+        if let genres = result.genres,
+           let converted = genreConverted[genres.first!] {
+            self.genre = converted
+        } else { self.genre = nil }
         
         let formats = result.formats
         self.format = formats?.first!.name ?? nil

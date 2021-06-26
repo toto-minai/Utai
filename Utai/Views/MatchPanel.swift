@@ -223,6 +223,7 @@ extension MatchPanel {
         let id3TagAlbum = ID32v3TagBuilder()
             .album(frame: ID3FrameWithStringContent(content: store.remoteUnit!.album))
             .recordingYear(frame: ID3FrameWithIntegerContent(value: store.remoteUnit!.year))
+            .genre(frame: ID3FrameGenre(genre: store.remoteUnit!.genre, description: nil))
         
         for track in matchedTracks {
             do {
@@ -267,9 +268,6 @@ extension MatchPanel {
                 }
                 if let subtitle = track.subtitle {
                     id3Tag = id3Tag.subtitle(frame: ID3FrameWithStringContent(content: subtitle))
-                }
-                if let genre = track.genre {
-                    id3Tag = id3Tag.genre(frame: genre)
                 }
                 if let recordingDayMonth = track.recordingDayMonth {
                     id3Tag = id3Tag.recordingDayMonth(frame: recordingDayMonth)
