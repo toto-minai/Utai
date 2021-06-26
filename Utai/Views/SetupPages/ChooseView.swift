@@ -301,7 +301,6 @@ struct ChooseView: View {
                                  styleMask: [], backing: .buffered, defer: false)
             
             let rootView = ArtworkView(store: store, subWindow: $subWindow, response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
-            subWindow.setFrameAutosaveName("Sub Window")
             
             subWindow.titleVisibility = .hidden
             subWindow.backgroundColor = NSColor.clear
