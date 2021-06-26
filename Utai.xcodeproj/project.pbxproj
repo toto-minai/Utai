@@ -25,10 +25,10 @@
 		99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F5267B1C01007C8B67 /* ChooseModes.swift */; };
 		99CA05F9267B28D5007C8B67 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F8267B28D5007C8B67 /* Settings.swift */; };
 		99D046F32674730A0076D972 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F22674730A0076D972 /* Store.swift */; };
-		99D046F626747D1B0076D972 /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 99D046F526747D1B0076D972 /* ID3TagEditor */; };
 		99D046F82674D07D0076D972 /* ChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F72674D07D0076D972 /* ChooseView.swift */; };
 		99D046FA2674E5B80076D972 /* SearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F92674E5B80076D972 /* SearchResponse.swift */; };
 		99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046FB2674E6AA0076D972 /* Secrets.swift */; };
+		99D76D8B2685DB8C00D9ED9F /* ID3TagEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 99D76D8A2685DB8C00D9ED9F /* ID3TagEditor */; };
 		99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE32675F0F900CCA6D7 /* MatchView.swift */; };
 		99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */; };
 		99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */; };
@@ -68,7 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				99D046F626747D1B0076D972 /* ID3TagEditor in Frameworks */,
+				99D76D8B2685DB8C00D9ED9F /* ID3TagEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,7 +220,7 @@
 			);
 			name = Utai;
 			packageProductDependencies = (
-				99D046F526747D1B0076D972 /* ID3TagEditor */,
+				99D76D8A2685DB8C00D9ED9F /* ID3TagEditor */,
 			);
 			productName = Utai;
 			productReference = 9987A3D32670E1F60000328B /* Utai.app */;
@@ -251,7 +251,7 @@
 			);
 			mainGroup = 9987A3CA2670E1F60000328B;
 			packageReferences = (
-				99D046F426747D1B0076D972 /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
+				99D76D892685DB8C00D9ED9F /* XCRemoteSwiftPackageReference "ID3TagEditor" */,
 			);
 			productRefGroup = 9987A3D42670E1F60000328B /* Products */;
 			projectDirPath = "";
@@ -434,6 +434,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Utai/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -466,6 +467,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Utai/Preview Content\"";
 				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -510,7 +512,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		99D046F426747D1B0076D972 /* XCRemoteSwiftPackageReference "ID3TagEditor" */ = {
+		99D76D892685DB8C00D9ED9F /* XCRemoteSwiftPackageReference "ID3TagEditor" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/chicio/ID3TagEditor";
 			requirement = {
@@ -521,9 +523,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		99D046F526747D1B0076D972 /* ID3TagEditor */ = {
+		99D76D8A2685DB8C00D9ED9F /* ID3TagEditor */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 99D046F426747D1B0076D972 /* XCRemoteSwiftPackageReference "ID3TagEditor" */;
+			package = 99D76D892685DB8C00D9ED9F /* XCRemoteSwiftPackageReference "ID3TagEditor" */;
 			productName = ID3TagEditor;
 		};
 /* End XCSwiftPackageProductDependency section */

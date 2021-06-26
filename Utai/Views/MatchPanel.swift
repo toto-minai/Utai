@@ -16,7 +16,7 @@ struct MatchPanel: View {
     @State private var matchedTracks: [LocalUnit.Track] = []
     
     private func extraInfo(diskNo: Int, trackNo: Int, length: Int?, originalLength: Double) -> String {
-        var extraInfo = "№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +
+        var extraInfo = "\t№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +
             "\(trackNo)"
         if let length = length {
             let delta = length - Int(originalLength)

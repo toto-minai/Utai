@@ -125,6 +125,8 @@ struct MatchView: View {
             store.referenceResult = nil
             print(store.referenceURL!.absoluteString)
 
+            
+            
             async {
                 do { try await search() }
                 catch {
@@ -232,8 +234,10 @@ extension MatchView {
                     let localTitleTokenString = localTitleTokens.map { String($0) }.reduce("", +).trimmingCharacters(in: .whitespaces)
                     
                     if localTitleTokenString.count > (hasWildcard ? 1 : 0) && remoteTitleTokenString.contains(localTitleTokenString) {
-                        if abs(Int(localTrack.length) - remoteTrack.length!) <= lengthMaxDelta {
-                            localTrack.matched.append(remoteTrack)
+                        if remoteTrack.length != nil {
+                            if abs(Int(localTrack.length) - remoteTrack.length!) <= lengthMaxDelta {
+                                localTrack.matched.append(remoteTrack)
+                            }
                         }
                         
                         print("-----------------")
