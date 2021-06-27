@@ -92,3 +92,4 @@ iOSInjectionProject/
 # Custom Git Ignore
 
 **/Secrets.swift
+*.ttf

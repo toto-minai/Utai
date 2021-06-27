@@ -182,6 +182,7 @@ struct MatchPanel: View {
                     
                     ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
                         .padding(Metrics.lilSpacing)
+                        .keyboardShortcut("s", modifiers: .command)
                 }
                 .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .background(.ultraThickMaterial)
@@ -325,30 +326,6 @@ struct MismatchedTrackLine: View {
         .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+(colorScheme == .light ? 1 : 2))
     }
 }
-
-/*
- .contextMenu {
-     if !track.matched.isEmpty {
-         Section("Suggestions") {
-             ForEach(track.matched) { matched in
-                 Button(matched.title) {
-                     link(track, to: matched)
-                 }
-             }
-         }
-     }
-     Divider()
-     Menu("Unmatched") {
-         ForEach(unmatchedTracks) { unmatchedTracks in
-             Button(unmatchedTracks.title) {
-                 link(track, to: unmatchedTracks)
-             }
-         }
-     }
- }
- 
- 
- */
 
 struct MatchedTrackLine: View {
     @Environment(\.colorScheme) var colorScheme

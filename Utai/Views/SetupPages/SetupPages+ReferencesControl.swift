@@ -19,6 +19,7 @@ struct SetupPages: View {
             MatchView()
         }
         .offset(x: CGFloat(1 - store.page) * Metrics.unitLength)
+        .animation(nil, value: store.page)
         .frame(width: Metrics.unitLength, alignment: .leading)
         .clipped()
     }

@@ -42,6 +42,7 @@ struct ImportView: View {
             ButtonCus(action: add,
                       label: "Add Music",
                       systemName: "music.note")
+                .keyboardShortcut("o", modifiers: .command)
                 .sheet(isPresented: $isConfirmSheetPresented) {
                     ConfirmSheet(systemName: "music.note",
                                  instruction: "Might want to confirm the title and artists before searching on Discogs.",
@@ -262,6 +263,8 @@ struct ConfirmSheet: View {
                     .buttonStyle(.borderless)
                 
                 Button(action: willDismiss) { Text("**Search**") }
+                    .keyboardShortcut(.return, modifiers: .command)
+                    .buttonStyle(.borderless)
                     .disabled(!isValid)
             }
         }

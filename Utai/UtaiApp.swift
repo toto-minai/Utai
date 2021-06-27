@@ -19,7 +19,7 @@ struct UtaiApp: App {
     }
 }
 
-class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate {
     var window: NSWindow!
     
     func applicationDidFinishLaunching(_ notification: Notification) {

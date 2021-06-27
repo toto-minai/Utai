@@ -24,6 +24,7 @@
 		99CA05F4267A6326007C8B67 /* Void.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F3267A6326007C8B67 /* Void.swift */; };
 		99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F5267B1C01007C8B67 /* ChooseModes.swift */; };
 		99CA05F9267B28D5007C8B67 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99CA05F8267B28D5007C8B67 /* Settings.swift */; };
+		99CFCFEC26876D8C0067302B /* YanoneKaffeesatz.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 99CFCFE8268769670067302B /* YanoneKaffeesatz.ttf */; };
 		99D046F32674730A0076D972 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F22674730A0076D972 /* Store.swift */; };
 		99D046F82674D07D0076D972 /* ChooseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F72674D07D0076D972 /* ChooseView.swift */; };
 		99D046FA2674E5B80076D972 /* SearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99D046F92674E5B80076D972 /* SearchResponse.swift */; };
@@ -33,6 +34,19 @@
 		99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */; };
 		99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		99CFCFEB26876D830067302B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Resources/Fonts;
+			dstSubfolderSpec = 7;
+			files = (
+				99CFCFEC26876D8C0067302B /* YanoneKaffeesatz.ttf in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		993C9FA22678C787007E4387 /* ReferenceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceResult.swift; sourceTree = "<group>"; };
@@ -54,6 +68,8 @@
 		99CA05F3267A6326007C8B67 /* Void.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Void.swift; sourceTree = "<group>"; };
 		99CA05F5267B1C01007C8B67 /* ChooseModes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseModes.swift; sourceTree = "<group>"; };
 		99CA05F8267B28D5007C8B67 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		99CFCFE8268769670067302B /* YanoneKaffeesatz.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = YanoneKaffeesatz.ttf; sourceTree = "<group>"; };
+		99CFCFEA26876BFE0067302B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		99D046F22674730A0076D972 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		99D046F72674D07D0076D972 /* ChooseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChooseView.swift; sourceTree = "<group>"; };
 		99D046F92674E5B80076D972 /* SearchResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResponse.swift; sourceTree = "<group>"; };
@@ -115,6 +131,7 @@
 		9987A3D52670E1F60000328B /* Utai */ = {
 			isa = PBXGroup;
 			children = (
+				99CFCFEA26876BFE0067302B /* Info.plist */,
 				996C0E842674FB6B00BA5A6C /* Utai.entitlements */,
 				9987A3D62670E1F60000328B /* UtaiApp.swift */,
 				99D046EC267471E90076D972 /* Model */,
@@ -144,6 +161,14 @@
 				99CA05F8267B28D5007C8B67 /* Settings.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		99CFCFE72687694E0067302B /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				99CFCFE8268769670067302B /* YanoneKaffeesatz.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		99D046EC267471E90076D972 /* Model */ = {
@@ -199,6 +224,7 @@
 		99D046F1267472A70076D972 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				99CFCFE72687694E0067302B /* Fonts */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -213,6 +239,7 @@
 				9987A3CF2670E1F60000328B /* Sources */,
 				9987A3D02670E1F60000328B /* Frameworks */,
 				9987A3D12670E1F60000328B /* Resources */,
+				99CFCFEB26876D830067302B /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -438,6 +465,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Utai/Info.plist;
 				INFOPLIST_KEY_CFBundleExecutable = Utai;
 				INFOPLIST_KEY_CFBundleName = Utai;
 				INFOPLIST_KEY_CFBundleVersion = 1;
@@ -447,7 +475,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = asia.chunghwa.Utai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -471,6 +499,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Utai/Info.plist;
 				INFOPLIST_KEY_CFBundleExecutable = Utai;
 				INFOPLIST_KEY_CFBundleName = Utai;
 				INFOPLIST_KEY_CFBundleVersion = 1;
@@ -480,7 +509,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = asia.chunghwa.Utai;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
