@@ -15,6 +15,8 @@ struct MatchPanel: View {
     @State private var mismatchedTracks: [LocalUnit.Track] = []
     @State private var matchedTracks: [LocalUnit.Track] = []
     
+    @State private var savedSet: Set<UUID> = Set<UUID>()
+    
     private func extraInfo(diskNo: Int, trackNo: Int, length: Int?, originalLength: Double) -> String {
         var extraInfo = "\t№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +
             "\(trackNo)"
@@ -114,7 +116,7 @@ struct MatchPanel: View {
                     }.sorted {
                         $0.perfectMatchedTrack!.trackNo < $1.perfectMatchedTrack!.trackNo
                     }) { track in
-                        MatchedTrackLine(track: track)
+                        MatchedTrackLine(track: track, savedSet: $savedSet)
                     }
                 } header: {
                     if showDiskNoForMatched && matchedTracks.contains { $0.perfectMatchedTrack!.diskNo == diskNo } {
@@ -287,6 +289,10 @@ extension MatchPanel {
 
                 let builded = id3Tag.build()
                 try id3TagEditor.write(tag: builded, to: track.url.path)
+                
+                withAnimation(.easeOut) {
+                    savedSet.insert(track.id)
+                }
             } catch { print(error) }
         }
     }
@@ -332,14 +338,24 @@ struct MatchedTrackLine: View {
     
     var track: LocalUnit.Track
     
+    @Binding var savedSet: Set<UUID>
+    
     var body: some View {
         HStack(alignment: .top, spacing: Metrics.lilSpacing) {
-            Text("\(track.perfectMatchedTrack!.trackNo)")
-                .font(.custom("Yanone Kaffeesatz", size: 16))
-                .monospacedDigit()
-                .fontWeight(.bold)
-                .foregroundColor(.secondary)
-                .frame(width: 15, alignment: .leading)
+            ZStack {
+                Text("\(track.perfectMatchedTrack!.trackNo)")
+                    .font(.custom("Yanone Kaffeesatz", size: 16))
+                    .monospacedDigit()
+                    .fontWeight(.bold)
+                    .foregroundColor(.secondary)
+                    .frame(width: 15, alignment: .leading)
+                    .opacity(savedSet.contains(track.id) ? 0 : 1)
+                
+                Image(systemName: "checkmark.circle.fill")
+                    .symbolRenderingMode(.multicolor)
+                    .offset(y: -1.2)
+                    .opacity(savedSet.contains(track.id) ? 1 : 0)
+            }
             
             Text(track.perfectMatchedTrack!.title)
                 .font(.custom("Yanone Kaffeesatz", size: 16))
