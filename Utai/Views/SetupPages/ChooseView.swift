@@ -344,7 +344,7 @@ struct ChooseView: View {
             formatGroupChoice = nil
             labelGroupChoice = nil
             
-            async {
+            Task {
                 do { try await search() }
                 catch { print(error) }
                 

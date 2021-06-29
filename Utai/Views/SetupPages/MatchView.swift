@@ -125,9 +125,7 @@ struct MatchView: View {
             store.referenceResult = nil
             print(store.referenceURL!.absoluteString)
 
-            
-            
-            async {
+            Task {
                 do { try await search() }
                 catch {
                     print(error)
