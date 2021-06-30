@@ -156,6 +156,37 @@ struct MatchPanel: View {
         }
     }
     
+    @AppStorage(Settings.forceSavingConflicts) var forceSavingConflicts: Bool = false
+    
+    private var extraMenu: some View {
+        Group {
+            Section("Preferences") {
+                Toggle("Force Saving Conflicts", isOn: $forceSavingConflicts)
+            }
+        }
+    }
+    
+    private var footer: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            
+            HStack {
+                Spacer()
+                
+                Menu { extraMenu } label: {
+                    ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
+                        .padding(Metrics.lilSpacing)
+                }
+                .menuStyle(BorderlessButtonMenuStyle())
+                .menuIndicator(.hidden)
+                .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
+                       height: Metrics.lilSpacing2x+Metrics.lilIconLength)
+                .offset(x: 2, y: -0.5)
+            }
+            .background(.ultraThickMaterial)
+        }
+    }
+    
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
@@ -201,19 +232,7 @@ struct MatchPanel: View {
                 } else { Text("Matching…") }
             }
             
-            VStack(spacing: 0) {
-                Spacer()
-                
-                HStack {
-                    Spacer()
-                    
-                    ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
-                        .padding(Metrics.lilSpacing)
-                        .keyboardShortcut("s", modifiers: .command)
-                }
-                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength)
-                .background(.ultraThickMaterial)
-            }
+            footer
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -265,7 +284,8 @@ extension MatchPanel {
             .genre(frame: ID3FrameGenre(genre: store.remoteUnit!.genre, description: nil))
         
         for track in matchedTracks {
-            if savedSet.contains(track.id) || (matchedTracks.filter {
+            if savedSet.contains(track.id) ||
+                !forceSavingConflicts && (matchedTracks.filter {
                 $0.perfectMatchedTrack === track.perfectMatchedTrack
             }.count > 1) { continue }
             
@@ -399,10 +419,19 @@ struct MatchedTrackLine: View {
                 }
                 .opacity(isRepeated ? 0 : 1)
                 
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .symbolRenderingMode(.multicolor)
-                    .offset(y: -1.2)
-                    .opacity(isRepeated ? 1 : 0)
+                ZStack {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .symbolRenderingMode(.multicolor)
+                        .offset(y: -1.2)
+                        .opacity(savedSet.contains(track.id) ? 0 : 1)
+                    
+                    Image(systemName: "checkmark.circle.trianglebadge.exclamationmark")
+                        .symbolRenderingMode(.palette)
+                        .foregroundStyle(.yellow, .blue)
+                        .offset(y: -1.2)
+                        .opacity(savedSet.contains(track.id) ? 1 : 0)
+                }
+                .opacity(isRepeated ? 1 : 0)
             }
             
             Text(track.perfectMatchedTrack!.title)

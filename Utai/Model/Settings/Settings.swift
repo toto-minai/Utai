@@ -13,4 +13,5 @@ enum Settings {
     static let preferCD = "preferCD"
     static let preferReleaseOnly = "preferReleaseOnly"
     static let lengthMaxDelta = "lengthMaxDelta"
+    static let forceSavingConflicts = "forceSavingConflicts"
 }
