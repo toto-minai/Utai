@@ -118,7 +118,7 @@ struct MatchPanel: View {
                     }.sorted {
                         $0.perfectMatchedTrack!.trackNo < $1.perfectMatchedTrack!.trackNo
                     }) { track in
-                        MatchedTrackLine(track: track, savedSet: $savedSet)
+                        MatchedTrackLine(matchedTracks: $matchedTracks, track: track, savedSet: $savedSet)
                             .swipeActions(allowsFullSwipe: false) {
                                 Button("Unmatch") { unmatch(track) }
                             }
@@ -355,6 +355,8 @@ struct MismatchedTrackLine: View {
 struct MatchedTrackLine: View {
     @Environment(\.colorScheme) var colorScheme
     
+    @Binding var matchedTracks: [LocalUnit.Track]
+    
     var track: LocalUnit.Track
     
     @Binding var savedSet: Set<UUID>
@@ -362,18 +364,29 @@ struct MatchedTrackLine: View {
     var body: some View {
         HStack(alignment: .top, spacing: Metrics.lilSpacing) {
             ZStack {
-                Text("\(track.perfectMatchedTrack!.trackNo)")
-                    .font(.custom("Yanone Kaffeesatz", size: 16))
-                    .monospacedDigit()
-                    .fontWeight(.bold)
-                    .foregroundColor(.secondary)
-                    .frame(width: 15, alignment: .leading)
-                    .opacity(savedSet.contains(track.id) ? 0 : 1)
+                ZStack {
+                    Text("\(track.perfectMatchedTrack!.trackNo)")
+                        .font(.custom("Yanone Kaffeesatz", size: 16))
+                        .monospacedDigit()
+                        .fontWeight(.bold)
+                        .foregroundColor(.secondary)
+                        .frame(width: 15, alignment: .leading)
+                        .opacity(savedSet.contains(track.id) ? 0 : 1)
+                    
+                    Image(systemName: "checkmark.circle.fill")
+                        .symbolRenderingMode(.multicolor)
+                        .offset(y: -1.2)
+                        .opacity(savedSet.contains(track.id) ? 1 : 0)
+                }
+                .opacity(matchedTracks.filter { $0.id == track.id }.count > 1 ? 0 : 1)
                 
-                Image(systemName: "checkmark.circle.fill")
+                Image(systemName: "exclamationmark.triangle.fill")
                     .symbolRenderingMode(.multicolor)
                     .offset(y: -1.2)
-                    .opacity(savedSet.contains(track.id) ? 1 : 0)
+                    .onAppear {
+//                        print(matchedTracks.filter { $0.id == track.id }.count)
+                    }
+                    .opacity(matchedTracks.filter { $0.id == track.id }.count > 1 ? 1 : 0)
             }
             
             Text(track.perfectMatchedTrack!.title)
