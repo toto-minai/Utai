@@ -126,7 +126,21 @@ struct MatchPanel: View {
                                 Button("Unmatch") { unmatch(track) }
                             }
                             .contextMenu {
-                                Button("Unmatch") { unmatch(track) }
+                                if (matchedTracks.filter {
+                                    $0.perfectMatchedTrack === track.perfectMatchedTrack
+                                }.count > 1) {
+                                    Button("Unmatch Conflicts") {
+                                        let id = track.perfectMatchedTrack!.id
+                                        
+                                        matchedTracks.forEach {
+                                            if $0.perfectMatchedTrack!.id == id {
+                                                unmatch($0)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    Button("Unmatch") { unmatch(track) }
+                                }
                             }
                     }
                 } header: {
