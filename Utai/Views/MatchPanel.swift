@@ -118,7 +118,10 @@ struct MatchPanel: View {
                     }.sorted {
                         $0.perfectMatchedTrack!.trackNo < $1.perfectMatchedTrack!.trackNo
                     }) { track in
-                        MatchedTrackLine(matchedTracks: $matchedTracks, track: track, savedSet: $savedSet)
+                        MatchedTrackLine(track: track, savedSet: $savedSet,
+                                         isRepeated: matchedTracks.filter {
+                            $0.perfectMatchedTrack === track.perfectMatchedTrack
+                        }.count > 1)
                             .swipeActions(allowsFullSwipe: false) {
                                 Button("Unmatch") { unmatch(track) }
                             }
@@ -248,6 +251,10 @@ extension MatchPanel {
             .genre(frame: ID3FrameGenre(genre: store.remoteUnit!.genre, description: nil))
         
         for track in matchedTracks {
+            if savedSet.contains(track.id) || (matchedTracks.filter {
+                $0.perfectMatchedTrack === track.perfectMatchedTrack
+            }.count > 1) { continue }
+            
             do {
                 var id3Tag = id3TagAlbum
                     .title(frame: ID3FrameWithStringContent(content: track.perfectMatchedTrack!.title))
@@ -309,9 +316,7 @@ extension MatchPanel {
                 let builded = id3Tag.build()
                 try id3TagEditor.write(tag: builded, to: track.url.path)
                 
-                let _ = withAnimation(.easeOut) {
-                    savedSet.insert(track.id)
-                }
+                savedSet.insert(track.id)
             } catch { print(error) }
         }
     }
@@ -355,11 +360,11 @@ struct MismatchedTrackLine: View {
 struct MatchedTrackLine: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @Binding var matchedTracks: [LocalUnit.Track]
-    
-    var track: LocalUnit.Track
+    let track: LocalUnit.Track
     
     @Binding var savedSet: Set<UUID>
+    
+    let isRepeated: Bool
     
     var body: some View {
         HStack(alignment: .top, spacing: Metrics.lilSpacing) {
@@ -378,15 +383,12 @@ struct MatchedTrackLine: View {
                         .offset(y: -1.2)
                         .opacity(savedSet.contains(track.id) ? 1 : 0)
                 }
-                .opacity(matchedTracks.filter { $0.id == track.id }.count > 1 ? 0 : 1)
+                .opacity(isRepeated ? 0 : 1)
                 
                 Image(systemName: "exclamationmark.triangle.fill")
                     .symbolRenderingMode(.multicolor)
                     .offset(y: -1.2)
-                    .onAppear {
-//                        print(matchedTracks.filter { $0.id == track.id }.count)
-                    }
-                    .opacity(matchedTracks.filter { $0.id == track.id }.count > 1 ? 1 : 0)
+                    .opacity(isRepeated ? 1 : 0)
             }
             
             Text(track.perfectMatchedTrack!.title)
