@@ -15,43 +15,65 @@ struct PageTurner: View {
         Rectangle()
             .fill(.ultraThinMaterial)
             .opacity(store.artworkMode ? 1 : 0)
+            .animation(.easeOut, value: store.artworkMode)
     }
     
     var body: some View {
-        VStack {
-            Spacer()
+        ZStack {
+            Button("", action: turnToPage1)
+                .keyboardShortcut("1", modifiers: .command)
+                .opacity(0)
+            Button("", action: turnToPage2)
+                .keyboardShortcut("2", modifiers: .command)
+                .opacity(0)
+            Button("", action: turnToPage3)
+                .keyboardShortcut("3", modifiers: .command)
+                .opacity(0)
             
-            if store.page != 3 || store.artworkMode {
-                HStack(spacing: 8) {
-                    PageTurnerControl(page: $store.page, target: 1,
-                                      systemName: "circle.fill", helpText: "Import")
-                        .onTapGesture {
-                            store.page = 1
-                            store.artworkMode = false
-                        }
-                    
-                    PageTurnerControl(page: $store.page, target: 2,
-                                      systemName: turner == 1 ? "triangle.fill" : "circle.fill", helpText: "Choose")
-                        .onTapGesture {
-                            store.page = 2
-                            store.artworkMode = false
-                        }
-                        .disabled(store.localUnit == nil)
-                    
-                    PageTurnerControl(page: $store.page, target: 3,
-                                      systemName: turner == 1 ? "square.fill" : "circle.fill", helpText: "Match")
-                        .onTapGesture {
-                            store.page = 3
-                        }
-                        .disabled(store.localUnit == nil)
+            VStack {
+                Spacer()
+                
+                if store.page != 3 || store.artworkMode {
+                    HStack(spacing: 8) {
+                        PageTurnerControl(page: $store.page, target: 1,
+                                          systemName: "circle.fill", helpText: "Import")
+                            .onTapGesture { turnToPage1() }
+                        
+                        PageTurnerControl(page: $store.page, target: 2,
+                                          systemName: turner == 1 ? "triangle.fill" : "circle.fill", helpText: "Choose")
+                            .onTapGesture { turnToPage2() }
+                        
+                        PageTurnerControl(page: $store.page, target: 3,
+                                          systemName: turner == 1 ? "square.fill" : "circle.fill", helpText: "Match")
+                            .onTapGesture { turnToPage3() }
+                    }
+                    .padding(8)
+                    .background(blurredBackground)
+                    .cornerRadius(4)
                 }
-                .padding(8)
-                .background(blurredBackground)
-                .cornerRadius(4)
             }
+            .padding(.bottom, Metrics.lilSpacing+Metrics.lilIconLength)
+            .frame(height: Metrics.unitLength)
         }
-        .padding(.bottom, Metrics.lilSpacing+Metrics.lilIconLength)
-        .frame(height: Metrics.unitLength)
+        
+    }
+}
+
+extension PageTurner {
+    private func turnToPage1() {
+        store.page = 1
+        store.artworkMode = false
+    }
+    
+    private func turnToPage2() {
+        if store.localUnit == nil { return }
+        
+        store.page = 2
+        store.artworkMode = false
+    }
+    
+    private func turnToPage3() {
+        if store.localUnit == nil { return }
     }
 }
 

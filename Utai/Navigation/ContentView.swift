@@ -36,6 +36,8 @@ struct ContentView: View {
         }
         .frame(width: Metrics.unitLength)
         .font(.custom("Yanone Kaffeesatz", size: 16))
+        .animation(nil, value: store.artworkMode)
+        .animation(nil, value: store.page)
     }
 }
 

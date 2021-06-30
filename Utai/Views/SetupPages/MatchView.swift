@@ -36,6 +36,7 @@ struct MatchView: View {
                                     .offset(y: 2.4+64)
                                     .scaleEffect(store.artworkMode ? 1.22 : 1)
                                     .opacity(store.artworkMode ? 0 : 1)
+                                    .animation(store.page == 3 ? .easeOut : .none, value: store.artworkMode)
                                 
                                 image.resizable().scaledToFill()
                                     .frame(width: 256, height: 256)
@@ -43,12 +44,11 @@ struct MatchView: View {
                                     .shadow(color: Color.black.opacity(0.54),
                                             radius: 7.2, x: 0, y: 2.4)
                                     .onTapGesture {
-                                        withAnimation(.easeOut) {
-                                            store.artworkMode.toggle()
-                                        }
+                                        store.artworkMode.toggle()
                                     }
                                     .scaleEffect(store.artworkMode ? 1.22 : 1)
                                     .onAppear { store.referenceURL = nil }
+                                    .animation(store.page == 3 ? .easeOut : .none, value: store.artworkMode)
                             }
                         } placeholder: { ProgressView() }
                         .frame(width: 312, height: 312)
