@@ -36,15 +36,15 @@ struct PageTurner: View {
                 if store.page != 3 || store.artworkMode {
                     HStack(spacing: 8) {
                         PageTurnerControl(page: $store.page, target: 1,
-                                          systemName: "circle.fill", helpText: "Import")
+                                          systemName: "circle.fill", helpText: "Import (⌘1)")
                             .onTapGesture { turnToPage1() }
                         
                         PageTurnerControl(page: $store.page, target: 2,
-                                          systemName: turner == 1 ? "triangle.fill" : "circle.fill", helpText: "Choose")
+                                          systemName: turner == 1 ? "triangle.fill" : "circle.fill", helpText: "Choose (⌘2)")
                             .onTapGesture { turnToPage2() }
                         
                         PageTurnerControl(page: $store.page, target: 3,
-                                          systemName: turner == 1 ? "square.fill" : "circle.fill", helpText: "Match")
+                                          systemName: turner == 1 ? "square.fill" : "circle.fill", helpText: "Match (⌘3)")
                             .onTapGesture { turnToPage3() }
                     }
                     .padding(8)
