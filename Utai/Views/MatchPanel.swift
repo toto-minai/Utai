@@ -15,7 +15,9 @@ struct MatchPanel: View {
     @State private var mismatchedTracks: [LocalUnit.Track] = []
     @State private var matchedTracks: [LocalUnit.Track] = []
     
-    @State private var savedSet: Set<UUID> = Set<UUID>()
+    @State private var savedSet: Set<UUID> = []
+    @State private var selection: Set<UUID> = []
+    
     
     private func extraInfo(diskNo: Int, trackNo: Int, length: Int?, originalLength: Double) -> String {
         var extraInfo = "\t№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +
@@ -117,6 +119,12 @@ struct MatchPanel: View {
                         $0.perfectMatchedTrack!.trackNo < $1.perfectMatchedTrack!.trackNo
                     }) { track in
                         MatchedTrackLine(track: track, savedSet: $savedSet)
+                            .swipeActions(allowsFullSwipe: false) {
+                                Button("Unmatch") { unmatch(track) }
+                            }
+                            .contextMenu {
+                                Button("Unmatch") { unmatch(track) }
+                            }
                     }
                 } header: {
                     if showDiskNoForMatched && matchedTracks.contains { $0.perfectMatchedTrack!.diskNo == diskNo } {
@@ -136,7 +144,7 @@ struct MatchPanel: View {
             VStack(spacing: 0) {
                 if store.isMatched {
                     ZStack {
-                        List {
+                        List(selection: $selection) {
                             if !mismatchedTracks.isEmpty { mismatched }
                             
                             if !matchedTracks.isEmpty { confirmedMatched }
@@ -221,6 +229,17 @@ extension MatchPanel {
         }
     }
     
+    private func unmatch(_ track: LocalUnit.Track) {
+        track.perfectMatchedTrack?.isPerfectMatched = false
+        track.perfectMatchedTrack = nil
+        withAnimation(.spring()) {
+            DispatchQueue.main.async {
+                matchedTracks.removeAll { $0.id == track.id }
+                mismatchedTracks.append(track.copy())
+            }
+        }
+    }
+    
     private func tag() {
         let id3TagEditor = ID3TagEditor()
         let id3TagAlbum = ID32v3TagBuilder()
@@ -290,7 +309,7 @@ extension MatchPanel {
                 let builded = id3Tag.build()
                 try id3TagEditor.write(tag: builded, to: track.url.path)
                 
-                withAnimation(.easeOut) {
+                let _ = withAnimation(.easeOut) {
                     savedSet.insert(track.id)
                 }
             } catch { print(error) }
