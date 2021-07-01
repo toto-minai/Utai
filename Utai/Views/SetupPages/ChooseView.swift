@@ -138,9 +138,9 @@ struct ChooseView: View {
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
                 .menuIndicator(.hidden)
+                .help("Options (⌘ , )")
                 .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
-                
                 .offset(x: 2, y: -0.5)
                 .focused($isOptionsFocused)
             }
@@ -279,7 +279,7 @@ struct ChooseView: View {
                     .keyboardShortcut(",", modifiers: .command)
                     .opacity(0)
                     .onChange(of: forceRefreshing) { _ in
-                        DispatchQueue.main.async {
+                        Task {
                             isOptionsFocused = false
                         }
                     }

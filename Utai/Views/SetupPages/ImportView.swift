@@ -20,6 +20,8 @@ struct ImportView: View {
     
     @State private var isConfirmSheetPresented = false
     
+    @FocusState private var isOptionsFocused: Bool
+    
     private var welcomeIcon: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
@@ -29,7 +31,7 @@ struct ImportView: View {
             Image("SimpleIcon")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 55)
+                .frame(width: 45)
                 .foregroundColor(Color.secondary)
         }
     }
@@ -80,9 +82,11 @@ struct ImportView: View {
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
                 .menuIndicator(.hidden)
+                .help("Options (⌘ , )")
                 .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
+                .focused($isOptionsFocused)
             }
         }
     }
@@ -93,6 +97,30 @@ struct ImportView: View {
                                 goal: $importGoal)
         
         return ZStack {
+            if store.page == 1 {
+                Button("") { }
+                    .keyboardShortcut(.tab, modifiers: [])
+                    .opacity(0)
+                
+                Button("") {
+                    isOptionsFocused = true
+                    
+                    let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+                    let spaceKey: UInt16 = 49
+                    
+                    let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
+                    let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
+                    spaceDown?.flags = .maskNonCoalesced
+                    spaceUp?.flags = .maskNonCoalesced
+                    
+                    let tap = CGEventTapLocation.cghidEventTap
+                    spaceDown?.post(tap: tap)
+                    spaceUp?.post(tap: tap)
+                }
+                    .keyboardShortcut(",", modifiers: .command)
+                    .opacity(0)
+            }
+            
             VStack(spacing: Metrics.lilSpacing) {
                 welcomeIcon
                 
