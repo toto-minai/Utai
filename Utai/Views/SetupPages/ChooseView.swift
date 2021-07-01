@@ -235,7 +235,7 @@ struct ChooseView: View {
         ZStack(alignment: .top) {
             if store.page == 2 {
                 Button("") { store.didReferencePicked(using: chosenResult.resourceURL) }
-                    .keyboardShortcut(.return, modifiers: .command)
+                    .keyboardShortcut(.return, modifiers: [])
                     .opacity(0)
                 
                 // ←
