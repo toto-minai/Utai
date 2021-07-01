@@ -78,6 +78,8 @@ struct ChooseView: View {
         updateDefaultChosen()
     }}
     
+    @State private var shouldScrollToChosen: Bool = false
+    
     var header: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 0) {
@@ -119,24 +121,28 @@ struct ChooseView: View {
     
     @State private var sortMode: SortMode = .none
     
+    @FocusState private var isOptionsFocused: Bool
+    
     var footer: some View {
         VStack {
             Spacer()
             
             HStack {
                 Spacer()
-                
+                    
                 Menu { extraMenu } label: {
-                    ButtonMini(alwaysHover: true,
-                               systemName: "ellipsis.circle",
-                               helpText: "Options")
+                    Image(systemName: "ellipsis.circle")
+                        .font(.system(size: 12))
+                        .help("Options")
                         .padding(Metrics.lilSpacing)
                 }
                 .menuStyle(BorderlessButtonMenuStyle())
                 .menuIndicator(.hidden)
                 .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
+                
                 .offset(x: 2, y: -0.5)
+                .focused($isOptionsFocused)
             }
         }
     }
@@ -210,6 +216,7 @@ struct ChooseView: View {
                 .disabled(yearGroupChoice == nil &&
                           formatGroupChoice == nil &&
                           labelGroupChoice == nil)
+                .keyboardShortcut(.delete, modifiers: [])
             }
             
             Divider()
@@ -222,8 +229,62 @@ struct ChooseView: View {
         }
     }
     
+    @State private var forceRefreshing = false
+    
     var body: some View {
         ZStack(alignment: .top) {
+            if store.page == 2 {
+                Button("") { store.didReferencePicked(using: chosenResult.resourceURL) }
+                    .keyboardShortcut(.return, modifiers: .command)
+                    .opacity(0)
+                
+                // ←
+                Button("") { toPrevious() }
+                    .keyboardShortcut("h", modifiers: [])
+                    .opacity(0)
+                Button("") { toPrevious() }
+                    .keyboardShortcut("k", modifiers: [])
+                    .opacity(0)
+                Button("") { toPrevious() }
+                    .keyboardShortcut(.tab, modifiers: .shift)
+                    .opacity(0)
+                
+                // →
+                Button("") { toNext() }
+                    .keyboardShortcut("j", modifiers: [])
+                    .opacity(0)
+                Button("") { toNext() }
+                    .keyboardShortcut("l", modifiers: [])
+                    .opacity(0)
+                Button("") { toNext() }
+                    .keyboardShortcut(.tab, modifiers: [])
+                    .opacity(0)
+                
+                Button("") {
+                    isOptionsFocused = true
+                    forceRefreshing.toggle()
+                    
+                    let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+                    let spaceKey: UInt16 = 49
+                    
+                    let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
+                    let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
+                    spaceDown?.flags = .maskNonCoalesced
+                    spaceUp?.flags = .maskNonCoalesced
+                    
+                    let tap = CGEventTapLocation.cghidEventTap
+                    spaceDown?.post(tap: tap)
+                    spaceUp?.post(tap: tap)
+                }
+                    .keyboardShortcut(",", modifiers: .command)
+                    .opacity(0)
+                    .onChange(of: forceRefreshing) { _ in
+                        DispatchQueue.main.async {
+                            isOptionsFocused = false
+                        }
+                    }
+            }
+            
             VStack(spacing: Metrics.lilSpacing2x) {
                 if store.localUnit != nil { header }
                 
@@ -300,7 +361,7 @@ struct ChooseView: View {
             subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.maxY-157, width: 352, height: 120),
                                  styleMask: [], backing: .buffered, defer: false)
             
-            let rootView = ArtworkView(store: store, subWindow: $subWindow, response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice)
+            let rootView = ArtworkView(store: store, subWindow: $subWindow, response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice, shouldScrollToChosen: $shouldScrollToChosen)
             
             subWindow.titleVisibility = .hidden
             subWindow.backgroundColor = NSColor.clear
@@ -653,6 +714,23 @@ extension ChooseView {
         
         return String("\(x * 10)s")
     }
+    
+    private func toNext() {
+        if let chosen = chosen {
+            let count = resultsProcessed.count
+            let index = resultsProcessed.firstIndex { $0.id == chosen }!
+            self.chosen = resultsProcessed[min(count - 1, index+1)].id
+            shouldScrollToChosen = true
+        }
+    }
+    
+    private func toPrevious() {
+        if let chosen = chosen {
+            let index = resultsProcessed.firstIndex { $0.id == chosen }!
+            self.chosen = resultsProcessed[max(0, index-1)].id
+            shouldScrollToChosen = true
+        }
+    }
 }
 
 struct ArtworkView: View {
@@ -671,6 +749,8 @@ struct ArtworkView: View {
     @Binding var yearGroupChoice: Int?
     @Binding var formatGroupChoice: String?
     @Binding var labelGroupChoice: String?
+    
+    @Binding var shouldScrollToChosen: Bool
     
     
     var body: some View {
@@ -691,14 +771,10 @@ struct ArtworkView: View {
                             .frame(height: 120)
                         }
                     }
-                    .onChange(of: showMode) { newValue in
-                        withAnimation {
-                            proxy.scrollTo(chosen, anchor: .top)
-                        }
-                    }
-                    .onChange(of: sortMode) { newValue in
-                        withAnimation {
-                            proxy.scrollTo(chosen, anchor: .top)
+                    .onChange(of: chosen) { newValue in
+                        if shouldScrollToChosen {
+                            proxy.scrollTo(chosen, anchor: .center)
+                            shouldScrollToChosen = false
                         }
                     }
                 }
@@ -805,5 +881,12 @@ struct Artwork80x80: View {
                 pasteboard.setString("\(result.id)", forType: .string)
             }
         }
+    }
+}
+
+extension NSButton {
+    open override var focusRingType: NSFocusRingType {
+        get { .none }
+        set {}
     }
 }
