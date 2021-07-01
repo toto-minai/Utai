@@ -45,6 +45,7 @@ struct ImportView: View {
                       label: "Add Music",
                       systemName: "music.note")
                 .keyboardShortcut("o", modifiers: .command)
+                .disabled(store.page != 1)
                 .sheet(isPresented: $isConfirmSheetPresented) {
                     ConfirmSheet(systemName: "music.note",
                                  instruction: "Might want to confirm the title and artists before searching on Discogs.",
@@ -131,7 +132,9 @@ struct ImportView: View {
             .padding(.top, 57)  // Align with album artworks on search page
             // TODO: Make it clear how to calc
             
-            footer
+            if store.page == 1 {
+                footer
+            }
             
             // Do when collected all dropped URLs
             if let goal = importGoal {

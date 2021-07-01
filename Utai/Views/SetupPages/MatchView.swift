@@ -22,6 +22,12 @@ struct MatchView: View {
     
     var body: some View {
         ZStack {
+            if store.page == 3 {
+                Button("") { store.artworkMode.toggle() }
+                .keyboardShortcut("i", modifiers: .command)
+                    .opacity(0)
+            }
+            
             if store.referenceResult != nil && store.referenceURL == nil {
                 if let thumb = artworkPrimaryURL.first {
                     ZStack {

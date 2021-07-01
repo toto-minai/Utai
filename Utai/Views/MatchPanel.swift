@@ -18,6 +18,8 @@ struct MatchPanel: View {
     @State private var savedSet: Set<UUID> = []
     @State private var selection: Set<UUID> = []
     
+    @FocusState private var isOptionsFocused: Bool
+    @State private var forceRefreshing = false
     
     private func extraInfo(diskNo: Int, trackNo: Int, length: Int?, originalLength: Double) -> String {
         var extraInfo = "\t№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +
@@ -182,6 +184,7 @@ struct MatchPanel: View {
                 .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
+                .focused($isOptionsFocused)
             }
             .background(.ultraThickMaterial)
         }
@@ -189,6 +192,32 @@ struct MatchPanel: View {
     
     var body: some View {
         ZStack {
+            if store.page == 3 {
+                Button("") {
+                    isOptionsFocused = true
+                    forceRefreshing.toggle()
+                    
+                    let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+                    let spaceKey: UInt16 = 49
+                    
+                    let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
+                    let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
+                    spaceDown?.flags = .maskNonCoalesced
+                    spaceUp?.flags = .maskNonCoalesced
+                    
+                    let tap = CGEventTapLocation.cghidEventTap
+                    spaceDown?.post(tap: tap)
+                    spaceUp?.post(tap: tap)
+                }
+                    .keyboardShortcut(",", modifiers: .command)
+                    .opacity(0)
+                    .onChange(of: forceRefreshing) { _ in
+                        Task {
+                            isOptionsFocused = false
+                        }
+                    }
+            }
+            
             VStack(spacing: 0) {
                 if store.isMatched {
                     ZStack {
@@ -204,6 +233,7 @@ struct MatchPanel: View {
                                 
                                 ButtonCus(action: tag, label: "Save Matched", systemName: "laptopcomputer.and.arrow.down")
                                     .font(.custom("Yanone Kaffeesatz", size: 16))
+                                    .keyboardShortcut("s", modifiers: .command)
                                 
                                 Spacer()
                             }
