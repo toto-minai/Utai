@@ -357,8 +357,7 @@ struct ChooseView: View {
         }
         .frame(width: Metrics.unitLength, height: Metrics.unitLength)
         .onAppear {  // doWhenBuildiThisPage
-            let frame = window.frame
-            subWindow = NSWindow(contentRect: NSRect(x: frame.minX-20, y: frame.maxY-157, width: 352, height: 120),
+            subWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 352, height: 120),
                                  styleMask: [], backing: .buffered, defer: false)
             
             let rootView = ArtworkView(store: store, subWindow: $subWindow, response: $response, searchURL: $store.searchURL, chosen: $chosen, showMode: $showMode, sortMode: $sortMode, yearGroupChoice: $yearGroupChoice, formatGroupChoice: $formatGroupChoice, labelGroupChoice: $labelGroupChoice, shouldScrollToChosen: $shouldScrollToChosen)
@@ -368,8 +367,6 @@ struct ChooseView: View {
             subWindow.hasShadow = false
             
             subWindow.contentView = NSHostingView(rootView: rootView)
-            
-            window.addChildWindow(subWindow, ordered: .above)
         }
     }
     
@@ -391,7 +388,7 @@ struct ChooseView: View {
         }
         .onDisappear {
             subWindow.orderOut(nil)
-            if let window = window {
+            if window != nil {
                 window.removeChildWindow(subWindow)
             }
         }
