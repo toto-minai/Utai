@@ -29,6 +29,8 @@ struct MatchView: View {
             }
             
             if store.referenceResult != nil && store.referenceURL == nil {
+                doWhenNeedToGetMasterYear
+                
                 if let thumb = artworkPrimaryURL.first {
                     ZStack {
                         AsyncImage(url: thumb) { image in
@@ -133,7 +135,7 @@ struct MatchView: View {
     var doWhenNeedToRetrieveData: some View {
         void.onAppear {
             store.referenceResult = nil
-            print(store.referenceURL!.absoluteString)
+            store.masterYear = nil
 
             Task {
                 do { try await search() }
@@ -152,6 +154,21 @@ struct MatchView: View {
             }
         }
     }
+    
+    var doWhenNeedToGetMasterYear: some View {
+        void.task {
+            if let url = resultSaved!.masterURL {
+                do {
+                    let (data, _) = try await URLSession.shared.data(from: url)
+                    
+                    do {
+                        let result = try JSONDecoder().decode(ReferenceResult.self, from: data)
+                        store.masterYear = result.year
+                    } catch { print(error) }
+                } catch { print(error) }
+            }
+        }
+    }
 }
 
 extension MatchView {
@@ -160,12 +177,12 @@ extension MatchView {
     private var artworkPrimaryURL: [URL] {
         if let artworks = store.referenceResult!.artworks {
             if artworks.filter({ $0.type == "primary" }).isEmpty {
-                return [artworks.first!.resourceURL]
+                return [URL(string: artworks.first!.resourceURL)!]
             }
             
             return artworks.filter {
                 $0.type == "primary"
-            }.map { $0.resourceURL }
+            }.map { URL(string: $0.resourceURL)! }
         }
         
         return []

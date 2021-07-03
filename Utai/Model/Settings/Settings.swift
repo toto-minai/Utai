@@ -14,4 +14,5 @@ enum Settings {
     static let preferReleaseOnly = "preferReleaseOnly"
     static let lengthMaxDelta = "lengthMaxDelta"
     static let forceSavingConflicts = "forceSavingConflicts"
+    static let useMasterYear = "useMasterYear"
 }

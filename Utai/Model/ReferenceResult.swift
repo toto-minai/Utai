@@ -83,7 +83,7 @@ struct ReferenceResult: Codable {
 
     struct Artwork: Codable {
         let type: String
-        let resourceURL: URL
+        let resourceURL: String
         let width: Int
         let height: Int
 

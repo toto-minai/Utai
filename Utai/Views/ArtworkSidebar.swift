@@ -66,7 +66,7 @@ struct SingleArtwork: View {
             Color.yellow.opacity(0.001)
                 .frame(width: 28)
             
-            AsyncImage(url: artwork.resourceURL) { image in
+            AsyncImage(url: URL(string: artwork.resourceURL)!) { image in
                     image.resizable()
                         .scaledToFill()
                         .frame(width: widthCalculated, height: heightCalculated)
@@ -85,7 +85,7 @@ struct SingleArtwork: View {
             withAnimation(.spring()) {
                 hover = false
             }
-            openURL(artwork.resourceURL)
+            openURL(URL(string: artwork.resourceURL)!)
         }
         .onHover { hovering in
             withAnimation(.spring()) {

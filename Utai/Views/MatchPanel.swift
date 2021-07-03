@@ -158,11 +158,13 @@ struct MatchPanel: View {
         }
     }
     
+    @AppStorage(Settings.useMasterYear) var useMasterYear: Bool = false
     @AppStorage(Settings.forceSavingConflicts) var forceSavingConflicts: Bool = false
     
     private var extraMenu: some View {
         Group {
             Section("Preferences") {
+                Toggle("Prefer Master Year", isOn: $useMasterYear)
                 Toggle("Force Saving Conflicts", isOn: $forceSavingConflicts)
             }
         }
@@ -310,7 +312,9 @@ extension MatchPanel {
         let id3TagEditor = ID3TagEditor()
         let id3TagAlbum = ID32v3TagBuilder()
             .album(frame: ID3FrameWithStringContent(content: store.remoteUnit!.album))
-            .recordingYear(frame: ID3FrameWithIntegerContent(value: store.remoteUnit!.year))
+            .recordingYear(frame: ID3FrameWithIntegerContent(value: useMasterYear && store.masterYear != nil ?
+                                                                store.masterYear :
+                                                                store.remoteUnit!.year))
             .genre(frame: ID3FrameGenre(genre: store.remoteUnit!.genre, description: nil))
         
         for track in matchedTracks {

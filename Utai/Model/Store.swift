@@ -66,4 +66,6 @@ class Store: ObservableObject {
     }
     
     @Published var isMatched: Bool = false
+    
+    @Published var masterYear: Int?
 }
