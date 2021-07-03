@@ -12,8 +12,7 @@ struct UtaiApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
-        WindowGroup { Color.clear }
-            .windowStyle(.hiddenTitleBar)
+        WindowGroup { }
             // Disable Command-N to create a new window
             .commands { CommandGroup(replacing: .newItem, addition: {}) }
     }
