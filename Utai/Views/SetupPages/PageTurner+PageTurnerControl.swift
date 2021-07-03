@@ -12,10 +12,8 @@ struct PageTurner: View {
     @AppStorage(Settings.pageTurner) var turner: Int = 1
     
     var blurredBackground: some View {
-        Rectangle()
-            .fill(.ultraThinMaterial)
+        EffectsView(material: .titlebar, blendingMode: .withinWindow)
             .opacity(store.artworkMode ? 1 : 0)
-            .animation(.easeOut, value: store.artworkMode)
     }
     
     var body: some View {
