@@ -81,7 +81,9 @@ struct MatchView: View {
                                         .foregroundColor(Color.secondary.opacity(0.4))
                                 }
                             }
-                            .background(.ultraThinMaterial)
+                            .background {
+                                EffectsView(material: .titlebar, blendingMode: .withinWindow)
+                            }
                             
                             Spacer()
                         }
