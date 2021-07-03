@@ -24,6 +24,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     
     var window: NSWindow!
     
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        // Clean AppStorage
+//        if let bundleID = Bundle.main.bundleIdentifier {
+//            UserDefaults.standard.removePersistentDomain(forName: bundleID)
+//        }
+    }
+    
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Hijack main window created by Scene
         NSApp.windows.first!.close()
