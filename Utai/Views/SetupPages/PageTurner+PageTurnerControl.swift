@@ -18,15 +18,15 @@ struct PageTurner: View {
     
     var body: some View {
         ZStack {
-            Button("", action: turnToPage1)
-                .keyboardShortcut("1", modifiers: .command)
-                .opacity(0)
-            Button("", action: turnToPage2)
-                .keyboardShortcut("2", modifiers: .command)
-                .opacity(0)
-            Button("", action: turnToPage3)
-                .keyboardShortcut("3", modifiers: .command)
-                .opacity(0)
+            Group {
+                Button("", action: turnToPage1)
+                    .keyboardShortcut("1", modifiers: .command)
+                Button("", action: turnToPage2)
+                    .keyboardShortcut("2", modifiers: .command)
+                Button("", action: turnToPage3)
+                    .keyboardShortcut("3", modifiers: .command)
+            }
+            .hidden()
             
             VStack {
                 Spacer()

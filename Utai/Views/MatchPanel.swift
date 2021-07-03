@@ -210,7 +210,7 @@ struct MatchPanel: View {
                     spaceUp?.post(tap: tap)
                 }
                     .keyboardShortcut(",", modifiers: .command)
-                    .opacity(0)
+                    .hidden()
                     .onChange(of: forceRefreshing) { _ in
                         Task {
                             isOptionsFocused = false

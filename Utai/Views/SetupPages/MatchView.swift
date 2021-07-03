@@ -24,8 +24,8 @@ struct MatchView: View {
         ZStack {
             if store.page == 3 {
                 Button("") { store.artworkMode.toggle() }
-                .keyboardShortcut("i", modifiers: .command)
-                    .opacity(0)
+                    .keyboardShortcut("i", modifiers: .command)
+                    .hidden()
             }
             
             if store.referenceResult != nil && store.referenceURL == nil {

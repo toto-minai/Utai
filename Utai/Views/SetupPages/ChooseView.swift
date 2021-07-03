@@ -234,55 +234,50 @@ struct ChooseView: View {
     var body: some View {
         ZStack(alignment: .top) {
             if store.page == 2 {
-                Button("") { store.didReferencePicked(using: chosenResult.resourceURL) }
-                    .keyboardShortcut(.return, modifiers: [])
-                    .opacity(0)
-                
-                // ←
-                Button("") { toPrevious() }
-                    .keyboardShortcut("h", modifiers: [])
-                    .opacity(0)
-                Button("") { toPrevious() }
-                    .keyboardShortcut("k", modifiers: [])
-                    .opacity(0)
-                Button("") { toPrevious() }
-                    .keyboardShortcut(.tab, modifiers: .shift)
-                    .opacity(0)
-                
-                // →
-                Button("") { toNext() }
-                    .keyboardShortcut("j", modifiers: [])
-                    .opacity(0)
-                Button("") { toNext() }
-                    .keyboardShortcut("l", modifiers: [])
-                    .opacity(0)
-                Button("") { toNext() }
-                    .keyboardShortcut(.tab, modifiers: [])
-                    .opacity(0)
-                
-                Button("") {
-                    isOptionsFocused = true
-                    forceRefreshing.toggle()
+                Group {
+                    Button("") { store.didReferencePicked(using: chosenResult.resourceURL) }
+                        .keyboardShortcut(.return, modifiers: [])
                     
-                    let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
-                    let spaceKey: UInt16 = 49
+                    // ←
+                    Button("") { toPrevious() }
+                        .keyboardShortcut("h", modifiers: [])
+                    Button("") { toPrevious() }
+                        .keyboardShortcut("k", modifiers: [])
+                    Button("") { toPrevious() }
+                        .keyboardShortcut(.tab, modifiers: .shift)
                     
-                    let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
-                    let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
-                    spaceDown?.flags = .maskNonCoalesced
-                    spaceUp?.flags = .maskNonCoalesced
+                    // →
+                    Button("") { toNext() }
+                        .keyboardShortcut("j", modifiers: [])
+                    Button("") { toNext() }
+                        .keyboardShortcut("l", modifiers: [])
+                    Button("") { toNext() }
+                        .keyboardShortcut(.tab, modifiers: [])
                     
-                    let tap = CGEventTapLocation.cghidEventTap
-                    spaceDown?.post(tap: tap)
-                    spaceUp?.post(tap: tap)
-                }
-                    .keyboardShortcut(",", modifiers: .command)
-                    .opacity(0)
-                    .onChange(of: forceRefreshing) { _ in
-                        Task {
-                            isOptionsFocused = false
-                        }
+                    Button("") {
+                        isOptionsFocused = true
+                        forceRefreshing.toggle()
+                        
+                        let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+                        let spaceKey: UInt16 = 49
+                        
+                        let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
+                        let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
+                        spaceDown?.flags = .maskNonCoalesced
+                        spaceUp?.flags = .maskNonCoalesced
+                        
+                        let tap = CGEventTapLocation.cghidEventTap
+                        spaceDown?.post(tap: tap)
+                        spaceUp?.post(tap: tap)
                     }
+                        .keyboardShortcut(",", modifiers: .command)
+                        .onChange(of: forceRefreshing) { _ in
+                            Task {
+                                isOptionsFocused = false
+                            }
+                        }
+                }
+                .hidden()
             }
             
             VStack(spacing: Metrics.lilSpacing2x) {

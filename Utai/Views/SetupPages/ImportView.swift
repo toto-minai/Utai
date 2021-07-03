@@ -101,7 +101,7 @@ struct ImportView: View {
             if store.page == 1 {
                 Button("") { }
                     .keyboardShortcut(.tab, modifiers: [])
-                    .opacity(0)
+                    .hidden()
                 
                 Button("") {
                     isOptionsFocused = true
@@ -119,7 +119,7 @@ struct ImportView: View {
                     spaceUp?.post(tap: tap)
                 }
                     .keyboardShortcut(",", modifiers: .command)
-                    .opacity(0)
+                    .hidden()
             }
             
             VStack(spacing: Metrics.lilSpacing) {
