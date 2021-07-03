@@ -33,6 +33,7 @@
 		99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE32675F0F900CCA6D7 /* MatchView.swift */; };
 		99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */; };
 		99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */; };
+		99E0BE0D2690B348001D7FE1 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E0BE0C2690B348001D7FE1 /* About.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,6 +78,7 @@
 		99DB1BE32675F0F900CCA6D7 /* MatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchView.swift; sourceTree = "<group>"; };
 		99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButtons.swift; sourceTree = "<group>"; };
 		99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureSheet.swift; sourceTree = "<group>"; };
+		99E0BE0C2690B348001D7FE1 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 		99D046ED2674720F0076D972 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				99E0BE0C2690B348001D7FE1 /* About.swift */,
 				99747F152672E9E500995E85 /* SetupPages */,
 				99DB1BE92676001600CCA6D7 /* ConfigureSheet.swift */,
 				99DB1BE72675FC1C00CCA6D7 /* CustomButtons.swift */,
@@ -323,6 +326,7 @@
 				99DB1BEA2676001600CCA6D7 /* ConfigureSheet.swift in Sources */,
 				99747F142672E78100995E85 /* EffectsView.swift in Sources */,
 				99DB1BE42675F0F900CCA6D7 /* MatchView.swift in Sources */,
+				99E0BE0D2690B348001D7FE1 /* About.swift in Sources */,
 				9994F2142682377F00CA3726 /* RemoteUnit.swift in Sources */,
 				99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */,
 				99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */,

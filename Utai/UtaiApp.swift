@@ -13,8 +13,21 @@ struct UtaiApp: App {
     
     var body: some Scene {
         WindowGroup { }
-            // Disable Command-N to create a new window
-            .commands { CommandGroup(replacing: .newItem, addition: {}) }
+            .commands {
+                CommandGroup(replacing: .newItem, addition: {})
+                
+                CommandGroup(replacing: .appInfo) {
+                    Button("About Utai") {
+                        appDelegate.showAboutWindow()
+                    }
+                }
+                
+                CommandGroup(replacing: .help) {
+                    Button("Cookbook") {
+                        print("Cookbook")
+                    }
+                }
+            }
     }
 }
 
@@ -22,6 +35,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     @AppStorage("launchForTheFirstTime") var launchForTheFirstTime: Bool = true
     
     var window: NSWindow!
+    var aboutWindow: NSWindow!
     
     func applicationWillFinishLaunching(_ notification: Notification) {
         #if CLEAN_APPSTORAGE
@@ -58,9 +72,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         }
         
         window.makeKeyAndOrderFront(nil)
+        
+        buildAboutWindow()
     }
     
     func windowWillClose(_ notification: Notification) { NSApp.terminate(self) }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
+    
+    func showAboutWindow() {
+        aboutWindow.center()
+        aboutWindow.makeKeyAndOrderFront(nil)
+    }
+    
+    private func buildAboutWindow() {
+        aboutWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: Metrics.unitLength, height: Metrics.unitLength),
+                               styleMask: [.titled, .closable, .fullSizeContentView],
+                               backing: .buffered, defer: false)
+        aboutWindow.titleVisibility = .hidden
+        aboutWindow.titlebarAppearsTransparent = true
+        aboutWindow.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        aboutWindow.standardWindowButton(.zoomButton)?.isHidden = true
+        
+        aboutWindow.level = .floating
+        aboutWindow.isMovableByWindowBackground = true
+        
+        aboutWindow.contentView = NSHostingView(rootView: About())
+    }
 }
 
 // Access window in Views
