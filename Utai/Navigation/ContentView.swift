@@ -12,7 +12,20 @@ struct ContentView: View {
     
     @EnvironmentObject var store: Store
     
+    private var panelMinHeight: CGFloat {
+        min(Metrics.unitLength*2,
+            CGFloat(store.localUnit!.tracks.count+5) * (Metrics.lilIconLength+Metrics.lilSpacing2x))
+    }
+    
     var body: some View {
+        Section {
+            <#code#>
+        } header: {
+            <#code#>
+        }
+
+        
+        
         VStack(spacing: 0) {
             ZStack {
                 SetupPages()
@@ -31,7 +44,7 @@ struct ContentView: View {
             
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
-                    .frame(minHeight: Metrics.unitLength*2, idealHeight: Metrics.unitLength*2, maxHeight: .infinity)
+                    .frame(minHeight: panelMinHeight, maxHeight: .infinity)
             }
         }
         .frame(width: Metrics.unitLength)
