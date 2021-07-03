@@ -122,7 +122,9 @@ struct MatchView: View {
         }
         .onDisappear {
             subWindow.orderOut(nil)
-            window.removeChildWindow(subWindow)
+            if window != nil {
+                window.removeChildWindow(subWindow)
+            }
         }
     }
     
@@ -151,7 +153,7 @@ struct MatchView: View {
 }
 
 extension MatchView {
-    private var window: NSWindow { self.hostingWindow()! }
+    private var window: NSWindow! { self.hostingWindow() }
     
     private var artworkPrimaryURL: [URL] {
         if let artworks = store.referenceResult!.artworks {

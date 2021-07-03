@@ -20,43 +20,40 @@ struct UtaiApp: App {
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
+    @AppStorage("launchForTheFirstTime") var launchForTheFirstTime: Bool = true
+    
     var window: NSWindow!
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Hijack main window created by Scene
-        window = NSApp.windows.first!
-        window.orderOut(nil)
+        NSApp.windows.first!.close()
         
-        // TODO: Should only set frame for the first time
-        window.setFrame(NSRect(x: 0, y: 0, width: 312, height: 312), display: true)
-        window.styleMask.remove([.miniaturizable])
+        window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 312, height: 312),
+                          styleMask: [.titled, .closable, .fullSizeContentView],
+                          backing: .buffered, defer: false)
         
         window.titleVisibility = .hidden
-        window.setFrameAutosaveName("Utai Main Window")
-        
         window.titlebarAppearsTransparent = true
-        window.level = .floating
-        window.tabbingMode = .disallowed
-        
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
         
+        window.level = .floating
+        window.tabbingMode = .disallowed
+        
         let contentView = WrappedContentView()
             .environment(\.hostingWindow, { [weak window] in
-            return window!
+            return window
         })
         window.contentView = NSHostingView(rootView: contentView)
+        window.setFrameAutosaveName("Utai Main Window")
         
-        // TODO: Should only centering window for the first time
-        // window.center()
+        if launchForTheFirstTime {
+            window.center()
+            
+            launchForTheFirstTime = false
+        }
+        
         window.makeKeyAndOrderFront(nil)
-    }
-    
-    func applicationWillTerminate(_ notification: Notification) {
-        // Save frame, in case it didn't
-        let frame = window.frame
-        window.setFrame(NSRect(x: frame.minX, y: frame.maxY-312, width: 312, height: 312), display: false)
-        window.saveFrame(usingName: "Utai Main Window")
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool { false }
@@ -73,7 +70,7 @@ struct HostingWindowKey: EnvironmentKey {
 
 extension EnvironmentValues {
     var hostingWindow: HostingWindowKey.Value {
-        get { return self[HostingWindowKey.self] }
+        get { self[HostingWindowKey.self] }
         set { self[HostingWindowKey.self] = newValue }
     }
 }

@@ -391,7 +391,9 @@ struct ChooseView: View {
         }
         .onDisappear {
             subWindow.orderOut(nil)
-            window.removeChildWindow(subWindow)
+            if let window = window {
+                window.removeChildWindow(subWindow)
+            }
         }
     }
     
@@ -539,7 +541,7 @@ extension Array where Element == SearchResponse.Result {
 }
 
 extension ChooseView {
-    private var window: NSWindow { self.hostingWindow()! }
+    private var window: NSWindow! { self.hostingWindow() }
     
     private var unit: LocalUnit { store.localUnit! }
     private var albumRaw: String { unit.album ?? "" }
