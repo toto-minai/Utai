@@ -18,14 +18,6 @@ struct ContentView: View {
     }
     
     var body: some View {
-        Section {
-            <#code#>
-        } header: {
-            <#code#>
-        }
-
-        
-        
         VStack(spacing: 0) {
             ZStack {
                 SetupPages()
