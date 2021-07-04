@@ -293,10 +293,11 @@ struct ConfirmSheet: View {
                 
                 Button("Cancel") { dismiss() }
                     .buttonStyle(.borderless)
+                    .keyboardShortcut(.escape, modifiers: [])
                 
                 Button(action: willDismiss) { Text("**Search**") }
-                    .keyboardShortcut(.return, modifiers: .command)
                     .buttonStyle(.borderless)
+                    .keyboardShortcut(.return, modifiers: .command)
                     .disabled(!isValid)
             }
         }
