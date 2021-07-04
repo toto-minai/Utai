@@ -9,11 +9,11 @@ import SwiftUI
 
 struct PageTurner: View {
     @EnvironmentObject var store: Store
-    @AppStorage(Settings.pageTurner) var turner: Int = 1
+    @AppStorage(Settings.pageTurnerIconType) var turner: Int = 1
     
     var blurredBackground: some View {
         EffectsView(material: .titlebar, blendingMode: .withinWindow)
-            .opacity(store.artworkMode ? 1 : 0)
+            .opacity(store.infoMode ? 1 : 0)
     }
     
     var body: some View {
@@ -31,7 +31,7 @@ struct PageTurner: View {
             VStack {
                 Spacer()
                 
-                if store.page != 3 || store.artworkMode {
+                if store.page != 3 || store.infoMode {
                     HStack(spacing: 8) {
                         PageTurnerControl(page: $store.page, target: 1,
                                           systemName: "circle.fill", helpText: "Import (⌘1)")
@@ -60,14 +60,14 @@ struct PageTurner: View {
 extension PageTurner {
     private func turnToPage1() {
         store.page = 1
-        store.artworkMode = false
+        store.infoMode = false
     }
     
     private func turnToPage2() {
         if store.localUnit == nil { return }
         
         store.page = 2
-        store.artworkMode = false
+        store.infoMode = false
     }
     
     private func turnToPage3() {

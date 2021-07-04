@@ -12,8 +12,9 @@ struct UtaiApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
-        WindowGroup { }
+        WindowGroup {}
             .commands {
+                // Remove default Open
                 CommandGroup(replacing: .newItem, addition: {})
                 
                 CommandGroup(replacing: .appInfo) {
@@ -32,7 +33,7 @@ struct UtaiApp: App {
 }
 
 final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
-    @AppStorage("launchForTheFirstTime") var launchForTheFirstTime: Bool = true
+    @AppStorage("isFirstLaunch") var isFirstLaunch: Bool = true
     
     var window: NSWindow!
     var aboutWindow: NSWindow!
@@ -46,7 +47,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
     
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Hijack main window created by Scene
+        // Hijack main window created by WindowGroup
         window = NSApp.windows.first!
         
         window.titleVisibility = .hidden
@@ -59,16 +60,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         
         window.delegate = self
         
+        // Passing hosting window to ContentView()
         let contentView = WrappedContentView()
             .environment(\.hostingWindow, { [weak window] in
-            return window
-        })
+                return window
+            })
         window.contentView = NSHostingView(rootView: contentView)
         
-        if launchForTheFirstTime {
+        if isFirstLaunch {
             window.center()
             
-            launchForTheFirstTime = false
+            isFirstLaunch = false
         }
         
         window.makeKeyAndOrderFront(nil)
@@ -76,9 +78,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         buildAboutWindow()
     }
     
+    // Quit the app when main window is closed
     func windowWillClose(_ notification: Notification) { NSApp.terminate(self) }
-    
-    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
     
     func showAboutWindow() {
         aboutWindow.center()
@@ -101,7 +102,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
 }
 
-// Access window in Views
+// Allow window access in Views
 struct HostingWindowKey: EnvironmentKey {
     static let defaultValue: () -> NSWindow? = { nil }
 }

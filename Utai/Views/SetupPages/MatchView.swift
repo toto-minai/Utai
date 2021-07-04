@@ -23,7 +23,7 @@ struct MatchView: View {
     var body: some View {
         ZStack {
             if store.page == 3 {
-                Button("") { store.artworkMode.toggle() }
+                Button("") { store.infoMode.toggle() }
                     .keyboardShortcut("i", modifiers: .command)
                     .hidden()
             }
@@ -42,21 +42,21 @@ struct MatchView: View {
                                     .blur(radius: 7.2)
                                     .frame(width: 248, height: 312).clipped()
                                     .offset(y: 2.4+64)
-                                    .scaleEffect(store.artworkMode ? 1.22 : 1)
-                                    .opacity(store.artworkMode ? 0 : 1)
-                                    .animation(store.page == 3 ? .easeOut : .none, value: store.artworkMode)
+                                    .scaleEffect(store.infoMode ? 1.22 : 1)
+                                    .opacity(store.infoMode ? 0 : 1)
+                                    .animation(store.page == 3 ? .easeOut : .none, value: store.infoMode)
                                 
                                 image.resizable().scaledToFill()
                                     .frame(width: 256, height: 256)
-                                    .cornerRadius(store.artworkMode ? 0 : 8)
+                                    .cornerRadius(store.infoMode ? 0 : 8)
                                     .shadow(color: Color.black.opacity(0.54),
                                             radius: 7.2, x: 0, y: 2.4)
                                     .onTapGesture {
-                                        store.artworkMode.toggle()
+                                        store.infoMode.toggle()
                                     }
-                                    .scaleEffect(store.artworkMode ? 1.22 : 1)
+                                    .scaleEffect(store.infoMode ? 1.22 : 1)
                                     .onAppear { store.referenceURL = nil }
-                                    .animation(store.page == 3 ? .easeOut : .none, value: store.artworkMode)
+                                    .animation(store.page == 3 ? .easeOut : .none, value: store.infoMode)
                             }
                         } placeholder: { ProgressView() }
                         .frame(width: 312, height: 312)
@@ -89,8 +89,8 @@ struct MatchView: View {
                             
                             Spacer()
                         }
-                        .opacity(store.artworkMode ? 1 : 0)
-                        .animation(nil, value: store.artworkMode)
+                        .opacity(store.infoMode ? 1 : 0)
+                        .animation(nil, value: store.infoMode)
                     }
                     
                 }

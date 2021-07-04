@@ -158,8 +158,8 @@ struct MatchPanel: View {
         }
     }
     
-    @AppStorage(Settings.useMasterYear) var useMasterYear: Bool = false
-    @AppStorage(Settings.forceSavingConflicts) var forceSavingConflicts: Bool = false
+    @AppStorage(Settings.preferMasterYear) var useMasterYear: Bool = false
+    @AppStorage(Settings.saveConflicts) var forceSavingConflicts: Bool = false
     
     private var extraMenu: some View {
         Group {

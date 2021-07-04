@@ -8,11 +8,11 @@
 import Foundation
 
 enum Settings {
-    static let pageTurner = "pageTurner"
+    static let pageTurnerIconType = "pageTurnerIconType"
     static let alwaysConfirm = "alwaysConfirm"
     static let preferCD = "preferCD"
     static let preferReleaseOnly = "preferReleaseOnly"
     static let lengthMaxDelta = "lengthMaxDelta"
-    static let forceSavingConflicts = "forceSavingConflicts"
-    static let useMasterYear = "useMasterYear"
+    static let saveConflicts = "saveConflicts"
+    static let preferMasterYear = "preferMasterYear"
 }

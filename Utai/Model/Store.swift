@@ -10,12 +10,12 @@ import SwiftUI
 class Store: ObservableObject {
     @Published var page: Int = 1
     @Published var showMatchPanel: Bool = false
-    @Published var artworkMode: Bool = false
+    @Published var infoMode: Bool = false
 
     // Page 1, 2, 3
     @Published var localUnit: LocalUnit?
-    @Published var referenceResult: ReferenceResult?
     @Published var remoteUnit: RemoteUnit?
+    @Published var referenceResult: ReferenceResult?
 
     // Page 1 -> 2
     @Published var searchURL: URL?
@@ -65,7 +65,7 @@ class Store: ObservableObject {
         page = 3
     }
     
+    // Page 3
     @Published var isMatched: Bool = false
-    
     @Published var masterYear: Int?
 }

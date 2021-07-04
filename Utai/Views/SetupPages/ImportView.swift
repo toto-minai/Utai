@@ -11,7 +11,7 @@ struct ImportView: View {
     @EnvironmentObject var store: Store
     
     @AppStorage(Settings.alwaysConfirm) var alwaysConfirm: Bool = false
-    @AppStorage(Settings.pageTurner) var pageTurner: Int = 1
+    @AppStorage(Settings.pageTurnerIconType) var pageTurner: Int = 1
     
     // Drag and drop
     @State private var draggingOver = false
@@ -48,7 +48,7 @@ struct ImportView: View {
                 .disabled(store.page != 1)
                 .sheet(isPresented: $isConfirmSheetPresented) {
                     ConfirmSheet(systemName: "music.note",
-                                 instruction: "Might want to confirm the title and artists before searching on Discogs.",
+                                 instruction: "Confirm the title and artists before searching on Discogs.",
                                  albums: unit.albumCandidatesSorted,
                                  artists: unit.artistCandidatesSorted)
                 }
@@ -234,6 +234,7 @@ struct ConfirmSheet: View {
     private var header: some View {
         Group {
             Text(instruction)
+                .fontWeight(.bold)
                 .lineSpacing(4)
             Divider()
         }.offset(y: 1.2)
@@ -287,7 +288,7 @@ struct ConfirmSheet: View {
             
             Spacer().frame(height: Metrics.lilSpacing2x)
             
-            HStack {
+            HStack(spacing: Metrics.lilSpacing) {
                 Spacer()
                 
                 Button("Cancel") { dismiss() }

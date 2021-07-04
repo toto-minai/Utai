@@ -25,9 +25,9 @@ struct ArtworkSidebar: View {
                                     }
                                 }
                                 .padding(.vertical, 28)
-                                .offset(x: store.artworkMode ? 0 : -56)
-                                .opacity(store.artworkMode ? 1 : 0)
-                                .animation(.spring(), value: store.artworkMode)
+                                .offset(x: store.infoMode ? 0 : -56)
+                                .opacity(store.infoMode ? 1 : 0)
+                                .animation(.spring(), value: store.infoMode)
                             }
                         }
                         .padding(.trailing, 132+8)

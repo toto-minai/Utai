@@ -139,6 +139,7 @@
 				99D046EC267471E90076D972 /* Model */,
 				99D046ED2674720F0076D972 /* Views */,
 				99D046EE267472310076D972 /* Navigation */,
+				99CA05F7267B28C6007C8B67 /* Settings */,
 				99D046EF267472630076D972 /* Main Menu */,
 				99747F122672E76100995E85 /* Toolbox */,
 				99D046F0267472A10076D972 /* Support */,
@@ -176,13 +177,11 @@
 		99D046EC267471E90076D972 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				99CA05F7267B28C6007C8B67 /* Settings */,
-				99747F1C2672EAD400995E85 /* LocalUnit.swift */,
 				99D046F22674730A0076D972 /* Store.swift */,
-				99CA05F5267B1C01007C8B67 /* ChooseModes.swift */,
+				99747F1C2672EAD400995E85 /* LocalUnit.swift */,
+				9994F2132682377F00CA3726 /* RemoteUnit.swift */,
 				99D046F92674E5B80076D972 /* SearchResponse.swift */,
 				993C9FA22678C787007E4387 /* ReferenceResult.swift */,
-				9994F2132682377F00CA3726 /* RemoteUnit.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -220,6 +219,7 @@
 			children = (
 				99D046FB2674E6AA0076D972 /* Secrets.swift */,
 				9994F20D267DD61B00CA3726 /* Metrics.swift */,
+				99CA05F5267B1C01007C8B67 /* ChooseModes.swift */,
 			);
 			path = Support;
 			sourceTree = "<group>";
