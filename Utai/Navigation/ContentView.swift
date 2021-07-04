@@ -13,8 +13,12 @@ struct ContentView: View {
     @EnvironmentObject var store: Store
     
     private var panelMinHeight: CGFloat {
-        min(Metrics.unitLength*2,
-            CGFloat(store.localUnit!.tracks.count+5) * (Metrics.lilIconLength+Metrics.lilSpacing2x))
+        max(
+            Metrics.unitLength,
+            min(Metrics.unitLength*2,
+                CGFloat(store.localUnit!.tracks.count+5) *
+                    (Metrics.lilIconLength+Metrics.lilSpacing2x))
+        )
     }
     
     var body: some View {
