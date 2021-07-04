@@ -103,13 +103,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
 // Access window in Views
 struct HostingWindowKey: EnvironmentKey {
-    typealias Value = () -> NSWindow?
-    
-    static let defaultValue: Self.Value = { nil }
+    static let defaultValue: () -> NSWindow? = { nil }
 }
 
 extension EnvironmentValues {
-    var hostingWindow: HostingWindowKey.Value {
+    var hostingWindow: () -> NSWindow? {
         get { self[HostingWindowKey.self] }
         set { self[HostingWindowKey.self] = newValue }
     }
