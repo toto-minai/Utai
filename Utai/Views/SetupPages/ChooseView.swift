@@ -89,13 +89,10 @@ struct ChooseView: View {
                         .fontWeight(.medium)
                         .textSelection(.disabled)
                 }
-                Text("\(artistRaw)")
-                    .fontWeight(.medium) +
-                Text(unit.artist != nil &&
+                CustomText("\(artistRaw)")
+                CustomText(unit.artist != nil &&
                      unit.album != nil ? " – " : "")
-                    .fontWeight(.medium) +
-                Text("\(albumRaw)")
-                    .fontWeight(.medium)
+                CustomText("\(albumRaw)")
             }
             .textSelection(.enabled)
             .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength)
@@ -310,13 +307,9 @@ struct ChooseView: View {
                                         
                                         VStack(alignment: .leading, spacing: 4) {
                                             CustomText("\(chosenTitleStyled)")
-//                                                .fontWeight(.medium)
                                             CustomText("\(chosenYearInCR)")
-//                                                .fontWeight(.medium)
                                             CustomText("\(chosenFormatStyled)")
-//                                                .fontWeight(.medium)
                                             CustomText("\(chosenLabelStyled)")
-//                                                .fontWeight(.medium)
                                             Button("**View on Discogs**") {
                                                 openURL(URL(string: "https://discogs.com\(chosenResult.uri)")!)
                                             }
@@ -327,7 +320,6 @@ struct ChooseView: View {
                                             
                                             Spacer()
                                         }
-                                        .textSelection(.enabled)
                                         .animation(nil, value: chosen)
                                     }
                                     .padding(.horizontal, Metrics.lilSpacing2x+Metrics.lilIconLength)

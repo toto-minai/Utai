@@ -405,10 +405,7 @@ struct MismatchedTrackLine: View {
                 .frame(width: 15, alignment: .leading)
             
             
-            Text(track.title ?? track.filename)
-                .font(.custom("Yanone Kaffeesatz", size: 16))
-                .fontWeight(.bold)
-                .lineSpacing(4)
+            CustomText(track.title ?? track.filename)
             
             Spacer()
             
@@ -468,11 +465,7 @@ struct MatchedTrackLine: View {
                 .opacity(isRepeated ? 1 : 0)
             }
             
-            Text(track.perfectMatchedTrack!.title)
-                .font(.custom("Yanone Kaffeesatz", size: 16))
-                .fontWeight(.bold)
-                .lineSpacing(4)
-                .textSelection(.enabled)
+            CustomText(track.perfectMatchedTrack!.title)
             
             Spacer()
             
