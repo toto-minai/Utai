@@ -309,14 +309,14 @@ struct ChooseView: View {
                                         .animation(.easeOut, value: chosen)
                                         
                                         VStack(alignment: .leading, spacing: 4) {
-                                            Text("\(chosenTitleStyled)")
-                                                .fontWeight(.medium)
-                                            Text("\(chosenYearInCR)")
-                                                .fontWeight(.medium)
-                                            Text("\(chosenFormatStyled)")
-                                                .fontWeight(.medium)
-                                            Text("\(chosenLabelStyled)")
-                                                .fontWeight(.medium)
+                                            CustomText("\(chosenTitleStyled)")
+//                                                .fontWeight(.medium)
+                                            CustomText("\(chosenYearInCR)")
+//                                                .fontWeight(.medium)
+                                            CustomText("\(chosenFormatStyled)")
+//                                                .fontWeight(.medium)
+                                            CustomText("\(chosenLabelStyled)")
+//                                                .fontWeight(.medium)
                                             Button("**View on Discogs**") {
                                                 openURL(URL(string: "https://discogs.com\(chosenResult.uri)")!)
                                             }
