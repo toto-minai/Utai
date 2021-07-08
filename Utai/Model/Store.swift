@@ -43,6 +43,9 @@ class Store: ObservableObject {
     }
     
     func willSearch() {
+        NSApp.keyWindow?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        
         makeSearchURL()
         page = 2
     }
