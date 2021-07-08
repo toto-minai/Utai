@@ -42,5 +42,6 @@ struct ReferencesControl: View {
             Spacer()
         }
         .frame(height: Metrics.unitLength)
+        .opacity(0)
     }
 }

@@ -31,10 +31,6 @@ struct About: View {
                 VStack(spacing: 4) {
                     Text("Copyright (c) 2021 [Toto Minai](https://twitter.com/toto_minai)")
                         .fontWeight(.bold)
-                    Text("[Become a Sponser](https://minai.gumroad.com)")
-                        .fontWeight(.bold)
-                    Text("[chunghwa.asia](https://chunghwa.asia)")
-                        .fontWeight(.bold)
                 }
             }
             .padding()

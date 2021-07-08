@@ -8,7 +8,7 @@
 import SwiftUI
 
 enum CustomFont {
-    static let CJKFont = NSFont(name: "Source Han Sans TC", size: 12.8)!
+    static let CJKFont = NSFont.systemFont(ofSize: 12.8)
     static let LatinFont = NSFont(name: "Yanone Kaffeesatz", size: 16)!
     static let LatinFontCharacterSet = LatinFont.fontDescriptor.object(forKey: .characterSet) as! NSCharacterSet
     

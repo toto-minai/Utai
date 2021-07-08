@@ -477,7 +477,7 @@
 				INFOPLIST_FILE = Utai/Info.plist;
 				INFOPLIST_KEY_CFBundleExecutable = Utai;
 				INFOPLIST_KEY_CFBundleName = Utai;
-				INFOPLIST_KEY_CFBundleVersion = 1;
+				INFOPLIST_KEY_CFBundleVersion = 2;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -512,7 +512,7 @@
 				INFOPLIST_FILE = Utai/Info.plist;
 				INFOPLIST_KEY_CFBundleExecutable = Utai;
 				INFOPLIST_KEY_CFBundleName = Utai;
-				INFOPLIST_KEY_CFBundleVersion = 1;
+				INFOPLIST_KEY_CFBundleVersion = 2;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
