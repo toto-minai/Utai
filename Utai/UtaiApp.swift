@@ -54,6 +54,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         window.titlebarAppearsTransparent = true
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
+        #if SCREENSHOT_MODE
+        window.backgroundColor = .clear
+        window.hasShadow = false
+        #endif
         
         window.level = .floating
         window.tabbingMode = .disallowed

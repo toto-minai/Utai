@@ -34,9 +34,15 @@ struct ContentView: View {
             .frame(height: Metrics.unitLength)
             .ignoresSafeArea()
             .frame(height: Metrics.unitLength-Metrics.titlebarHeight)
-            .background(EffectsView(
-                material: .sidebar,
-                blendingMode: .behindWindow).ignoresSafeArea())
+            .background {
+                #if SCREENSHOT_MODE
+                #else
+                EffectsView(
+                    material: .sidebar,
+                    blendingMode: .behindWindow).ignoresSafeArea()
+                #endif
+            }
+            
             
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
