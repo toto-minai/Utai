@@ -33,32 +33,42 @@ struct MatchView: View {
                 
                 if let thumb = artworkPrimaryURL.first {
                     ZStack {
-                        AsyncImage(url: thumb) { image in
-                            ZStack {
-                                image.resizable().scaledToFill()
-                                    .frame(width: 256, height: 256)
-                                    .frame(height: 128, alignment: .bottom)
-                                    .cornerRadius(72)
-                                    .blur(radius: 7.2)
-                                    .frame(width: 248, height: 312).clipped()
-                                    .offset(y: 2.4+64)
-                                    .scaleEffect(store.infoMode ? 1.22 : 1)
-                                    .opacity(store.infoMode ? 0 : 1)
-                                    .animation(store.page == 3 ? .easeOut : .none, value: store.infoMode)
-                                
-                                image.resizable().scaledToFill()
-                                    .frame(width: 256, height: 256)
-                                    .cornerRadius(store.infoMode ? 0 : 8)
-                                    .shadow(color: Color.black.opacity(0.54),
-                                            radius: 7.2, x: 0, y: 2.4)
-                                    .onTapGesture {
-                                        store.infoMode.toggle()
-                                    }
-                                    .scaleEffect(store.infoMode ? 1.22 : 1)
-                                    .onAppear { store.referenceURL = nil }
-                                    .animation(store.page == 3 ? .easeOut : .none, value: store.infoMode)
+                        AsyncImage(url: thumb,
+                                   transaction: Transaction(animation: .easeOut)) { phase in
+                            switch(phase) {
+                            case .empty:
+                                ProgressView()
+                            case .success(let image):
+                                ZStack {
+                                    image.resizable().scaledToFill()
+                                        .frame(width: 256, height: 256)
+                                        .frame(height: 128, alignment: .bottom)
+                                        .cornerRadius(72)
+                                        .blur(radius: 7.2)
+                                        .frame(width: 248, height: 312).clipped()
+                                        .offset(y: 2.4+64)
+                                        .scaleEffect(store.infoMode ? 1.22 : 1)
+                                        .opacity(store.infoMode ? 0 : 1)
+                                        .animation(store.page == 3 ? .easeOut : .none, value: store.infoMode)
+                                    
+                                    image.resizable().scaledToFill()
+                                        .frame(width: 256, height: 256)
+                                        .cornerRadius(store.infoMode ? 0 : 8)
+                                        .shadow(color: Color.black.opacity(0.54),
+                                                radius: 7.2, x: 0, y: 2.4)
+                                        .onTapGesture {
+                                            store.infoMode.toggle()
+                                        }
+                                        .scaleEffect(store.infoMode ? 1.22 : 1)
+                                        .onAppear { store.referenceURL = nil }
+                                        .animation(store.page == 3 ? .easeOut : .none, value: store.infoMode)
+                                }
+                            case .failure:
+                                EmptyView()
+                            @unknown default:
+                                EmptyView()
                             }
-                        } placeholder: { ProgressView() }
+                        }
                         .frame(width: 312, height: 312)
                         .contextMenu {
                             Button(action: { openURL(URL(string: "\(store.referenceResult!.uri)")!) })

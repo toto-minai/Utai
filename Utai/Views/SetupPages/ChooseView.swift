@@ -811,46 +811,59 @@ struct Artwork80x80: View {
     var body: some View {
         ZStack {
             if let thumb = result.coverImage {
-                AsyncImage(url: URL(string: thumb)!) { image in
-                    ZStack {
-                        image.resizable().scaledToFill()
-                            .frame(width: 80, height: 80)
-                            .frame(height: 40, alignment: .bottom)
-                            .cornerRadius(36)
-                            .overlay(RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.accentColor
-                                    .opacity(
-                                        (chosen != nil && chosen! == result.id) ?
-                                        1 : 0.001), lineWidth: 2))
-                            .blur(radius: 3.6)
-                            .frame(width: 76, height: 120).clipped()
-                            .offset(y: 2.4+20)
-                        
-                        image.resizable().scaledToFill()
-                            .frame(width: 80, height: 80)
-                            .cornerRadius(4)
-                            .shadow(color: Color.black.opacity(0.54),
-                                    radius: 3.6, x: 0, y: 2.4)
-                            .overlay(RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.accentColor
-                                    .opacity(
-                                        (chosen != nil && chosen! == result.id) ?
-                                        1 : 0.001), lineWidth: 2))
-                            .onTapGesture {
-                                if chosen == result.id { store.didReferencePicked(using: result.resourceURL) }
-                                else { withAnimation(.easeOut) { chosen = result.id } }
-                            }
+                AsyncImage(url: URL(string: thumb)!,
+                           transaction: Transaction(animation: .easeOut)) { phase in
+                    switch(phase) {
+                    case .empty:
+                        ZStack {
+                            EffectView(material: .contentBackground,
+                                       blendingMode: .behindWindow)
+                            
+                            ProgressView()
+                        }.cornerRadius(8)
+                    case .success(let image):
+                        ZStack {
+                            image.resizable().scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .frame(height: 40, alignment: .bottom)
+                                .cornerRadius(36)
+                                .overlay(RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color.accentColor
+                                        .opacity(
+                                            (chosen != nil && chosen! == result.id) ?
+                                            1 : 0.001), lineWidth: 2))
+                                .blur(radius: 3.6)
+                                .frame(width: 76, height: 120).clipped()
+                                .offset(y: 2.4+20)
+                            
+                            image.resizable().scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .cornerRadius(4)
+                                .shadow(color: Color.black.opacity(0.54),
+                                        radius: 3.6, x: 0, y: 2.4)
+                        }
+                    case .failure:
+                        ZStack {
+                            EffectView(material: .contentBackground,
+                                       blendingMode: .behindWindow)
+                        }.cornerRadius(8)
+                    @unknown default:
+                        EmptyView()
                     }
-                    .id(result.id)
-                } placeholder: {
-                    ZStack {
-                        Color.black.opacity(0.2)
-                        
-                        ProgressView()
-                    }.cornerRadius(8)
                 }
+                .id(result.id)
                 .frame(width: 80, height: 80)
-            } else { Color.red.frame(width: 80, height: 80) }
+                .onTapGesture {
+                    if chosen == result.id {
+                        store.didReferencePicked(using: result.resourceURL)
+                    } else { withAnimation(.easeOut) { chosen = result.id } }
+                }
+                .overlay(RoundedRectangle(cornerRadius: 4)
+                    .stroke(Color.accentColor
+                        .opacity(
+                            (chosen != nil && chosen! == result.id) ?
+                            1 : 0.001), lineWidth: 2))
+            }
         }
         // Cancel shadow-clipping: 1. Positive padding
         .padding(.vertical, 20)

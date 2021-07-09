@@ -66,20 +66,31 @@ struct SingleArtwork: View {
             Color.yellow.opacity(0.001)
                 .frame(width: 28)
             
-            AsyncImage(url: URL(string: artwork.resourceURL)!) { image in
+            AsyncImage(url: URL(string: artwork.resourceURL)!,
+                       transaction: Transaction(animation: .easeOut)) { phase in
+                switch (phase) {
+                case .empty:
+                    ZStack {
+                        EffectView(material: .contentBackground, blendingMode: .behindWindow)
+                
+                        ProgressView()
+                    }.cornerRadius(8)
+                case .success(let image):
                     image.resizable()
                         .scaledToFill()
                         .frame(width: widthCalculated, height: heightCalculated)
                         .cornerRadius(4)
                         .shadow(color: Color.black.opacity(0.54),
                                 radius: 3.6, x: 0, y: 2.4)
-            } placeholder: {
-                ZStack {
-                    EffectView(material: .sidebar, blendingMode: .behindWindow)
-            
-                    ProgressView()
-                }.frame(width: widthCalculated, height: heightCalculated).cornerRadius(8)
+                case .failure:
+                    ZStack {
+                        EffectView(material: .contentBackground, blendingMode: .behindWindow)
+                    }.cornerRadius(8)
+                @unknown default:
+                    EmptyView()
+                }
             }
+            .frame(width: widthCalculated, height: heightCalculated)
         }
         .onTapGesture {
             withAnimation(.spring()) {
