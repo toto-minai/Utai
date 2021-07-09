@@ -75,7 +75,7 @@ struct SingleArtwork: View {
                                 radius: 3.6, x: 0, y: 2.4)
             } placeholder: {
                 ZStack {
-                    EffectsView(material: .sidebar, blendingMode: .behindWindow)
+                    EffectView(material: .sidebar, blendingMode: .behindWindow)
             
                     ProgressView()
                 }.frame(width: widthCalculated, height: heightCalculated).cornerRadius(8)

@@ -37,7 +37,7 @@ struct ContentView: View {
             .background {
                 #if SCREENSHOT_MODE
                 #else
-                EffectsView(
+                EffectView(
                     material: .sidebar,
                     blendingMode: .behindWindow).ignoresSafeArea()
                 #endif

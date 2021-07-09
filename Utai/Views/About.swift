@@ -39,7 +39,7 @@ struct About: View {
         .ignoresSafeArea()
         .frame(height: Metrics.unitLength-Metrics.titlebarHeight)
         .frame(width: Metrics.unitLength)
-        .background(EffectsView(
+        .background(EffectView(
             material: .sidebar,
             blendingMode: .behindWindow).ignoresSafeArea())
         .font(.custom("Yanone Kaffeesatz", size: 16))

@@ -12,7 +12,7 @@ struct PageTurner: View {
     @AppStorage(Settings.pageTurnerIconType) var turner: Int = 1
     
     var blurredBackground: some View {
-        EffectsView(material: .titlebar, blendingMode: .withinWindow)
+        EffectView(material: .titlebar, blendingMode: .withinWindow)
             .opacity(store.infoMode ? 1 : 0)
     }
     

@@ -84,7 +84,7 @@ struct MatchView: View {
                                 }
                             }
                             .background {
-                                EffectsView(material: .titlebar, blendingMode: .withinWindow)
+                                EffectView(material: .titlebar, blendingMode: .withinWindow)
                             }
                             
                             Spacer()
