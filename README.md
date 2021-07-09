@@ -3,7 +3,7 @@
 <p>Mini-Functional, Offensive, MP3 Tagger for Philharmoniques<br />
 <b><a href="https://github.com/toto-minai/Utai/releases/download/v0.1_3/Utai.app.zip">Download Beta</a> 🙋</b> / 
 <b><a href="https://t.me/utai_app">Telegram Group</a> 🧸</b></p>
-<p>Utai uses some new features (like <code>AsyncImage</code> and <code>Task</code>) from WWDC21, so it requires 
+<p>Utai uses some new features (like <code>AsyncImage</code> and <code>Task</code>) from WWDC21, <br />so it requires 
 <b>macOS 12 Monterey</b> to run.</p>
 </div>
 
