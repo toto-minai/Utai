@@ -10,7 +10,6 @@ import SwiftUI
 struct MatchView: View {
     @AppStorage(Settings.lengthMaxDelta) var lengthMaxDelta: Int = 15
     
-    let pasteboard = NSPasteboard.general
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.openURL) var openURL
     @Environment(\.hostingWindow) var hostingWindow
