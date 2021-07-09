@@ -264,14 +264,6 @@ extension MatchView {
                                 localTrack.matched.append(remoteTrack)
                             }
                         }
-                        
-                        print("-----------------")
-                        print(localTitleTokenString)
-                        print(remoteTitleTokenString)
-                        print(localTitle)
-                        print(remoteTitle)
-                        print(localTitleTokenString.count > (hasWildcard ? 1 : 0) && remoteTitleTokenString.contains(localTitleTokenString))
-                        print("~~~~~~~~~~~~~~~")
                     }
                     
                 }
