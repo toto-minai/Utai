@@ -78,7 +78,7 @@ struct CustomTextRepresented: NSViewRepresentable {
             }
             
             nsView.attributedStringValue = attributedString
-            show = true
+            withAnimation(.easeOut) { show = true }
         }
     }
 }

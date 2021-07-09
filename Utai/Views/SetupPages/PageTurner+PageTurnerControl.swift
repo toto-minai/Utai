@@ -53,7 +53,6 @@ struct PageTurner: View {
             .padding(.bottom, Metrics.lilSpacing+Metrics.lilIconLength)
             .frame(height: Metrics.unitLength)
         }
-        
     }
 }
 
