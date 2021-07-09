@@ -10,7 +10,7 @@
 ## About
 
 Utai (ウタイ) is a SwiftUI app that retrieves metadata from [Discogs](https://discogs.com) and puts ID3 tags into your MP3 files. 
-It will recognise songs by their titles and lengths, and make some simple comparison with the data from Discogs.
+It will recognise songs by their titles and lengths, and make some simple comparison with the data from Discogs to match.
 
 <p align="center">
 <img src="https://github.com/toto-minai/chunghwa.asia/raw/main/utai/img/screenshot-for-github.png" width="540px" />
