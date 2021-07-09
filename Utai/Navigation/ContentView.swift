@@ -38,7 +38,7 @@ struct ContentView: View {
                 #if SCREENSHOT_MODE
                 #else
                 EffectView(
-                    material: .sidebar,
+                    material: colorScheme == .light ? .menu : .sidebar,
                     blendingMode: .behindWindow).ignoresSafeArea()
                 #endif
             }
