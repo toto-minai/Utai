@@ -41,7 +41,7 @@ Distributed under the GNU General Public License v3.0. See `LICENSE` for more de
 ## Contact
 
 Toto Minai – [@toto_minai](https://twitter.com/toto_minai) 🍒 / [toto_minai@outlook.com](mailto:toto_minai@outlook.com) ✉️
-✉️
+
 Website – <https://chunghwa.asia/utai>
 
 Telegram Group – <https://t.me/utai_app>
