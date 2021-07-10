@@ -226,18 +226,20 @@ struct MatchPanel: View {
                         List(selection: $selection) {
                             if !mismatchedTracks.isEmpty { mismatched }
                             
-                            if !matchedTracks.isEmpty { confirmedMatched }
-                            
-                            Text(" ")
-                            
-                            HStack {
-                                Spacer()
+                            if !matchedTracks.isEmpty {
+                                confirmedMatched
                                 
-                                ButtonCus(action: tag, label: "Save Matched", systemName: "laptopcomputer.and.arrow.down")
-                                    .font(.custom("Yanone Kaffeesatz", size: 16))
-                                    .keyboardShortcut("s", modifiers: .command)
+                                Text(" ")
                                 
-                                Spacer()
+                                HStack {
+                                    Spacer()
+                                    
+                                    ButtonCus(action: tag, label: "Save Matched", systemName: "laptopcomputer.and.arrow.down")
+                                        .font(.custom("Yanone Kaffeesatz", size: 16))
+                                        .keyboardShortcut("s", modifiers: .command)
+                                    
+                                    Spacer()
+                                }
                             }
                             
                             Text(" ")
