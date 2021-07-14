@@ -47,7 +47,7 @@ struct CustomTitleBar: View {
                         }
                     }
                     .background {
-                        EffectView(material: .titlebar, blendingMode: .withinWindow)
+                        Rectangle().fill(.ultraThinMaterial)
                             .opacity(store.infoMode ? 1 : 0)
                     }
                     .offset(y: store.infoMode ? (hovering ? 0 : -(Metrics.lilSpacing2x+Metrics.lilIconLength+0.5)) : 0)
