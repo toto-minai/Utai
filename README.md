@@ -3,14 +3,14 @@
 <p>Mini-Functional, Offensive, MP3 Tagger for Philharmoniques<br />
 <b><a href="https://github.com/toto-minai/Utai/releases/download/v0.1_3/Utai.app.zip">Download Beta</a> 🙋</b> / 
 <b><a href="https://t.me/utai_app">Telegram Group</a> 🧸</b></p>
-<p>Utai uses some new features (like <code>AsyncImage</code> and <code>Task</code>) from WWDC21, so it requires 
+<p>Utai uses some new features (like <code>AsyncImage</code> and <code>Task</code>) from WWDC21, <br />so it requires 
 <b>macOS 12 Monterey</b> to run.</p>
 </div>
 
 ## About
 
 Utai (ウタイ) is a SwiftUI app that retrieves metadata from [Discogs](https://discogs.com) and puts ID3 tags into your MP3 files. 
-It will recognise songs by their titles and lengths, and make some simple comparison with the data from Discogs.
+It will recognise songs by their titles and lengths, and make some simple comparison with the data from Discogs to match.
 
 <p align="center">
 <img src="https://github.com/toto-minai/chunghwa.asia/raw/main/utai/img/screenshot-for-github.png" width="540px" />
