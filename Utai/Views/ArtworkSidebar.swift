@@ -30,7 +30,6 @@ struct ArtworkSidebar: View {
                                 .animation(.spring(), value: store.infoMode)
                             }
                         }
-                        .padding(.trailing, 132+8)
                     }
                     .frame(width: 292+8)
                     .frame(height: 339, alignment: .top)
@@ -62,48 +61,55 @@ struct SingleArtwork: View {
     @State private var hover: Bool = false
     
     var body: some View {
-        HStack(spacing: 0) {
-            Color.yellow.opacity(0.001)
-                .frame(width: 28)
-            
-            AsyncImage(url: URL(string: artwork.resourceURL)!,
-                       transaction: Transaction(animation: .easeOut)) { phase in
-                switch (phase) {
-                case .empty:
-                    ZStack {
-                        EffectView(material: .contentBackground, blendingMode: .behindWindow)
+        ZStack(alignment: .trailing) {
+            HStack(spacing: 0) {
+                Color.black.opacity(0.001)
+                    .frame(width: 28)
                 
-                        ProgressView()
-                    }.cornerRadius(8)
-                case .success(let image):
-                    image.resizable()
-                        .scaledToFill()
-                        .frame(width: widthCalculated, height: heightCalculated)
-                        .cornerRadius(4)
-                        .shadow(color: Color.black.opacity(0.54),
-                                radius: 3.6, x: 0, y: 2.4)
-                case .failure:
-                    ZStack {
-                        EffectView(material: .contentBackground, blendingMode: .behindWindow)
-                    }.cornerRadius(8)
-                @unknown default:
-                    EmptyView()
+                AsyncImage(url: URL(string: artwork.resourceURL)!,
+                           transaction: Transaction(animation: .easeOut)) { phase in
+                    switch (phase) {
+                    case .empty:
+                        ZStack {
+                            EffectView(material: .contentBackground, blendingMode: .behindWindow)
+                    
+                            ProgressView()
+                        }.cornerRadius(8)
+                    case .success(let image):
+                        image.resizable()
+                            .scaledToFill()
+                            .frame(width: widthCalculated, height: heightCalculated)
+                            .cornerRadius(4)
+                            .shadow(color: Color.black.opacity(0.54),
+                                    radius: 3.6, x: 0, y: 2.4)
+                    case .failure:
+                        ZStack {
+                            EffectView(material: .contentBackground, blendingMode: .behindWindow)
+                        }.cornerRadius(8)
+                    @unknown default:
+                        EmptyView()
+                    }
                 }
+                .frame(width: widthCalculated, height: heightCalculated)
             }
-            .frame(width: widthCalculated, height: heightCalculated)
+            .offset(x: protrude)
+            
+            Color.black.opacity(0.001)
+                .frame(width: 32 + protrude)
+                
+                .onHover { hovering in
+                    withAnimation(
+                        .spring()
+                            .speed(hovering ? speed : 1)
+                    ) { hover = hovering }
+                }
+                .offset(x: protrude)
         }
+        .padding(.trailing, 132+8)
         .onTapGesture {
-            withAnimation(.spring()) {
-                hover = false
-            }
+            withAnimation(.spring()) { hover = false }
             openURL(URL(string: artwork.resourceURL)!)
         }
-        .onHover { hovering in
-            withAnimation(.spring()) {
-                hover = hovering
-            }
-        }
-        .offset(x: protrude)
     }
 }
 
@@ -130,6 +136,10 @@ extension SingleArtwork {
         } else {
             return 80
         }
+    }
+    
+    var speed: Double {
+        1 - (Double(widthCalculated) - 80) / 160 / 2
     }
     
     var protrude: CGFloat {
