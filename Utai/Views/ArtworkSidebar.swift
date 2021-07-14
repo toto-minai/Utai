@@ -32,7 +32,7 @@ struct ArtworkSidebar: View {
                         }
                     }
                     .frame(width: 292+8)
-                    .frame(height: 339, alignment: .top)
+                    .frame(height: 312, alignment: .top)
                     .frame(width: 168+8, alignment: .trailing)
                     .clipped()
                     .mask {
@@ -45,7 +45,6 @@ struct ArtworkSidebar: View {
                             LinearGradient(colors: [Color.black, Color.black.opacity(0)], startPoint: .top, endPoint: .bottom)
                                 .frame(height: 12)
                         }
-                        .padding(.vertical, 16)
                     }
                 }
             }

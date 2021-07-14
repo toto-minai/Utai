@@ -86,7 +86,7 @@ struct MatchView: View {
         }
         .frame(width: Metrics.unitLength, height: Metrics.unitLength)
         .onAppear {  // doWhenBuildThisPage
-            subWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 168, height: 352),
+            subWindow = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 168, height: 312),
                                  styleMask: [], backing: .buffered, defer: false)
             
             let rootView = ArtworkSidebar(store: store)
@@ -103,7 +103,7 @@ struct MatchView: View {
     var doWhenTurnToThisPage: some View {
         void.onAppear {
             let frame = window.frame
-            subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-339))
+            subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-312))
             window.addChildWindow(subWindow, ordered: .below)
         }
         .onDisappear {
@@ -129,7 +129,7 @@ struct MatchView: View {
                 store.referenceResult = resultSaved
                 
                 let frame = window.frame
-                subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-339))
+                subWindow.setFrameOrigin(NSPoint(x: frame.minX+312, y: frame.maxY-312))
                 window.addChildWindow(subWindow, ordered: .below)
                 
                 match()
