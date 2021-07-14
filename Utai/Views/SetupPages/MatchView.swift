@@ -73,33 +73,6 @@ struct MatchView: View {
                             Button(action: { openURL(URL(string: "\(store.referenceResult!.uri)")!) })
                             { Text("View on Discogs") }
                         }
-                        
-                        VStack {
-                            VStack(spacing: 0) {
-                                ZStack {
-                                    Rectangle()
-                                        .foregroundColor(.clear)
-                                        .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength-0.5)
-                                }
-                                
-                                if colorScheme == .light {
-                                    Rectangle()
-                                        .frame(width: Metrics.unitLength, height: 1)
-                                        .foregroundColor(Color.secondary.opacity(0.4))
-                                } else {
-                                    Rectangle()
-                                        .frame(width: Metrics.unitLength-2, height: 1)
-                                        .foregroundColor(Color.secondary.opacity(0.4))
-                                }
-                            }
-                            .background {
-                                EffectView(material: .titlebar, blendingMode: .withinWindow)
-                            }
-                            
-                            Spacer()
-                        }
-                        .opacity(store.infoMode ? 1 : 0)
-                        .animation(nil, value: store.infoMode)
                     }
                     
                 }

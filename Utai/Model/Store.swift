@@ -11,6 +11,8 @@ class Store: ObservableObject {
     @Published var page: Int = 1
     @Published var showMatchPanel: Bool = false
     @Published var infoMode: Bool = false
+    
+    @Published var forcedRefresh: Bool = false
 
     // Page 1, 2, 3
     @Published var localUnit: LocalUnit?

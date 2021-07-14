@@ -29,6 +29,9 @@ struct ContentView: View {
                 ReferencesControl(page: $store.page)
                 
                 PageTurner()
+                
+                CustomTitleBar()
+                    .forcingRefresh($store.forcedRefresh)
             }
             // Translucent background
             .frame(height: Metrics.unitLength)
@@ -42,7 +45,8 @@ struct ContentView: View {
                     blendingMode: .behindWindow).ignoresSafeArea()
                 #endif
             }
-            
+            // Forcing custom title bar to refresh when `colorScheme` changed
+            .onChange(of: colorScheme) { _ in store.forcedRefresh.toggle() }
             
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
