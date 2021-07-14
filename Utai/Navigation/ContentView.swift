@@ -50,7 +50,7 @@ struct ContentView: View {
             
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
-                    .frame(height: Metrics.unitLength*2)
+                    .frame(height: Metrics.unitLength*1.618)
                     // .frame(minHeight: panelMinHeight, maxHeight: .infinity)
             }
         }
