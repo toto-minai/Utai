@@ -32,7 +32,7 @@ struct CustomTitleBar: View {
                             
                             Spacer()
                         }
-                        .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength-0.5)
+                        .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                         
                         if colorScheme == .light {
                             Rectangle()
@@ -50,11 +50,11 @@ struct CustomTitleBar: View {
                         Rectangle().fill(.ultraThinMaterial)
                             .opacity(store.infoMode ? 1 : 0)
                     }
-                    .offset(y: store.infoMode ? (hovering ? 0 : -(Metrics.lilSpacing2x+Metrics.lilIconLength+0.5)) : 0)
+                    .offset(y: store.infoMode ? (hovering ? 0 : -(Metrics.lilSpacing2x+Metrics.lilIconLength+1)) : 0)
                     .animation(.easeOut.speed(2), value: hovering)
                     .animation(.easeOut.speed(2), value: store.infoMode)
                 }
-                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength+0.5)
+                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength+1)
                 
                 Spacer()
             }
@@ -68,7 +68,7 @@ struct CustomTitleBar: View {
                     
                     Spacer()
                 }
-                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength-0.5)
+                .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                     
                 Spacer()
             }
