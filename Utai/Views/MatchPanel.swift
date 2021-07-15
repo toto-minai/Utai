@@ -249,7 +249,7 @@ struct MatchPanel: View {
                         .frame(width: colorScheme == .light ? 312 : 310)
                         .clipped()
                         .padding(.bottom, Metrics.lilIconLength+Metrics.lilSpacing2x)
-                        .listStyle(BorderedListStyle(alternatesRowBackgrounds: true))
+                        .listStyle(.bordered(alternatesRowBackgrounds: true))
                         .environment(\.defaultMinListRowHeight, Metrics.lilIconLength+Metrics.lilSpacing2x)
                         .environment(\.defaultMinListHeaderHeight, Metrics.lilIconLength+Metrics.lilSpacing2x)
                         
