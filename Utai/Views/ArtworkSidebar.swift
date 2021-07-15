@@ -98,7 +98,7 @@ struct SingleArtwork: View {
                 
                 .onHover { hovering in
                     withAnimation(
-                        .spring()
+                        .easeOut
                             .speed(hovering ? speed : 1)
                     ) { hover = hovering }
                 }
@@ -106,7 +106,7 @@ struct SingleArtwork: View {
         }
         .padding(.trailing, 132+8)
         .onTapGesture {
-            withAnimation(.spring()) { hover = false }
+            withAnimation(.easeOut) { hover = false }
             openURL(URL(string: artwork.resourceURL)!)
         }
     }
