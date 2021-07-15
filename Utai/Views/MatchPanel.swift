@@ -293,8 +293,7 @@ extension MatchPanel {
         withAnimation(.spring()) {
             DispatchQueue.main.async {
                 mismatchedTracks.removeAll { $0.id == localTrack.id }
-                // Can only use a copy or it will generate extra spaces in Xcode 13 Beta 1
-                matchedTracks.append(localTrack.copy())
+                matchedTracks.append(localTrack)
             }
         }
     }
