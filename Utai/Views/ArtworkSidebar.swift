@@ -58,6 +58,7 @@ struct SingleArtwork: View {
     let artwork: ReferenceResult.Artwork
     
     @State private var hover: Bool = false
+    @State private var loaded: Bool = false
     
     var body: some View {
         ZStack(alignment: .trailing) {
@@ -81,6 +82,12 @@ struct SingleArtwork: View {
                             .cornerRadius(4)
                             .shadow(color: Color.black.opacity(0.54),
                                     radius: 3.6, x: 0, y: 2.4)
+                            .onAppear {
+                                withAnimation(.easeOut ) {
+                                    loaded = true
+                                }
+                            }
+                            .onDisappear { loaded = false }
                     case .failure:
                         ZStack {
                             EffectView(material: .contentBackground, blendingMode: .behindWindow)
@@ -142,6 +149,6 @@ extension SingleArtwork {
     }
     
     var protrude: CGFloat {
-        hover ? (widthCalculated < 28 ? 0 : widthCalculated - 28 ) : 0
+        loaded && hover ? (widthCalculated < 28 ? 0 : widthCalculated - 28 ) : 0
     }
 }
