@@ -18,16 +18,6 @@ struct PageTurner: View {
     
     var body: some View {
         ZStack {
-            Group {
-                Button("", action: turnToPage1)
-                    .keyboardShortcut("1", modifiers: .command)
-                Button("", action: turnToPage2)
-                    .keyboardShortcut("2", modifiers: .command)
-                Button("", action: turnToPage3)
-                    .keyboardShortcut("3", modifiers: .command)
-            }
-            .hidden()
-            
             VStack {
                 Spacer()
                 
@@ -52,6 +42,15 @@ struct PageTurner: View {
             }
             .padding(.bottom, Metrics.lilSpacing+Metrics.lilIconLength)
             .frame(height: Metrics.unitLength)
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("turnToPage1"))) { _ in
+                turnToPage1()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("turnToPage2"))) { _ in
+                turnToPage2()
+            }
+            .onReceive(NotificationCenter.default.publisher(for: Notification.Name("turnToPage3"))) { _ in
+                turnToPage3()
+            }
         }
     }
 }
