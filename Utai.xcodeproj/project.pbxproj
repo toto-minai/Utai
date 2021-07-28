@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		993C9FA32678C787007E4387 /* ReferenceResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993C9FA22678C787007E4387 /* ReferenceResult.swift */; };
-		9955CD3E26B140E10055462F /* Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9955CD3D26B140E10055462F /* Commands.swift */; };
+		9955CD5C26B1815E0055462F /* ViewCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9955CD5B26B1815E0055462F /* ViewCommands.swift */; };
 		995BA54526971F1D0016757A /* CustomText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995BA54426971F1D0016757A /* CustomText.swift */; };
 		99747F142672E78100995E85 /* EffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F132672E78100995E85 /* EffectView.swift */; };
 		99747F172672EA0000995E85 /* SetupPages+ReferencesControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99747F162672EA0000995E85 /* SetupPages+ReferencesControl.swift */; };
@@ -54,7 +54,7 @@
 
 /* Begin PBXFileReference section */
 		993C9FA22678C787007E4387 /* ReferenceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceResult.swift; sourceTree = "<group>"; };
-		9955CD3D26B140E10055462F /* Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Commands.swift; sourceTree = "<group>"; };
+		9955CD5B26B1815E0055462F /* ViewCommands.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCommands.swift; sourceTree = "<group>"; };
 		995BA54426971F1D0016757A /* CustomText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomText.swift; sourceTree = "<group>"; };
 		996C0E842674FB6B00BA5A6C /* Utai.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Utai.entitlements; sourceTree = "<group>"; };
 		99747F132672E78100995E85 /* EffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectView.swift; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 		9955CD3C26B140AD0055462F /* Commands */ = {
 			isa = PBXGroup;
 			children = (
-				9955CD3D26B140E10055462F /* Commands.swift */,
+				9955CD5B26B1815E0055462F /* ViewCommands.swift */,
 			);
 			path = Commands;
 			sourceTree = "<group>";
@@ -337,7 +337,6 @@
 				99747F192672EA3300995E85 /* PageTurner+PageTurnerControl.swift in Sources */,
 				99D046F32674730A0076D972 /* Store.swift in Sources */,
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
-				9955CD3E26B140E10055462F /* Commands.swift in Sources */,
 				99747F1D2672EAD400995E85 /* LocalUnit.swift in Sources */,
 				995BA54526971F1D0016757A /* CustomText.swift in Sources */,
 				9994F21226806CAD00CA3726 /* ArtworkSidebar.swift in Sources */,
@@ -351,6 +350,7 @@
 				99CA05F6267B1C01007C8B67 /* ChooseModes.swift in Sources */,
 				99D046FC2674E6AA0076D972 /* Secrets.swift in Sources */,
 				99DB1BE82675FC1C00CCA6D7 /* CustomButtons.swift in Sources */,
+				9955CD5C26B1815E0055462F /* ViewCommands.swift in Sources */,
 				99CA05F9267B28D5007C8B67 /* Settings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
