@@ -37,17 +37,10 @@ struct CustomTitleBar: View {
                         }
                         .frame(height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                         
-                        if colorScheme == .light {
-                            Rectangle()
-                                .frame(width: Metrics.unitLength, height: 1)
-                                .foregroundColor(Color.secondary.opacity(0.4))
-                                .opacity(store.infoMode ? 1 : 0)
-                        } else {
-                            Rectangle()
-                                .frame(width: Metrics.unitLength-2, height: 1)
-                                .foregroundColor(Color.secondary.opacity(0.4))
-                                .opacity(store.infoMode ? 1 : 0)
-                        }
+                        Rectangle()
+                            .frame(width: Metrics.unitLength - (colorScheme == .light ? 0 : 2), height: 1)
+                            .foregroundColor(Color.secondary.opacity(0.4))
+                            .opacity(store.infoMode ? 1 : 0)
                     }
                     .background {
                         Rectangle().fill(.ultraThinMaterial)

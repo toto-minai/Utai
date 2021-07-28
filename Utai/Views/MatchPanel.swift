@@ -170,36 +170,42 @@ struct MatchPanel: View {
     }
     
     private var footer: some View {
-        VStack(spacing: 0) {
+        VStack {
             Spacer()
             
-            HStack {
-                Spacer()
+            VStack(spacing: 0) {
+                Rectangle()
+                    .frame(width: Metrics.unitLength - (colorScheme == .light ? 0 : 2), height: 1)
+                    .foregroundColor(Color.secondary.opacity(0.4))
                 
-                Menu { extraMenu } label: {
-                    ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
-                        .padding(Metrics.lilSpacing)
-                }
-                .menuStyle(BorderlessButtonMenuStyle())
-                .menuIndicator(.hidden)
-                .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
-                       height: Metrics.lilSpacing2x+Metrics.lilIconLength)
-                .offset(x: 2, y: -0.5)
-                .focused($isOptionsFocused)
-                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("toggleOptions"))) { _ in
-                    isOptionsFocused = true
+                HStack {
+                    Spacer()
                     
-                    let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
-                    let spaceKey: UInt16 = 49
-                    
-                    let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
-                    let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
-                    spaceDown?.flags = .maskNonCoalesced
-                    spaceUp?.flags = .maskNonCoalesced
-                    
-                    let tap = CGEventTapLocation.cghidEventTap
-                    spaceDown?.post(tap: tap)
-                    spaceUp?.post(tap: tap)
+                    Menu { extraMenu } label: {
+                        ButtonMini(systemName: "ellipsis.circle", helpText: "Options")
+                            .padding(Metrics.lilSpacing)
+                    }
+                    .menuStyle(BorderlessButtonMenuStyle())
+                    .menuIndicator(.hidden)
+                    .frame(width: Metrics.lilSpacing2x+Metrics.lilIconLength,
+                           height: Metrics.lilSpacing2x+Metrics.lilIconLength)
+                    .offset(x: 2, y: -0.5)
+                    .focused($isOptionsFocused)
+                    .onReceive(NotificationCenter.default.publisher(for: Notification.Name("toggleOptions"))) { _ in
+                        isOptionsFocused = true
+                        
+                        let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+                        let spaceKey: UInt16 = 49
+                        
+                        let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
+                        let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
+                        spaceDown?.flags = .maskNonCoalesced
+                        spaceUp?.flags = .maskNonCoalesced
+                        
+                        let tap = CGEventTapLocation.cghidEventTap
+                        spaceDown?.post(tap: tap)
+                        spaceUp?.post(tap: tap)
+                    }
                 }
             }
             .background(.ultraThickMaterial)
@@ -236,7 +242,6 @@ struct MatchPanel: View {
                         .clipped()
                         .frame(width: colorScheme == .light ? 312 : 310)
                         .clipped()
-                        .padding(.bottom, Metrics.lilIconLength+Metrics.lilSpacing2x)
                         .listStyle(.bordered(alternatesRowBackgrounds: true))
                         .environment(\.defaultMinListRowHeight, Metrics.lilIconLength+Metrics.lilSpacing2x)
                         .environment(\.defaultMinListHeaderHeight, Metrics.lilIconLength+Metrics.lilSpacing2x)
