@@ -140,6 +140,21 @@ struct ChooseView: View {
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
                 .focused($isOptionsFocused)
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("showOptions"))) { _ in
+                    isOptionsFocused = true
+                    
+                    let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
+                    let spaceKey: UInt16 = 49
+                    
+                    let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
+                    let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
+                    spaceDown?.flags = .maskNonCoalesced
+                    spaceUp?.flags = .maskNonCoalesced
+                    
+                    let tap = CGEventTapLocation.cghidEventTap
+                    spaceDown?.post(tap: tap)
+                    spaceUp?.post(tap: tap)
+                }
             }
         }
     }
@@ -251,28 +266,11 @@ struct ChooseView: View {
                     Button("") { toNext() }
                         .keyboardShortcut(.tab, modifiers: [])
                     
-                    Button("") {
-                        isOptionsFocused = true
-                        forceRefreshing.toggle()
-                        
-                        let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
-                        let spaceKey: UInt16 = 49
-                        
-                        let spaceDown = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: true)
-                        let spaceUp = CGEvent(keyboardEventSource: source, virtualKey: spaceKey, keyDown: false)
-                        spaceDown?.flags = .maskNonCoalesced
-                        spaceUp?.flags = .maskNonCoalesced
-                        
-                        let tap = CGEventTapLocation.cghidEventTap
-                        spaceDown?.post(tap: tap)
-                        spaceUp?.post(tap: tap)
-                    }
-                        .keyboardShortcut(",", modifiers: .command)
-                        .onChange(of: forceRefreshing) { _ in
-                            Task {
-                                isOptionsFocused = false
-                            }
-                        }
+//                        .onChange(of: forceRefreshing) { _ in
+//                            Task {
+//                                isOptionsFocused = false
+//                            }
+//                        }
                 }
                 .hidden()
             }
@@ -333,10 +331,10 @@ struct ChooseView: View {
             }
             .padding(.top, Metrics.lilSpacing2x+Metrics.lilIconLength)
             .contextMenu { if response != nil && store.searchURL == nil { extraMenu } }
-            
-            if response != nil && store.searchURL == nil { footer }
                 
             if store.page == 2 {
+                if response != nil && store.searchURL == nil { footer }
+                
                 doWhenTurnToThisPage
                 
                 if store.searchURL != nil { doWhenNeededSearch }

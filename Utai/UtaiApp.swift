@@ -53,6 +53,13 @@ struct ViewCommands: Commands {
                                                     object: nil)
                 }.keyboardShortcut("3")
             }
+            
+            Divider()
+            
+            Button("Show Options") {
+                NotificationCenter.default.post(name: Notification.Name("showOptions"),
+                                                object: nil)
+            }.keyboardShortcut(".", modifiers: .command)
         }
     }
 }

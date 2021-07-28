@@ -187,17 +187,8 @@ struct MatchPanel: View {
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
                 .focused($isOptionsFocused)
-            }
-            .background(.ultraThickMaterial)
-        }
-    }
-    
-    var body: some View {
-        ZStack {
-            if store.page == 3 {
-                Button("") {
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("showOptions"))) { _ in
                     isOptionsFocused = true
-                    forceRefreshing.toggle()
                     
                     let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
                     let spaceKey: UInt16 = 49
@@ -211,15 +202,13 @@ struct MatchPanel: View {
                     spaceDown?.post(tap: tap)
                     spaceUp?.post(tap: tap)
                 }
-                    .keyboardShortcut(",", modifiers: .command)
-                    .hidden()
-                    .onChange(of: forceRefreshing) { _ in
-                        Task {
-                            isOptionsFocused = false
-                        }
-                    }
             }
-            
+            .background(.ultraThickMaterial)
+        }
+    }
+    
+    var body: some View {
+        ZStack {
             VStack(spacing: 0) {
                 if store.isMatched {
                     ZStack {
@@ -266,7 +255,7 @@ struct MatchPanel: View {
                 } else { Text("Matching…") }
             }
             
-            footer
+            if store.page == 3 { footer }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

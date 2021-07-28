@@ -88,22 +88,7 @@ struct ImportView: View {
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
                 .focused($isOptionsFocused)
-            }
-        }
-    }
-    
-    var body: some View {
-        let delegate = Delegate(draggingOver: $draggingOver,
-                                urls: $importedURLs,
-                                goal: $importGoal)
-        
-        return ZStack {
-            if store.page == 1 {
-                Button("") { }
-                    .keyboardShortcut(.tab, modifiers: [])
-                    .hidden()
-                
-                Button("") {
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("showOptions"))) { _ in
                     isOptionsFocused = true
                     
                     let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
@@ -118,7 +103,19 @@ struct ImportView: View {
                     spaceDown?.post(tap: tap)
                     spaceUp?.post(tap: tap)
                 }
-                    .keyboardShortcut(",", modifiers: .command)
+            }
+        }
+    }
+    
+    var body: some View {
+        let delegate = Delegate(draggingOver: $draggingOver,
+                                urls: $importedURLs,
+                                goal: $importGoal)
+        
+        return ZStack {
+            if store.page == 1 {
+                Button("") { }
+                    .keyboardShortcut(.tab, modifiers: [])
                     .hidden()
             }
             
