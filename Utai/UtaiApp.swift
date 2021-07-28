@@ -16,7 +16,7 @@ struct UtaiApp: App {
             .commands {
                 // Remove default Open
                 CommandGroup(replacing: .newItem) {
-                    Button("Add Music") {
+                    Button("Add Music...") {
                         NotificationCenter.default.post(name: Notification.Name("addMusic"),
                                                         object: nil)
                     }.keyboardShortcut("o", modifiers: .command)
