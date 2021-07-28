@@ -29,6 +29,9 @@ struct CustomTitleBar: View {
                             CloseButton()
                                 .frame(width: 14, height: 14)
                                 .padding(.leading, Metrics.lilSpacing-(colorScheme == .light ? 0 : 1))
+                            #if SCREENSHOT_MODE
+                                .hidden()
+                            #endif
                             
                             Spacer()
                         }
@@ -65,6 +68,9 @@ struct CustomTitleBar: View {
                     CloseButton()
                         .frame(width: 14, height: 14)
                         .padding(.leading, Metrics.lilSpacing-(colorScheme == .light ? 0 : 1))
+                    #if SCREENSHOT_MODE
+                        .hidden()
+                    #endif
                     
                     Spacer()
                 }
