@@ -88,7 +88,7 @@ struct ImportView: View {
                        height: Metrics.lilSpacing2x+Metrics.lilIconLength)
                 .offset(x: 2, y: -0.5)
                 .focused($isOptionsFocused)
-                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("showOptions"))) { _ in
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("toggleOptions"))) { _ in
                     isOptionsFocused = true
                     
                     let source = CGEventSource(stateID: CGEventSourceStateID.hidSystemState)
