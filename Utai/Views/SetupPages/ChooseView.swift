@@ -241,8 +241,6 @@ struct ChooseView: View {
         }
     }
     
-    @State private var forceRefreshing = false
-    
     var body: some View {
         ZStack(alignment: .top) {
             if store.page == 2 {
@@ -265,12 +263,6 @@ struct ChooseView: View {
                         .keyboardShortcut("l", modifiers: [])
                     Button("") { toNext() }
                         .keyboardShortcut(.tab, modifiers: [])
-                    
-//                        .onChange(of: forceRefreshing) { _ in
-//                            Task {
-//                                isOptionsFocused = false
-//                            }
-//                        }
                 }
                 .hidden()
             }

@@ -19,7 +19,6 @@ struct MatchPanel: View {
     @State private var selection: Set<UUID> = []
     
     @FocusState private var isOptionsFocused: Bool
-    @State private var forceRefreshing = false
     
     private func extraInfo(diskNo: Int, trackNo: Int, length: Int?, originalLength: Double) -> String {
         var extraInfo = "\t№ = " + (diskNo > 1 ? "\(diskNo)-" : "") +

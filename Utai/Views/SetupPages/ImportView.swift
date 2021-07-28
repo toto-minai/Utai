@@ -44,13 +44,15 @@ struct ImportView: View {
             ButtonCus(action: add,
                       label: "Add Music",
                       systemName: "music.note")
-                .keyboardShortcut("o", modifiers: .command)
                 .disabled(store.page != 1)
                 .sheet(isPresented: $isConfirmSheetPresented) {
                     ConfirmSheet(systemName: "music.note",
                                  instruction: "Confirm the title and artists before searching on Discogs.",
                                  albums: unit.albumCandidatesSorted,
                                  artists: unit.artistCandidatesSorted)
+                }
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("addMusic"))) { _ in
+                    add()
                 }
         }
     }
