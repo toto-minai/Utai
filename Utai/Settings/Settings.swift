@@ -15,4 +15,7 @@ enum Settings {
     static let lengthMaxDelta = "lengthMaxDelta"
     static let saveConflicts = "saveConflicts"
     static let preferMasterYear = "preferMasterYear"
+    
+    static let forceCapitalising = "forceCapitalising"
+    static let capitaliseStyle = "capitaliseStyle"
 }

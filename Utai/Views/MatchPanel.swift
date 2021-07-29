@@ -159,10 +159,23 @@ struct MatchPanel: View {
     
     @AppStorage(Settings.preferMasterYear) var useMasterYear: Bool = false
     @AppStorage(Settings.saveConflicts) var forceSavingConflicts: Bool = false
+    @AppStorage(Settings.forceCapitalising) var forceCapitalising: Bool = true
+    @AppStorage(Settings.capitaliseStyle) var capitaliseStyle: CapitaliseStyle = .none
     
     private var extraMenu: some View {
         Group {
             Section("Preferences") {
+                Picker("Capitaliser", selection: $capitaliseStyle) {
+                    Text("None").tag(CapitaliseStyle.none)
+                    Divider()
+                    Text("Wikipedia").tag(CapitaliseStyle.WP)
+                    Text("The Associated Press Stylebook").tag(CapitaliseStyle.AP)
+                }
+                Toggle("Force Capitalising in English", isOn: $forceCapitalising)
+                    .disabled(capitaliseStyle == .none)
+                
+                Divider()
+                
                 Toggle("Prefer Master Year", isOn: $useMasterYear)
                 Toggle("Force Saving Conflicts", isOn: $forceSavingConflicts)
             }
@@ -303,10 +316,23 @@ extension MatchPanel {
         }
     }
     
+    private func titleStyle(_ title: String) -> String {
+        switch capitaliseStyle {
+        case .none:
+            return title
+        case .WP:
+            return title.capitalised(using: Capitalisers.WPCapitaliser(),
+                                     forcing: forceCapitalising)
+        case .AP:
+            return title.capitalised(using: Capitalisers.APCapitaliser(),
+                                     forcing: forceCapitalising)
+        }
+    }
+    
     private func tag() {
         let id3TagEditor = ID3TagEditor()
         let id3TagAlbum = ID32v3TagBuilder()
-            .album(frame: ID3FrameWithStringContent(content: store.remoteUnit!.album))
+            .album(frame: ID3FrameWithStringContent(content: titleStyle(store.remoteUnit!.album)))
             .recordingYear(frame: ID3FrameWithIntegerContent(value: useMasterYear && store.masterYear != nil ?
                                                                 store.masterYear :
                                                                 store.remoteUnit!.year))
@@ -320,7 +346,7 @@ extension MatchPanel {
             
             do {
                 var id3Tag = id3TagAlbum
-                    .title(frame: ID3FrameWithStringContent(content: track.perfectMatchedTrack!.title))
+                    .title(frame: ID3FrameWithStringContent(content: titleStyle(track.perfectMatchedTrack!.title)))
                     .discPosition(frame: ID3FramePartOfTotal(part: track.perfectMatchedTrack!.diskNo, total: store.remoteUnit!.diskMax))
                     .trackPosition(frame: ID3FramePartOfTotal(part: track.perfectMatchedTrack!.trackNo,
                                                               total: store.remoteUnit!.trackTos[track.perfectMatchedTrack!.diskNo]))
@@ -420,6 +446,9 @@ struct MismatchedTrackLine: View {
 struct MatchedTrackLine: View {
     @Environment(\.colorScheme) var colorScheme
     
+    @AppStorage(Settings.forceCapitalising) var forceCapitalising: Bool = true
+    @AppStorage(Settings.capitaliseStyle) var capitaliseStyle: CapitaliseStyle = .none
+    
     let track: LocalUnit.Track
     
     @Binding var savedSet: Set<UUID>
@@ -460,7 +489,7 @@ struct MatchedTrackLine: View {
                 .opacity(isRepeated ? 1 : 0)
             }
             
-            CustomText(track.perfectMatchedTrack!.title)
+            CustomText(titleStyled)
             
             Spacer()
             
@@ -474,4 +503,25 @@ struct MatchedTrackLine: View {
         .padding(.vertical, 2)
         .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+(colorScheme == .light ? 1 : 2))
     }
+}
+
+extension MatchedTrackLine {
+    var titleStyled: String {
+        switch capitaliseStyle {
+        case .none:
+            return track.perfectMatchedTrack!.title
+        case .WP:
+            return track.perfectMatchedTrack!.title.capitalised(using: Capitalisers.WPCapitaliser(),
+                                                         forcing: forceCapitalising)
+        case .AP:
+            return track.perfectMatchedTrack!.title.capitalised(using: Capitalisers.APCapitaliser(),
+                                                         forcing: forceCapitalising)
+        }
+    }
+}
+
+enum CapitaliseStyle: Int, Identifiable {
+    case none, WP, AP
+    
+    var id: Int { rawValue }
 }
