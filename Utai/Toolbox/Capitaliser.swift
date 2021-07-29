@@ -31,8 +31,6 @@ protocol Capitalisable {
 
 extension Capitalisable {
     func shouldCapitalise(_ word: String, tag: NLTag) -> Bool {
-        if word.contains("'") { return false }
-        
         if mustCapitaliseTags.contains(tag) &&
             !mustntCapitaliseTags.contains(tag) {
             return true
@@ -129,7 +127,7 @@ extension String {
             let word = String(result[tokenRange])
             
             if let tag = tag {
-                if word.first!.isNumber { return true }
+                if word.first!.isNumber || word.contains("'") { return true }
                 
                 if isFirst {
                     result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
