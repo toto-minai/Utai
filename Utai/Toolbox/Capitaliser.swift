@@ -129,6 +129,8 @@ extension String {
             let word = String(result[tokenRange])
             
             if let tag = tag {
+                if word.first!.isNumber { return true }
+                
                 if isFirst {
                     result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
                                            tag == NLTag("OtherWord") ?
