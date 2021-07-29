@@ -130,7 +130,8 @@ extension String {
             
             if let tag = tag {
                 if isFirst {
-                    result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ?
+                    result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
+                                           tag == NLTag("OtherWord") ?
                         word.capitalisedFirst() :
                         word.capitalized)
                     
@@ -139,7 +140,8 @@ extension String {
                 }
                 
                 if capitaliser.shouldCapitalise(word, tag: tag) {
-                    result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ?
+                    result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
+                                           tag == NLTag("OtherWord") ?
                         word.capitalisedFirst() :
                         word.capitalized)
                 } else { result.replaceSubrange(tokenRange, with: word.lowercased()) }
@@ -153,7 +155,8 @@ extension String {
         }
         
         if let lastTag = lastTag {
-            result.replaceSubrange(lastRange!, with: lastTag == NLTag("Noun") ?
+            result.replaceSubrange(lastRange!, with: lastTag == NLTag("Noun") ||
+                                   lastTag == NLTag("OtherWord") ?
                 lastWord!.capitalisedFirst() :
                 lastWord!.capitalized)
         }
