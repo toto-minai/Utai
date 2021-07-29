@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		990F988026B2FC1F00196568 /* Capitaliser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 990F987F26B2FC1F00196568 /* Capitaliser.swift */; };
 		993C9FA32678C787007E4387 /* ReferenceResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993C9FA22678C787007E4387 /* ReferenceResult.swift */; };
 		9955CD5C26B1815E0055462F /* ViewCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9955CD5B26B1815E0055462F /* ViewCommands.swift */; };
 		995BA54526971F1D0016757A /* CustomText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 995BA54426971F1D0016757A /* CustomText.swift */; };
@@ -53,6 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		990F987F26B2FC1F00196568 /* Capitaliser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Capitaliser.swift; sourceTree = "<group>"; };
 		993C9FA22678C787007E4387 /* ReferenceResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceResult.swift; sourceTree = "<group>"; };
 		9955CD5B26B1815E0055462F /* ViewCommands.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewCommands.swift; sourceTree = "<group>"; };
 		995BA54426971F1D0016757A /* CustomText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomText.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 		99747F122672E76100995E85 /* Toolbox */ = {
 			isa = PBXGroup;
 			children = (
+				990F987F26B2FC1F00196568 /* Capitaliser.swift */,
 				99CA05F3267A6326007C8B67 /* Void.swift */,
 				99747F132672E78100995E85 /* EffectView.swift */,
 			);
@@ -339,6 +342,7 @@
 				9987A3D72670E1F60000328B /* UtaiApp.swift in Sources */,
 				99747F1D2672EAD400995E85 /* LocalUnit.swift in Sources */,
 				995BA54526971F1D0016757A /* CustomText.swift in Sources */,
+				990F988026B2FC1F00196568 /* Capitaliser.swift in Sources */,
 				9994F21226806CAD00CA3726 /* ArtworkSidebar.swift in Sources */,
 				99747F1B2672EA7200995E85 /* ImportView.swift in Sources */,
 				9994F210267F81DB00CA3726 /* MatchPanel.swift in Sources */,
@@ -482,7 +486,7 @@
 				CODE_SIGN_ENTITLEMENTS = Utai/Utai.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Utai/Preview Content\"";
 				DEVELOPMENT_TEAM = HF53MKBBUV;
 				ENABLE_APP_SANDBOX = YES;
@@ -517,7 +521,7 @@
 				CODE_SIGN_ENTITLEMENTS = Utai/Utai.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Utai/Preview Content\"";
 				DEVELOPMENT_TEAM = HF53MKBBUV;
 				ENABLE_APP_SANDBOX = YES;

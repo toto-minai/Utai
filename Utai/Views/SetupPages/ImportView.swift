@@ -169,6 +169,7 @@ extension ImportView {
             return
         }
         
+        store.infoMode = false
         store.localUnit = LocalUnit(urls: panel.urls)
         
         if unit.isQueryComplete && !alwaysConfirm { store.willSearch() }

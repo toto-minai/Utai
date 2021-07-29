@@ -51,7 +51,11 @@ struct ContentView: View {
             if store.page == 3 && store.referenceURL == nil {
                 MatchPanel()
                     .frame(height: Metrics.unitLength*1.618)
-                    // .frame(minHeight: panelMinHeight, maxHeight: .infinity)
+                    .onDisappear {
+                        DispatchQueue.main.async {
+                            store.forcedRefresh.toggle()
+                        }
+                    }
             }
         }
         .frame(width: Metrics.unitLength)
