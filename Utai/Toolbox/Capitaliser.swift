@@ -96,8 +96,29 @@ class Capitalisers {
 extension String {
     func capitalisedFirst() -> String {
         guard !isEmpty else { return "" }
+        guard isLatin else { return self }
 
         return first!.uppercased() + dropFirst()
+    }
+    
+    func tagged() -> [(NLTag?, Range<Index>)] {
+        var result = [(NLTag?, Range<Index>)]()
+        
+        let tagger = NLTagger(tagSchemes: [.lexicalClass])
+        tagger.string = self
+        
+        let options: NLTagger.Options = [
+            .omitOther, .omitWhitespace, .omitPunctuation, .joinContractions, .joinNames]
+        tagger.enumerateTags(in: startIndex..<endIndex,
+                             unit: .word,
+                             scheme: .lexicalClass,
+                             options: options) { tag, tokenRange in
+            result.append((tag, tokenRange))
+            
+            return true
+        }
+        
+        return result
     }
     
     func capitalised(using capitaliser: Capitalisable, forcing: Bool = false) -> String {
@@ -111,54 +132,23 @@ extension String {
         
         var result = self
         
-        let tagger = NLTagger(tagSchemes: [.lexicalClass])
-        tagger.string = result
-        
-        var isFirst = true
-        var lastWord: String?
-        var lastRange: Range<Index>?
-        var lastTag: NLTag?
-        
-        let options: NLTagger.Options = [.omitOther, .omitWhitespace, .omitPunctuation]
-        tagger.enumerateTags(in: startIndex..<endIndex,
-                             unit: .word,
-                             scheme: .lexicalClass,
-                             options: options) { tag, tokenRange in
+        let tagged = tagged()
+        tagged.enumerated().forEach { index, element in
+            let (tag, tokenRange) = element
+            
             let word = String(result[tokenRange])
             
             if let tag = tag {
-                if word.first!.isNumber || word.contains("'") { return true }
+                if word.isEmpty || word.first!.isNumber { return }
                 
-                if isFirst {
-                    result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
-                                           tag == NLTag("OtherWord") ?
-                        word.capitalisedFirst() :
-                        word.capitalized)
-                    
-                    isFirst = false
-                    return true
-                }
-                
-                if capitaliser.shouldCapitalise(word, tag: tag) {
+                if index == 0 || index == tagged.count-1 ||
+                    capitaliser.shouldCapitalise(word, tag: tag) {
                     result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
                                            tag == NLTag("OtherWord") ?
                         word.capitalisedFirst() :
                         word.capitalized)
                 } else { result.replaceSubrange(tokenRange, with: word.lowercased()) }
-                
-                lastWord = word
-                lastRange = tokenRange
-                lastTag = tag
             }
-            
-            return true
-        }
-        
-        if let lastTag = lastTag {
-            result.replaceSubrange(lastRange!, with: lastTag == NLTag("Noun") ||
-                                   lastTag == NLTag("OtherWord") ?
-                lastWord!.capitalisedFirst() :
-                lastWord!.capitalized)
         }
         
         return result
@@ -171,5 +161,9 @@ extension String {
         guard let language = recognizer.dominantLanguage else { return nil }
         
         return language.rawValue
+    }
+    
+    var isLatin: Bool {
+        range(of: "\\P{Latin}", options: .regularExpression) == nil
     }
 }
