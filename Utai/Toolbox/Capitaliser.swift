@@ -136,18 +136,21 @@ extension String {
         tagged.enumerated().forEach { index, element in
             let (tag, tokenRange) = element
             
-            let word = String(result[tokenRange])
+            let word = String(self[tokenRange])
+            let newStartIndex = result.index(result.startIndex, offsetBy: tokenRange.lowerBound.utf16Offset(in: self))
+            let newEndIndex = result.index(result.startIndex, offsetBy: tokenRange.upperBound.utf16Offset(in: self))
+            let newRange = newStartIndex..<newEndIndex
             
             if let tag = tag {
                 if word.isEmpty || word.first!.isNumber { return }
                 
                 if index == 0 || index == tagged.count-1 ||
                     capitaliser.shouldCapitalise(word, tag: tag) {
-                    result.replaceSubrange(tokenRange, with: tag == NLTag("Noun") ||
+                    result.replaceSubrange(newRange, with: tag == NLTag("Noun") ||
                                            tag == NLTag("OtherWord") ?
                         word.capitalisedFirst() :
                         word.capitalized)
-                } else { result.replaceSubrange(tokenRange, with: word.lowercased()) }
+                } else { result.replaceSubrange(newRange, with: word.lowercased()) }
             }
         }
         
