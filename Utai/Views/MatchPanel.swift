@@ -159,7 +159,7 @@ struct MatchPanel: View {
     
     @AppStorage(Settings.preferMasterYear) var useMasterYear: Bool = false
     @AppStorage(Settings.saveConflicts) var forceSavingConflicts: Bool = false
-    @AppStorage(Settings.forceCapitalising) var forceCapitalising: Bool = true
+    @AppStorage(Settings.forceCapitalising) var forceCapitalising: Bool = false
     @AppStorage(Settings.capitaliseStyle) var capitaliseStyle: CapitaliseStyle = .none
     
     private var extraMenu: some View {
@@ -446,7 +446,7 @@ struct MismatchedTrackLine: View {
 struct MatchedTrackLine: View {
     @Environment(\.colorScheme) var colorScheme
     
-    @AppStorage(Settings.forceCapitalising) var forceCapitalising: Bool = true
+    @AppStorage(Settings.forceCapitalising) var forceCapitalising: Bool = false
     @AppStorage(Settings.capitaliseStyle) var capitaliseStyle: CapitaliseStyle = .none
     
     let track: LocalUnit.Track
