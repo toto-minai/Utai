@@ -86,8 +86,7 @@ class Capitalisers {
             NLTag("Conjunction"): {
                 !WordsGroup.coOrdinatingConjunctions.contains($0.lowercased())
             },
-            NLTag("Determiner"): { !WordsGroup.articles.contains($0.lowercased())
-            },
+            NLTag("Determiner"): { !WordsGroup.articles.contains($0.lowercased()) },
             NLTag("Particle"): { $0.lowercased() != "to" }
         ]
     }
