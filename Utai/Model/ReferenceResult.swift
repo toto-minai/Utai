@@ -10,9 +10,9 @@ import Foundation
 struct ReferenceResult: Codable {
     struct Artist: Codable {
         let name: String
-        let anv: String?
+        let anv: String
         let join: String?
-        let role: String?
+        let role: String
         let tracks: String?
         let resourceURL: String
 

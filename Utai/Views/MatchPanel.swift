@@ -489,7 +489,7 @@ struct MatchedTrackLine: View {
                 .opacity(isRepeated ? 1 : 0)
             }
             
-            CustomText(titleStyled)
+            titleAndArtists
             
             Spacer()
             
@@ -502,6 +502,31 @@ struct MatchedTrackLine: View {
         
         .padding(.vertical, 2)
         .padding(.horizontal, Metrics.lilIconLength+Metrics.lilSpacing+(colorScheme == .light ? 1 : 2))
+    }
+    
+    var titleAndArtists: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            CustomText(titleStyled)
+            
+            if let extraArtists = track.perfectMatchedTrack!.extraArtists {
+                ForEach(extraArtists.sorted { $0.key < $1.key }, id: \.key) { role, pairs in
+                    HStack(alignment: .top, spacing: 0) {
+                        Text(role + " – ")
+                            .font(.custom("Yanone Kaffeesatz", size: 16))
+                            .foregroundColor(.secondary)
+                            .fontWeight(.bold)
+                        
+                        VStack(spacing: 4) {
+                            ForEach(Array(pairs.enumerated()), id: \.offset) { _, pair in
+                                CustomText(pair.1.isEmpty ? pair.0 : pair.1+"†")
+                                    .help(pair.1.isEmpty ? "" : pair.0)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 }
 

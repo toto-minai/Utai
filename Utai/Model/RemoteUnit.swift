@@ -26,20 +26,39 @@ class RemoteUnit {
         let duration: String?
         let trackNo: Int
         let diskNo: Int
+        let extraArtists: [String: [(String, String)]]?
         
         var isPerfectMatched: Bool = false
         
-        init(title: String, duration: String?, trackNo: Int, diskNo: Int) {
+        init(title: String, duration: String?, trackNo: Int, diskNo: Int, extraArtists: [ReferenceResult.Artist]?) {
             self.title = title
             self.duration = duration
             self.trackNo = trackNo
             self.diskNo = diskNo
+            
+            if let extraArtists = extraArtists {
+                var dict = [String: [(String, String)]]()
+                
+                extraArtists.forEach {
+                    if dict[$0.role] != nil {
+                        dict[$0.role]!.append(($0.name, $0.anv))
+                    } else {
+                        dict[$0.role] = [($0.name, $0.anv)]
+                    }
+                    
+                }
+                
+                self.extraArtists = dict
+                
+            } else {
+                self.extraArtists = nil
+            }
         }
     }
     
     var tracks = [Track]()
     
-    let genreConverted: [String:ID3Genre] = [
+    let genreConverted: [String: ID3Genre] = [
         "Blues": .blues,
         "Classical": .classical,
         "Electronic": .electronic,
@@ -88,11 +107,11 @@ class RemoteUnit {
                         
                         count += 1
                         self.tracks.append(Track(title: subTrack.title, duration: subTrack.duration,
-                                                 trackNo: count, diskNo: disk))
+                                                 trackNo: count, diskNo: disk, extraArtists: track.extraArtists))  // TODO: subTrack
                     } else {
                         count += 1
                         self.tracks.append(Track(title: subTrack.title, duration: subTrack.duration,
-                                                 trackNo: count, diskNo: 1))
+                                                 trackNo: count, diskNo: 1, extraArtists: track.extraArtists))
                     }
                 }
             } else {
@@ -111,11 +130,11 @@ class RemoteUnit {
                     
                     count += 1
                     self.tracks.append(Track(title: track.title, duration: track.duration,
-                                             trackNo: count, diskNo: disk))
+                                             trackNo: count, diskNo: disk, extraArtists: track.extraArtists))
                 } else {
                     count += 1
                     self.tracks.append(Track(title: track.title, duration: track.duration,
-                                             trackNo: count, diskNo: 1))
+                                             trackNo: count, diskNo: 1, extraArtists: track.extraArtists))
                 }
             }
         }
