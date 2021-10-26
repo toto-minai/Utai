@@ -1,9 +1,7 @@
 <div align="center">
 <h1>Utai</h1>
 <p>Mini-Functional, Offensive, MP3 Tagger for Philharmoniques<br />
-<b><a href="https://github.com/toto-minai/Utai/releases/download/v0.1_5/Utai.app.zip">Download Latest</a> (0.1 Build 5, requires macOS 12 Monterey Beta 3+) 🙋</b> <br />
-<b><a href="https://github.com/toto-minai/Utai/releases/download/v0.1_4/Utai.app.zip">Download Legacy</a> (Build 4) 🙋</b> / 
-<b><a href="https://t.me/utai_app">Telegram Group</a> 🧸</b></p>
+<b><a href="https://github.com/toto-minai/Utai/releases/download/v0.1_8/Utai.0.1.dmg">Download Latest</a> (0.1 Build 8, requires macOS 12 Monterey) 🧸</b> <br />
 <p>Utai uses some new features (like <code>AsyncImage</code> and <code>Task</code>) from WWDC21, <br />so it requires 
 <b>macOS 12 Monterey</b> to run.</p>
 </div>
