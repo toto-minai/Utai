@@ -43,8 +43,6 @@ Toto Minai – [@toto_minai](https://twitter.com/toto_minai) 🍒 / [toto_minai@
 
 Website – <https://chunghwa.asia/utai>
 
-Telegram Group – <https://t.me/utai_app>
-
 ## Frameworks
 
 - [ID3TagEditor](https://github.com/chicio/ID3TagEditor)
